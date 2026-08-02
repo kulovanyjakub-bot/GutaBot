@@ -15,6 +15,20 @@ const rankChecker =
 
 
 
+const COMMAND_ROLES = [
+
+    "1502598398736338954",
+
+    "1502599934220701836",
+
+    "1533447617957073117"
+
+];
+
+
+
+
+
 module.exports = {
 
 
@@ -41,6 +55,7 @@ module.exports = {
         )
 
 
+
         .addIntegerOption(option =>
 
             option
@@ -58,6 +73,7 @@ module.exports = {
         )
 
 
+
         .addIntegerOption(option =>
 
             option
@@ -65,6 +81,24 @@ module.exports = {
             .setName("tymovaprace")
 
             .setDescription("Týmová práce 0-100")
+
+            .setRequired(true)
+
+            .setMinValue(0)
+
+            .setMaxValue(100)
+
+        )
+
+
+
+        .addIntegerOption(option =>
+
+            option
+
+            .setName("disciplina")
+
+            .setDescription("Disciplína 0-100")
 
             .setRequired(true)
 
@@ -84,19 +118,31 @@ module.exports = {
 
 
 
-        // oprávnění velení
+        const allowed =
 
-        if(
-            !interaction.member.permissions.has(
-                PermissionFlagsBits.Administrator
-            )
-        ){
+            interaction.member.roles.cache.some(
+
+                role =>
+
+                COMMAND_ROLES.includes(
+                    role.id
+                )
+
+            );
+
+
+
+
+
+        if(!allowed){
 
 
             return interaction.reply({
 
                 content:
+
                 "❌ Tento příkaz může použít pouze velení.",
+
 
                 ephemeral:true
 
@@ -120,6 +166,7 @@ module.exports = {
 
 
 
+
         const activity =
 
             interaction.options.getInteger(
@@ -129,10 +176,21 @@ module.exports = {
 
 
 
+
         const teamwork =
 
             interaction.options.getInteger(
                 "tymovaprace"
+            );
+
+
+
+
+
+        const discipline =
+
+            interaction.options.getInteger(
+                "disciplina"
             );
 
 
@@ -149,9 +207,12 @@ module.exports = {
 
             activity,
 
-            teamwork
+            teamwork,
+
+            discipline
 
         );
+
 
 
 
@@ -198,7 +259,9 @@ module.exports = {
 
             `⚡ Aktivita: **${activity}/100**\n` +
 
-            `🤝 Týmová práce: **${teamwork}/100**`
+            `🤝 Týmová práce: **${teamwork}/100**\n` +
+
+            `🎖 Disciplína: **${discipline}/100**`
 
         });
 
