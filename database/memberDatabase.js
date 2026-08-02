@@ -22,8 +22,7 @@ function loadMembers(){
 
         fs.writeFileSync(
             filePath,
-            "[]",
-            "utf8"
+            "[]"
         );
 
     }
@@ -124,7 +123,30 @@ function createMember(member){
 
 
     members.push(
-        member
+
+        {
+
+            id:
+            member.id,
+
+
+            username:
+            member.username || "Neznámý",
+
+
+            trainings:
+            0,
+
+
+            missions:
+            0,
+
+
+            lastActivity:
+            new Date().toISOString()
+
+        }
+
     );
 
 
@@ -194,7 +216,15 @@ function updateMember(id,data){
 
 
 
-function addTraining(id){
+// ===============================
+// PŘIDÁNÍ VÝCVIKU
+// ===============================
+
+
+function addTraining(
+    id,
+    username
+){
 
 
     let members =
@@ -214,7 +244,7 @@ function addTraining(id){
 
 
 
-    // AUTOMATICKÉ VYTVOŘENÍ ČLENA
+    // pokud člen neexistuje vytvoříme ho
 
     if(!member){
 
@@ -222,16 +252,24 @@ function addTraining(id){
         member = {
 
 
-            id:id,
+            id:
+            id,
 
 
-            trainings:0,
+            username:
+            username || "Neznámý",
 
 
-            missions:0,
+            trainings:
+            0,
 
 
-            lastActivity:null
+            missions:
+            0,
+
+
+            lastActivity:
+            new Date().toISOString()
 
 
         };
@@ -244,8 +282,6 @@ function addTraining(id){
 
 
     }
-
-
 
 
 
@@ -264,14 +300,27 @@ function addTraining(id){
 
 
 
-
     member.trainings++;
 
 
 
 
+
     member.lastActivity =
+
         new Date().toISOString();
+
+
+
+
+
+
+
+    console.log(
+        "ULOŽEN ČLEN:",
+        member
+    );
+
 
 
 
@@ -279,13 +328,6 @@ function addTraining(id){
 
     saveMembers(
         members
-    );
-
-
-
-    console.log(
-        "✅ ULOŽEN VÝCVIK ČLENOVI:",
-        member
     );
 
 
@@ -299,7 +341,15 @@ function addTraining(id){
 
 
 
-function addMission(id){
+// ===============================
+// PŘIDÁNÍ MISE
+// ===============================
+
+
+function addMission(
+    id,
+    username
+){
 
 
     let members =
@@ -325,16 +375,24 @@ function addMission(id){
         member = {
 
 
-            id:id,
+            id:
+            id,
 
 
-            trainings:0,
+            username:
+            username || "Neznámý",
 
 
-            missions:0,
+            trainings:
+            0,
 
 
-            lastActivity:null
+            missions:
+            0,
+
+
+            lastActivity:
+            new Date().toISOString()
 
 
         };
@@ -347,8 +405,6 @@ function addMission(id){
 
 
     }
-
-
 
 
 
@@ -372,8 +428,21 @@ function addMission(id){
 
 
 
+
     member.lastActivity =
+
         new Date().toISOString();
+
+
+
+
+
+
+    console.log(
+        "ULOŽENA MISE:",
+        member
+    );
+
 
 
 
@@ -381,13 +450,6 @@ function addMission(id){
 
     saveMembers(
         members
-    );
-
-
-
-    console.log(
-        "✅ ULOŽENA MISE ČLENOVI:",
-        member
     );
 
 
