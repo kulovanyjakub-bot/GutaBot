@@ -11,6 +11,12 @@ const memberDB =
     require("../database/memberDatabase");
 
 
+const rankChecker =
+    require("../utils/rankChecker");
+
+
+
+
 
 module.exports = async (interaction) => {
 
@@ -263,7 +269,6 @@ module.exports = async (interaction) => {
 
                     :
 
-
                     field.value.split("\n");
 
 
@@ -497,6 +502,52 @@ module.exports = async (interaction) => {
 
                     );
 
+
+
+
+
+                    // ===============================
+                    // KONTROLA POVÝŠENÍ
+                    // ===============================
+
+
+                    try{
+
+
+                        const discordMember =
+
+                            await interaction.guild.members.fetch(
+
+                                member.id
+
+                            );
+
+
+
+                        await rankChecker(
+
+                            discordMember,
+
+                            interaction.guild
+
+                        );
+
+
+                    }
+
+                    catch(err){
+
+
+                        console.error(
+
+                            "Rank check error:",
+
+                            err
+
+                        );
+
+
+                    }
 
 
 
