@@ -27,9 +27,9 @@ module.exports = async (interaction) => {
 
 
 
-        // ==================================
+        // ===============================
         // ÚČAST NA MISI
-        // ==================================
+        // ===============================
 
 
         if(
@@ -37,14 +37,11 @@ module.exports = async (interaction) => {
         ){
 
 
-
             const missionId =
                 interaction.customId.replace(
                     "missionJoin_",
                     ""
                 );
-
-
 
 
 
@@ -69,23 +66,14 @@ module.exports = async (interaction) => {
 
 
 
-
-
-
             const embed =
                 EmbedBuilder.from(
-
                     interaction.message.embeds[0]
-
                 );
 
 
 
-
-
-
-
-            const field =
+            let field =
                 embed.data.fields.find(
 
                     f =>
@@ -95,65 +83,38 @@ module.exports = async (interaction) => {
 
 
 
+            let users =
+                field.value === "Nikdo přihlášen"
 
+                ?
 
+                []
 
+                :
 
-            if(field){
-
-
-
-                let users =
-
-                    field.value === "Nikdo přihlášen"
-
-                    ?
-
-                    []
-
-                    :
-
-                    field.value.split("\n");
+                field.value.split("\n");
 
 
 
 
 
-
-
-                const entry =
-
-                    `🪖 ${interaction.user.username}`;
+            const entry =
+                `🪖 ${interaction.user.username}`;
 
 
 
+            if(
+                !users.includes(entry)
+            ){
 
-
-
-
-                if(
-                    !users.includes(entry)
-                ){
-
-                    users.push(entry);
-
-                }
-
-
-
-
-
-
-
-                field.value =
-
-                    users.join("\n");
-
-
+                users.push(entry);
 
             }
 
 
+
+            field.value =
+                users.join("\n");
 
 
 
@@ -171,12 +132,7 @@ module.exports = async (interaction) => {
 
 
 
-
-
-
-
             return;
-
 
         }
 
@@ -188,9 +144,9 @@ module.exports = async (interaction) => {
 
 
 
-        // ==================================
+        // ===============================
         // ODHLÁŠENÍ Z MISE
-        // ==================================
+        // ===============================
 
 
         if(
@@ -200,18 +156,10 @@ module.exports = async (interaction) => {
 
 
             const missionId =
-
                 interaction.customId.replace(
-
                     "missionLeave_",
-
                     ""
-
                 );
-
-
-
-
 
 
 
@@ -228,24 +176,15 @@ module.exports = async (interaction) => {
 
 
 
-
-
             const embed =
-
                 EmbedBuilder.from(
-
                     interaction.message.embeds[0]
-
                 );
 
 
 
 
-
-
-
-            const field =
-
+            let field =
                 embed.data.fields.find(
 
                     f =>
@@ -257,68 +196,48 @@ module.exports = async (interaction) => {
 
 
 
+            let users =
+                field.value === "Nikdo přihlášen"
 
+                ?
 
-            if(field){
+                []
 
+                :
 
-
-                let users =
-
-                    field.value === "Nikdo přihlášen"
-
-                    ?
-
-                    []
-
-                    :
-
-                    field.value.split("\n");
+                field.value.split("\n");
 
 
 
 
 
 
+            users =
+                users.filter(
 
-                users =
+                    u =>
 
-                    users.filter(
+                    u !==
+                    `🪖 ${interaction.user.username}`
 
-                        u =>
-
-                        u !==
-                        `🪖 ${interaction.user.username}`
-
-                    );
+                );
 
 
 
 
 
 
+            field.value =
 
+                users.length
 
-                field.value =
+                ?
 
+                users.join("\n")
 
-                    users.length
+                :
 
-
-                    ?
-
-                    users.join("\n")
-
-
-                    :
-
-                    "Nikdo přihlášen";
-
-
-
-            }
-
-
+                "Nikdo přihlášen";
 
 
 
@@ -339,10 +258,7 @@ module.exports = async (interaction) => {
 
 
 
-
-
             return;
-
 
         }
 
@@ -354,9 +270,9 @@ module.exports = async (interaction) => {
 
 
 
-        // ==================================
+        // ===============================
         // UKONČENÍ MISE
-        // ==================================
+        // ===============================
 
 
         if(
@@ -366,35 +282,25 @@ module.exports = async (interaction) => {
 
 
             const milsimRole =
-
                 "1381662796646973542";
 
 
 
 
 
-
-
             if(
-
                 !interaction.member.roles.cache.has(
-
                     milsimRole
-
                 )
-
             ){
 
 
                 return interaction.reply({
 
                     content:
-
                     "❌ Pouze MILSIM může ukončit misi.",
 
-
                     ephemeral:true
-
 
                 });
 
@@ -407,17 +313,12 @@ module.exports = async (interaction) => {
 
 
 
+
             const missionId =
-
-
                 interaction.customId.replace(
-
                     "missionClose_",
-
                     ""
-
                 );
-
 
 
 
@@ -426,12 +327,8 @@ module.exports = async (interaction) => {
 
 
             const mission =
-
-
                 missionDB.getMission(
-
                     missionId
-
                 );
 
 
@@ -439,22 +336,16 @@ module.exports = async (interaction) => {
 
 
 
-
             console.log(
-
                 "UKONČUJI MISI:",
-
                 JSON.stringify(
-
                     mission,
-
                     null,
-
                     4
-
                 )
-
             );
+
+
 
 
 
@@ -466,43 +357,35 @@ module.exports = async (interaction) => {
 
 
 
+                console.log(
+                    "ÚČASTNÍCI MISE:",
+                    mission.participants
+                );
+
+
+
+
                 for(
-
                     const member of mission.participants
-
                 ){
 
 
 
-
-
                     console.log(
-
                         "PŘIDÁVÁM MISI:",
-
                         member.id,
-
                         member.username
-
                     );
 
 
 
-
-
-
                     memberDB.addMission(
-
-                        member.id,
-
-                        member.username
-
+                        member.id
                     );
 
 
 
                 }
-
 
 
             }
@@ -516,12 +399,8 @@ module.exports = async (interaction) => {
 
 
             const archive =
-
-
                 interaction.guild.channels.cache.get(
-
                     "1533538567756972163"
-
                 );
 
 
@@ -534,13 +413,10 @@ module.exports = async (interaction) => {
             if(archive){
 
 
-
                 await archive.send({
 
                     embeds:
-
                     interaction.message.embeds
-
 
                 });
 
@@ -554,22 +430,14 @@ module.exports = async (interaction) => {
 
 
 
-
             await interaction.update({
 
                 content:
-
                 "🔒 Mise ukončena. Statistiky účastníků aktualizovány.",
 
 
-
-
                 embeds:
-
                 interaction.message.embeds,
-
-
-
 
 
                 components:[]
@@ -580,11 +448,7 @@ module.exports = async (interaction) => {
 
 
 
-
-
-
             return;
-
 
         }
 
@@ -594,11 +458,8 @@ module.exports = async (interaction) => {
 
 
 
-
     }
-
     catch(err){
-
 
 
         console.error(
@@ -612,29 +473,20 @@ module.exports = async (interaction) => {
 
 
 
-
         if(
-
             !interaction.replied &&
-
             !interaction.deferred
-
         ){
 
 
-
-            await interaction.reply({
+            interaction.reply({
 
                 content:
-
                 "❌ Chyba při zpracování mise.",
-
 
                 ephemeral:true
 
-
             }).catch(()=>{});
-
 
 
         }
