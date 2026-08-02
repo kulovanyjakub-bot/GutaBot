@@ -21,26 +21,43 @@ module.exports = {
 
         .setDescription("Vytvoří nový výcvik GUTALAX MILSIM")
 
+
         .addStringOption(option =>
             option
+
             .setName("nazev")
+
             .setDescription("Název výcviku")
+
             .setRequired(true)
+
         )
+
 
         .addStringOption(option =>
             option
+
             .setName("datum")
+
             .setDescription("Datum a čas výcviku")
+
             .setRequired(true)
+
         )
+
 
         .addStringOption(option =>
             option
+
             .setName("popis")
+
             .setDescription("Popis výcviku")
+
             .setRequired(true)
+
         ),
+
+
 
 
 
@@ -58,6 +75,7 @@ module.exports = {
             !interaction.member.roles.cache.has(milsimRole)
         ){
 
+
             return interaction.reply({
 
                 content:
@@ -66,6 +84,7 @@ module.exports = {
                 ephemeral:true
 
             });
+
 
         }
 
@@ -77,12 +96,16 @@ module.exports = {
             interaction.options.getString("nazev");
 
 
+
         const datum =
             interaction.options.getString("datum");
 
 
+
         const popis =
             interaction.options.getString("popis");
+
+
 
 
 
@@ -95,19 +118,74 @@ module.exports = {
 
 
 
+
+
         trainingDB.createTraining({
+
+            id:
+            trainingId,
+
+
+            name:
+            nazev,
+
+
+            date:
+            datum,
+
+
+            description:
+            popis,
+
+
+            participants:
+            []
+
+        });
+
+
+
+
+
+
+        // TEST DATABASE
+
+        console.log(
+            "=============================="
+        );
+
+
+        console.log(
+            "VYTVOŘENÝ VÝCVIK:"
+        );
+
+
+        console.log({
 
             id: trainingId,
 
             name: nazev,
 
-            date: datum,
-
-            description: popis,
-
             participants: []
 
         });
+
+
+
+        console.log(
+            "AKTUÁLNÍ VÝCVIKY V DB:"
+        );
+
+
+        console.log(
+            trainingDB.getTrainings()
+        );
+
+
+        console.log(
+            "=============================="
+        );
+
 
 
 
@@ -118,32 +196,48 @@ module.exports = {
         const embed =
             new EmbedBuilder()
 
+
             .setColor("#1f8b4c")
 
+
             .setTitle("🎖 VÝCVIK")
+
 
             .setDescription(
                 `**${nazev}**`
             )
 
+
             .addFields(
 
                 {
+
                     name:"📅 Datum",
+
                     value:datum
+
                 },
 
+
                 {
+
                     name:"📋 Popis",
+
                     value:popis
+
                 },
 
+
                 {
+
                     name:"👥 Účast",
+
                     value:"Nikdo přihlášen"
+
                 }
 
             )
+
 
             .setTimestamp();
 
@@ -153,8 +247,11 @@ module.exports = {
 
 
 
+
+
         const buttons =
             new ActionRowBuilder()
+
 
             .addComponents(
 
@@ -209,6 +306,8 @@ module.exports = {
 
 
 
+
+
         const channel =
             interaction.guild.channels.cache.get(
                 "1381674086089883698"
@@ -220,6 +319,7 @@ module.exports = {
 
         if(!channel){
 
+
             return interaction.reply({
 
                 content:
@@ -228,6 +328,7 @@ module.exports = {
                 ephemeral:true
 
             });
+
 
         }
 
@@ -242,11 +343,13 @@ module.exports = {
             content:
             "@everyone",
 
+
             embeds:[
 
                 embed
 
             ],
+
 
             components:[
 
@@ -254,15 +357,20 @@ module.exports = {
 
             ],
 
+
             allowedMentions:{
 
                 parse:[
+
                     "everyone"
+
                 ]
 
             }
 
+
         });
+
 
 
 
