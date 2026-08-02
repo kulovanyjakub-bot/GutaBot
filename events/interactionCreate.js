@@ -1,8 +1,3 @@
-const {
-    Events
-} = require("discord.js");
-
-
 const trainingButtons =
     require("../handlers/trainingButtons");
 
@@ -12,123 +7,118 @@ const missionButtons =
 
 
 
-module.exports = {
-
-
-    name: Events.InteractionCreate,
-
-
-    async execute(interaction) {
+module.exports = async (
+    interaction
+) => {
 
 
 
-        // ===============================
-        // BUTTONY
-        // ===============================
+    // ===============================
+    // BUTTONY
+    // ===============================
+
+
+    if(
+        interaction.isButton()
+    ){
+
 
 
         if(
-            interaction.isButton()
+            interaction.customId.startsWith("training")
         ){
 
 
-            // VÝCVIKY
-
-            if(
-                interaction.customId.startsWith("training")
-            ){
-
-                return trainingButtons(
-                    interaction
-                );
-
-            }
-
-
-
-
-            // MISE
-
-            if(
-                interaction.customId.startsWith("mission")
-            ){
-
-                return missionButtons(
-                    interaction
-                );
-
-            }
-
-
-
-        }
-
-
-
-
-
-
-        // ===============================
-        // SLASH COMMANDY
-        // ===============================
-
-
-        if(
-            !interaction.isChatInputCommand()
-        )
-            return;
-
-
-
-
-        const command =
-            interaction.client.commands.get(
-                interaction.commandName
-            );
-
-
-
-        if(!command)
-            return;
-
-
-
-        try{
-
-
-            await command.execute(
+            return trainingButtons(
                 interaction
             );
 
 
         }
-        catch(err){
-
-
-            console.error(err);
 
 
 
-            if(
-                !interaction.replied
-            ){
+
+        if(
+            interaction.customId.startsWith("mission")
+        ){
 
 
-                await interaction.reply({
-
-                    content:
-                    "❌ Chyba při provádění příkazu.",
-
-                    ephemeral:true
-
-                });
-
-
-            }
+            return missionButtons(
+                interaction
+            );
 
 
         }
 
+
+
+    }
+
+
+
+
+
+
+    // ===============================
+    // SLASH COMMANDY
+    // ===============================
+
+
+    if(
+        !interaction.isChatInputCommand()
+    )
+        return;
+
+
+
+
+    const command =
+        interaction.client.commands.get(
+            interaction.commandName
+        );
+
+
+
+    if(!command)
+        return;
+
+
+
+    try{
+
+
+        await command.execute(
+            interaction
+        );
+
+
+    }
+    catch(err){
+
+
+        console.error(
+            err
+        );
+
+
+
+        if(
+            !interaction.replied
+        ){
+
+
+            await interaction.reply({
+
+                content:
+                "❌ Chyba při provádění příkazu.",
+
+                ephemeral:true
+
+            });
+
+
+        }
 
 
     }
