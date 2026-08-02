@@ -10,30 +10,44 @@ const {
     Partials
 } = require("discord.js");
 
+
 const client = new Client({
+
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
     ],
+
     partials: [
         Partials.Channel
     ]
+
 });
+
 
 client.commands = new Collection();
 
-// ---------- Načtení commandů ----------
+
+// ===============================
+// NAČTENÍ COMMANDŮ
+// ===============================
+
 const commandsPath = path.join(__dirname, "commands");
+
 
 const commandFiles = fs
     .readdirSync(commandsPath)
     .filter(file => file.endsWith(".js"));
 
+
 for (const file of commandFiles) {
 
-    const command = require(path.join(commandsPath, file));
+    const command = require(
+        path.join(commandsPath, file)
+    );
+
 
     if (
         command.data &&
@@ -49,56 +63,131 @@ for (const file of commandFiles) {
 
 }
 
-// ---------- Ready ----------
+
+
+// ===============================
+// READY
+// ===============================
+
 client.once("ready", () => {
 
-    console.log(`✅ Přihlášen jako ${client.user.tag}`);
+    console.log(
+        `✅ Přihlášen jako ${client.user.tag}`
+    );
 
 });
 
-// ---------- Interakce ----------
-const interactionHandler = require("./events/interactionCreate");
 
-client.on("interactionCreate", async (interaction) => {
 
-    // Nejprve předáme tlačítka do interaction handleru
-    if (interaction.isButton()) {
-        return interactionHandler(interaction, client);
-    }
+// ===============================
+// INTERAKCE
+// ===============================
 
-    // Slash příkazy
-    if (!interaction.isChatInputCommand()) return;
 
-    const command = client.commands.get(interaction.commandName);
+const interactionHandler = require(
+    "./events/interactionCreate"
+);
 
-    if (!command) return;
 
-    try {
 
-        await command.execute(interaction);
+client.on(
+    "interactionCreate",
+    async (interaction) => {
 
-    } catch (err) {
 
-        console.error(err);
+        // Nábor tlačítka + formuláře
 
-        if (interaction.replied || interaction.deferred) {
+        if (
+            interaction.isButton() ||
+            interaction.isModalSubmit()
+        ) {
 
-            await interaction.followUp({
-                content: "❌ Nastala chyba.",
-                ephemeral: true
-            });
-
-        } else {
-
-            await interaction.reply({
-                content: "❌ Nastala chyba.",
-                ephemeral: true
-            });
+            return interactionHandler(
+                interaction,
+                client
+            );
 
         }
 
+
+
+        // Slash commandy
+
+        if (
+            !interaction.isChatInputCommand()
+        ) return;
+
+
+
+        const command =
+            client.commands.get(
+                interaction.commandName
+            );
+
+
+
+        if (!command) return;
+
+
+
+        try {
+
+
+            await command.execute(
+                interaction
+            );
+
+
+        } catch (err) {
+
+
+            console.error(err);
+
+
+
+            if (
+                interaction.replied ||
+                interaction.deferred
+            ) {
+
+
+                await interaction.followUp({
+
+                    content:
+                        "❌ Nastala chyba.",
+
+                    ephemeral: true
+
+                });
+
+
+            } else {
+
+
+                await interaction.reply({
+
+                    content:
+                        "❌ Nastala chyba.",
+
+                    ephemeral: true
+
+                });
+
+            }
+
+        }
+
+
     }
 
-});
+);
 
-client.login(process.env.TOKEN);
+
+
+// ===============================
+// LOGIN
+// ===============================
+
+client.login(
+    process.env.TOKEN
+);
