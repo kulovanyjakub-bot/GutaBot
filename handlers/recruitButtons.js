@@ -3,12 +3,10 @@ const {
 } = require("discord.js");
 
 
-
 module.exports = async (interaction) => {
 
 
     try {
-
 
 
         // ===============================
@@ -18,21 +16,15 @@ module.exports = async (interaction) => {
         if (interaction.customId.startsWith("acceptRecruit_")) {
 
 
-
             const userId = interaction.customId.replace(
                 "acceptRecruit_",
                 ""
             );
 
 
-
-            const member = await interaction.guild.members.fetch(
-                userId
-            );
+            const member = await interaction.guild.members.fetch(userId);
 
 
-
-            // Přidání role Rekrut
 
             await member.roles.add(
                 "1458487234989654201"
@@ -40,15 +32,11 @@ module.exports = async (interaction) => {
 
 
 
-            // Přejmenování ticketu
-
-            await interaction.channel.setName(
-                `rekrut-${member.user.username}`
-            ).catch(()=>{});
+            await interaction.deferUpdate();
 
 
 
-            await interaction.update({
+            await interaction.message.edit({
 
                 content:
 `✅ ${member} byl přijat do GUTALAX MILSIM.
@@ -72,13 +60,11 @@ Vítej v jednotce!`,
 
 
 
-
         // ===============================
         // POHOVOR
         // ===============================
 
         if (interaction.customId.startsWith("interviewRecruit_")) {
-
 
 
             const userId = interaction.customId.replace(
@@ -87,19 +73,14 @@ Vítej v jednotce!`,
             );
 
 
-
-            const member = await interaction.guild.members.fetch(
-                userId
-            );
+            const member = await interaction.guild.members.fetch(userId);
 
 
 
             await interaction.reply({
 
                 content:
-`${member}
-
-🎤 **Pohovor požadován**
+`🎤 **Pohovor požaduje ${member}**
 
 <@&1533447617957073117>
 
@@ -129,13 +110,11 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-
         // ===============================
         // ODMÍTNOUT
         // ===============================
 
         if (interaction.customId.startsWith("rejectRecruit_")) {
-
 
 
             const userId = interaction.customId.replace(
@@ -144,14 +123,15 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             );
 
 
-
-            const member = await interaction.guild.members.fetch(
-                userId
-            );
+            const member = await interaction.guild.members.fetch(userId);
 
 
 
-            await interaction.update({
+            await interaction.deferUpdate();
+
+
+
+            await interaction.message.edit({
 
                 content:
 `❌ ${member} byl odmítnut.`,
@@ -165,7 +145,6 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
             setTimeout(() => {
-
 
                 interaction.channel.delete()
                 .catch(()=>{});
@@ -181,30 +160,24 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-    }
-    catch(err) {
-
+    } catch(err) {
 
 
         console.error(
-            "❌ recruitButtons chyba:"
+            "❌ RECRUIT BUTTON ERROR:"
         );
-
 
         console.error(err);
 
 
 
-        if(
-            !interaction.replied &&
-            !interaction.deferred
-        ){
+        if (!interaction.replied && !interaction.deferred) {
 
 
             await interaction.reply({
 
                 content:
-                "❌ Nastala chyba při zpracování tlačítka.",
+                "❌ Chyba při zpracování tlačítka.",
 
                 ephemeral:true
 
