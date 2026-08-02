@@ -14,7 +14,10 @@ const {
 
 
 
-// VYTVOŘENÍ BOTA
+
+// ==========================
+// VYTVOŘENÍ CLIENTA
+// ==========================
 
 const client = new Client({
 
@@ -41,17 +44,23 @@ const client = new Client({
 
 
 
+
 client.commands = new Collection();
 
 
 
 
+
+// ==========================
 // NAČTENÍ COMMANDŮ
+// ==========================
+
 
 const commandsPath = path.join(
     __dirname,
     "commands"
 );
+
 
 
 if (fs.existsSync(commandsPath)) {
@@ -64,12 +73,14 @@ if (fs.existsSync(commandsPath)) {
         );
 
 
+
     for (const file of commandFiles) {
 
 
         const command = require(
             path.join(commandsPath, file)
         );
+
 
 
         if (
@@ -100,7 +111,13 @@ if (fs.existsSync(commandsPath)) {
 
 
 
+
+
+
+// ==========================
 // READY
+// ==========================
+
 
 client.once(
     "ready",
@@ -119,7 +136,13 @@ client.once(
 
 
 
-// EVENTY
+
+
+
+// ==========================
+// INTERACTION HANDLER
+// ==========================
+
 
 const interactionHandler = require(
     "./events/interactionCreate"
@@ -161,7 +184,10 @@ client.on(
 
 
 
+
+
             // SLASH COMMANDY
+
 
             if (
                 !interaction.isChatInputCommand()
@@ -172,14 +198,18 @@ client.on(
 
 
 
-            const command = client.commands.get(
-                interaction.commandName
-            );
+            const command =
+                client.commands.get(
+                    interaction.commandName
+                );
+
+
 
 
 
             if (!command)
                 return;
+
 
 
 
@@ -193,13 +223,15 @@ client.on(
 
 
 
-        } catch (err) {
+
+        } catch (error) {
 
 
             console.error(
                 "❌ Interaction error:",
-                err
+                error
             );
+
 
 
 
@@ -216,12 +248,11 @@ client.on(
 
                     ephemeral:true
 
-                });
+                }).catch(() => {});
 
 
 
             } else {
-
 
 
                 await interaction.reply({
@@ -231,17 +262,19 @@ client.on(
 
                     ephemeral:true
 
-                });
-
+                }).catch(() => {});
 
 
             }
 
 
+
         }
 
 
+
     }
+
 );
 
 
@@ -249,7 +282,28 @@ client.on(
 
 
 
+
+
+// ==========================
+// CHYBY
+// ==========================
+
+
+client.on(
+    "error",
+    console.error
+);
+
+
+
+
+
+
+
+// ==========================
 // LOGIN
+// ==========================
+
 
 client.login(
     process.env.TOKEN
