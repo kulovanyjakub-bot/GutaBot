@@ -2,14 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 
-
 const filePath =
     path.join(
         __dirname,
         "members.json"
     );
-
-
 
 
 
@@ -49,7 +46,6 @@ function loadMembers(){
 
 
 
-
 function saveMembers(data){
 
 
@@ -76,8 +72,6 @@ function saveMembers(data){
 
 
 
-
-
 function getMember(id){
 
 
@@ -95,8 +89,6 @@ function getMember(id){
 
 
 }
-
-
 
 
 
@@ -139,8 +131,6 @@ function createMember(member){
 
 
 }
-
-
 
 
 
@@ -218,6 +208,7 @@ function addTraining(
 
 
 
+
     if(!member){
 
 
@@ -240,7 +231,10 @@ function addTraining(
             activity:3,
 
 
-            teamwork:0,
+            teamwork:1,
+
+
+            discipline:0,
 
 
             joined:
@@ -272,15 +266,13 @@ function addTraining(
         }
 
 
-
         member.trainings++;
 
 
 
 
-
         // ===============================
-        // AKTIVITA ZA VÝCVIK
+        // AKTIVITA
         // ===============================
 
 
@@ -291,7 +283,6 @@ function addTraining(
         }
 
 
-
         member.activity += 3;
 
 
@@ -299,6 +290,45 @@ function addTraining(
         if(member.activity > 100){
 
             member.activity = 100;
+
+        }
+
+
+
+
+
+
+        // ===============================
+        // TÝMOVÁ PRÁCE
+        // ===============================
+
+
+        if(!member.teamwork){
+
+            member.teamwork = 0;
+
+        }
+
+
+        member.teamwork += 1;
+
+
+
+        if(member.teamwork > 100){
+
+            member.teamwork = 100;
+
+        }
+
+
+
+
+
+
+
+        if(!member.discipline){
+
+            member.discipline = 0;
 
         }
 
@@ -353,6 +383,7 @@ function addMission(
 
 
 
+
     if(!member){
 
 
@@ -375,7 +406,10 @@ function addMission(
             activity:5,
 
 
-            teamwork:0,
+            teamwork:2,
+
+
+            discipline:0,
 
 
             joined:
@@ -415,7 +449,7 @@ function addMission(
 
 
         // ===============================
-        // AKTIVITA ZA MISI
+        // AKTIVITA
         // ===============================
 
 
@@ -436,6 +470,48 @@ function addMission(
             member.activity = 100;
 
         }
+
+
+
+
+
+
+
+        // ===============================
+        // TÝMOVÁ PRÁCE
+        // ===============================
+
+
+        if(!member.teamwork){
+
+            member.teamwork = 0;
+
+        }
+
+
+
+        member.teamwork += 2;
+
+
+
+        if(member.teamwork > 100){
+
+            member.teamwork = 100;
+
+        }
+
+
+
+
+
+
+
+        if(!member.discipline){
+
+            member.discipline = 0;
+
+        }
+
 
 
 
@@ -469,7 +545,8 @@ function addMission(
 function updateEvaluation(
     id,
     activity,
-    teamwork
+    teamwork,
+    discipline
 ){
 
 
@@ -493,13 +570,24 @@ function updateEvaluation(
 
 
 
+
+
     member.activity =
     activity;
 
 
 
+
     member.teamwork =
     teamwork;
+
+
+
+
+    member.discipline =
+    discipline;
+
+
 
 
 
