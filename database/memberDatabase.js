@@ -126,46 +126,7 @@ function createMember(member){
 
 
         members.push(
-
-            {
-
-                id:
-                member.id,
-
-
-                username:
-                member.username || "Neznámý",
-
-
-                trainings:
-                member.trainings || 0,
-
-
-                missions:
-                member.missions || 0,
-
-
-                rank:
-                member.rank || "Rekrut",
-
-
-                activity:
-                member.activity || 0,
-
-
-                teamwork:
-                member.teamwork || 0,
-
-
-                joined:
-                member.joined || new Date().toISOString(),
-
-
-                lastActivity:
-                member.lastActivity || new Date().toISOString()
-
-            }
-
+            member
         );
 
 
@@ -276,10 +237,7 @@ function addTraining(
             missions:0,
 
 
-            rank:"Rekrut",
-
-
-            activity:0,
+            activity:3,
 
 
             teamwork:0,
@@ -314,7 +272,39 @@ function addTraining(
         }
 
 
+
         member.trainings++;
+
+
+
+
+
+        // ===============================
+        // AKTIVITA ZA VÝCVIK
+        // ===============================
+
+
+        if(!member.activity){
+
+            member.activity = 0;
+
+        }
+
+
+
+        member.activity += 3;
+
+
+
+        if(member.activity > 100){
+
+            member.activity = 100;
+
+        }
+
+
+
+
 
 
         member.lastActivity =
@@ -382,10 +372,7 @@ function addMission(
             missions:1,
 
 
-            rank:"Rekrut",
-
-
-            activity:0,
+            activity:5,
 
 
             teamwork:0,
@@ -420,7 +407,39 @@ function addMission(
         }
 
 
+
         member.missions++;
+
+
+
+
+
+        // ===============================
+        // AKTIVITA ZA MISI
+        // ===============================
+
+
+        if(!member.activity){
+
+            member.activity = 0;
+
+        }
+
+
+
+        member.activity += 5;
+
+
+
+        if(member.activity > 100){
+
+            member.activity = 100;
+
+        }
+
+
+
+
 
 
         member.lastActivity =
