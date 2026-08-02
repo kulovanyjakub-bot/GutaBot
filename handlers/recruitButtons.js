@@ -41,7 +41,7 @@ module.exports = async (interaction) => {
 
             const logChannel =
                 interaction.guild.channels.cache.get(
-                    "SEM_DEJ_ID_NÁBOR_LOGU"
+                    "1533447352684380361"
                 );
 
 
