@@ -18,11 +18,14 @@ const ranks =
 module.exports = {
 
 
-    data: new SlashCommandBuilder()
+    data:
+
+    new SlashCommandBuilder()
 
         .setName("profil")
 
         .setDescription("Zobrazí profil člena MILSIM")
+
 
         .addUserOption(option =>
 
@@ -47,7 +50,10 @@ module.exports = {
 
 
         let user =
-            interaction.options.getUser("clen");
+
+            interaction.options.getUser(
+                "clen"
+            );
 
 
 
@@ -64,8 +70,11 @@ module.exports = {
 
 
         const member =
+
             await interaction.guild.members.fetch(
+
                 user.id
+
             );
 
 
@@ -74,43 +83,85 @@ module.exports = {
 
 
 
+
+        const data =
+
+            memberDB.getMember(
+
+                user.id
+
+            );
+
+
+
+
+
+
+
+        if(!data){
+
+
+            return interaction.reply({
+
+                content:
+
+                "❌ Člen nemá vytvořený profil.",
+
+                ephemeral:true
+
+            });
+
+
+        }
+
+
+
+
+
+
+
         // ===============================
-        // HODNOST
+        // AKTUÁLNÍ HODNOST
         // ===============================
 
 
-        let rank =
-            "Bez hodnosti";
+        let currentRank =
+
+            "Rekrut";
 
 
+        let currentLevel = 0;
 
-        let highestLevel = 0;
 
 
 
         for(
-            const r of ranks
+
+            const rank of ranks
+
         ){
 
 
             if(
 
-                member.roles.cache.has(r.id)
+                member.roles.cache.has(
+
+                    rank.id
+
+                )
 
                 &&
 
-                r.level > highestLevel
+                rank.level > currentLevel
 
             ){
 
+                currentRank =
+                rank.name;
 
-                rank =
-                r.name;
 
-
-                highestLevel =
-                r.level;
-
+                currentLevel =
+                rank.level;
 
             }
 
@@ -123,61 +174,55 @@ module.exports = {
 
 
 
+
+
         // ===============================
-        // STATISTIKY
+        // DALŠÍ HODNOST
         // ===============================
 
 
-        let data =
-            memberDB.getMember(
-                user.id
+        const nextRank =
+
+            ranks.find(
+
+                r =>
+
+                r.level === currentLevel + 1
+
             );
 
 
 
 
 
-        if(!data){
 
 
-            data = {
+        let progress =
 
-
-                id:
-                user.id,
-
-
-                username:
-                user.username,
-
-
-                trainings:
-                0,
-
-
-                missions:
-                0,
-
-
-                joined:
-                new Date().toISOString(),
-
-
-                lastActivity:
-                null
-
-
-            };
+            "Maximální hodnost";
 
 
 
-            memberDB.createMember(
-                data
-            );
+
+
+
+
+        if(nextRank){
+
+
+
+            progress =
+
+            `🎯 Mise: ${data.missions}/${nextRank.missions}\n` +
+
+            `🏋️ Výcviky: ${data.trainings}/${nextRank.trainings}\n` +
+
+            `⚡ Aktivita: ${data.activity || 0}/${nextRank.activity}\n` +
+
+            `🤝 Týmová práce: ${data.teamwork || 0}/${nextRank.teamwork}`;
 
 
         }
-
 
 
 
@@ -192,11 +237,15 @@ module.exports = {
         .setColor("#1f8b4c")
 
         .setTitle(
+
             "🪖 GUTALAX MILSIM - Profil"
+
         )
 
         .setThumbnail(
+
             user.displayAvatarURL()
+
         )
 
         .addFields(
@@ -205,9 +254,11 @@ module.exports = {
             {
 
                 name:
+
                 "👤 Člen",
 
                 value:
+
                 `${user}`
 
             },
@@ -216,10 +267,12 @@ module.exports = {
             {
 
                 name:
+
                 "🎖 Hodnost",
 
                 value:
-                rank
+
+                currentRank
 
             },
 
@@ -227,21 +280,12 @@ module.exports = {
             {
 
                 name:
-                "🏋️ Výcviky",
 
-                value:
-                `${data.trainings}`
-
-            },
-
-
-            {
-
-                name:
                 "🎯 Mise",
 
                 value:
-                `${data.missions}`
+
+                `${data.missions || 0}`
 
             },
 
@@ -249,13 +293,51 @@ module.exports = {
             {
 
                 name:
-                "📅 Člen od",
+
+                "🏋️ Výcviky",
 
                 value:
-                `<t:${Math.floor(
-                    new Date(data.joined)
-                    .getTime() / 1000
-                )}:d>`
+
+                `${data.trainings || 0}`
+
+            },
+
+
+            {
+
+                name:
+
+                "⚡ Aktivita",
+
+                value:
+
+                `${data.activity || 0}/100`
+
+            },
+
+
+            {
+
+                name:
+
+                "🤝 Týmová práce",
+
+                value:
+
+                `${data.teamwork || 0}/100`
+
+            },
+
+
+            {
+
+                name:
+
+                "⬆️ Postup na další hodnost",
+
+                value:
+
+                progress
 
             }
 
@@ -263,6 +345,7 @@ module.exports = {
         )
 
         .setTimestamp();
+
 
 
 
