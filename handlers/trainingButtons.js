@@ -69,7 +69,7 @@ module.exports = async (interaction) => {
 
 
 
-            let members =
+            let users =
                 field.value === "Nikdo přihlášen"
                 ?
                 []
@@ -78,23 +78,23 @@ module.exports = async (interaction) => {
 
 
 
-            const entry =
+            const name =
                 `🪖 ${interaction.user.username}`;
 
 
 
             if(
-                !members.includes(entry)
+                !users.includes(name)
             ){
 
-                members.push(entry);
+                users.push(name);
 
             }
 
 
 
             field.value =
-                members.join("\n");
+                users.join("\n");
 
 
 
@@ -102,11 +102,7 @@ module.exports = async (interaction) => {
 
             await interaction.update({
 
-                embeds:[
-
-                    embed
-
-                ]
+                embeds:[embed]
 
             });
 
@@ -133,7 +129,6 @@ module.exports = async (interaction) => {
         ){
 
 
-
             const trainingId =
                 interaction.customId.replace(
                     "trainingLeave_",
@@ -149,6 +144,7 @@ module.exports = async (interaction) => {
                 interaction.user.id
 
             );
+
 
 
 
@@ -171,7 +167,7 @@ module.exports = async (interaction) => {
 
 
 
-            let members =
+            let users =
                 field.value === "Nikdo přihlášen"
                 ?
                 []
@@ -180,11 +176,11 @@ module.exports = async (interaction) => {
 
 
 
-            members =
-                members.filter(
+            users =
+                users.filter(
 
-                    m =>
-                    m !==
+                    u =>
+                    u !==
                     `🪖 ${interaction.user.username}`
 
                 );
@@ -192,9 +188,9 @@ module.exports = async (interaction) => {
 
 
             field.value =
-                members.length
+                users.length
                 ?
-                members.join("\n")
+                users.join("\n")
                 :
                 "Nikdo přihlášen";
 
@@ -202,13 +198,10 @@ module.exports = async (interaction) => {
 
 
 
+
             await interaction.update({
 
-                embeds:[
-
-                    embed
-
-                ]
+                embeds:[embed]
 
             });
 
@@ -226,7 +219,7 @@ module.exports = async (interaction) => {
 
 
         // ===============================
-        // UKONČENÍ
+        // UKONČENÍ VÝCVIKU
         // ===============================
 
 
@@ -277,13 +270,13 @@ module.exports = async (interaction) => {
 
 
 
+
             if(archive){
 
 
                 await archive.send({
 
                     embeds:
-
                     interaction.message.embeds
 
                 });
@@ -296,18 +289,13 @@ module.exports = async (interaction) => {
 
 
 
-
             await interaction.update({
 
                 content:
-
                 "🔒 Výcvik byl ukončen a uložen do archivu.",
 
-
                 embeds:
-
                 interaction.message.embeds,
-
 
                 components:[]
 
@@ -315,11 +303,10 @@ module.exports = async (interaction) => {
 
 
 
+
             return;
 
-
         }
-
 
 
 
@@ -328,13 +315,10 @@ module.exports = async (interaction) => {
     catch(err){
 
 
-
         console.error(
-            "❌ TRAINING BUTTON ERROR:"
+            "❌ TRAINING BUTTON ERROR:",
+            err
         );
-
-
-        console.error(err);
 
 
 
