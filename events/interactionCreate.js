@@ -59,4 +59,6 @@ if (interaction.customId === "openRecruit") {
     );
 
     return interaction.showModal(modal);
-}
+        }
+    }
+};
