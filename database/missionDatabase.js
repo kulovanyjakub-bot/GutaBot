@@ -2,14 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 
-
 const filePath =
     path.join(
         __dirname,
         "missions.json"
     );
-
-
 
 
 
@@ -44,9 +41,6 @@ function loadMissions(){
 
 
 
-
-
-
 function saveMissions(data){
 
 
@@ -70,11 +64,6 @@ function saveMissions(data){
 
 
 
-
-
-
-
-
 function createMission(mission){
 
 
@@ -88,17 +77,12 @@ function createMission(mission){
     );
 
 
-
     saveMissions(
         missions
     );
 
 
 }
-
-
-
-
 
 
 
@@ -131,7 +115,6 @@ function addParticipant(
 
 
 
-
     const exists =
         mission.participants.find(
 
@@ -144,11 +127,9 @@ function addParticipant(
 
     if(!exists){
 
-
         mission.participants.push(
             user
         );
-
 
     }
 
@@ -160,10 +141,6 @@ function addParticipant(
 
 
 }
-
-
-
-
 
 
 
@@ -196,7 +173,6 @@ function removeParticipant(
 
 
 
-
     mission.participants =
 
         mission.participants.filter(
@@ -208,34 +184,12 @@ function removeParticipant(
 
 
 
-
-
     saveMissions(
         missions
     );
 
 
 }
-
-
-
-
-
-
-
-
-
-function getMissions(){
-
-
-    return loadMissions();
-
-
-}
-
-
-
-
 
 
 
@@ -263,6 +217,13 @@ function getMission(id){
 
 
 
+function getMissions(){
+
+
+    return loadMissions();
+
+
+}
 
 
 
@@ -276,9 +237,8 @@ module.exports = {
 
     removeParticipant,
 
-    getMissions,
+    getMission,
 
-    getMission
-
+    getMissions
 
 };
