@@ -1,60 +1,26 @@
 const {
-    ButtonBuilder,
-    ButtonStyle,
-    ActionRowBuilder
+    EmbedBuilder
 } = require("discord.js");
 
 
+
 module.exports = async (interaction) => {
+
 
 
     // ===============================
     // PŘIJMOUT REKRUTA
     // ===============================
 
-    // ===============================
-// POHOVOR
-// ===============================
+    if (interaction.customId.startsWith("acceptRecruit_")) {
 
-if (interaction.customId.startsWith("interviewRecruit_")) {
-
-
-    const userId = interaction.customId.replace(
-        "interviewRecruit_",
-        ""
-    );
-
-
-    const member = await interaction.guild.members.fetch(userId);
-
-
-
-    await interaction.reply({
-
-        content:
-`${member}
-
-🎤 **Pohovor požadován**
-
-<@&1533447617957073117>
-
-Náborář prosím zahajte pohovor s uchazečem.`,
-
-        ephemeral: false
-
-    });
-
-
-
-    return;
-
-}
 
 
         const userId = interaction.customId.replace(
             "acceptRecruit_",
             ""
         );
+
 
 
         const member = await interaction.guild.members.fetch(userId);
@@ -85,7 +51,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 🎖 Byla ti přidělena role Rekrut.
 Vítej v jednotce!`,
 
-            embeds: interaction.message.embeds,
+            embeds: [],
 
             components: []
 
@@ -96,6 +62,8 @@ Vítej v jednotce!`,
         return;
 
     }
+
+
 
 
 
@@ -108,10 +76,12 @@ Vítej v jednotce!`,
     if (interaction.customId.startsWith("interviewRecruit_")) {
 
 
+
         const userId = interaction.customId.replace(
             "interviewRecruit_",
             ""
         );
+
 
 
         const member = await interaction.guild.members.fetch(userId);
@@ -123,13 +93,21 @@ Vítej v jednotce!`,
             content:
 `🎤 **Pohovor požaduje ${member}**
 
-<@701088576779059200>
-<@807310842713735178>
-<@1119313377257341129>
+<@&1533447617957073117>
 
-Prosím domluvte s uchazečem termín pohovoru.`,
+Náborář prosím zahajte pohovor s uchazečem.`,
 
-            ephemeral: false
+            allowedMentions: {
+
+                users: [
+                    member.id
+                ],
+
+                roles: [
+                    "1533447617957073117"
+                ]
+
+            }
 
         });
 
@@ -138,6 +116,8 @@ Prosím domluvte s uchazečem termín pohovoru.`,
         return;
 
     }
+
+
 
 
 
@@ -150,10 +130,12 @@ Prosím domluvte s uchazečem termín pohovoru.`,
     if (interaction.customId.startsWith("rejectRecruit_")) {
 
 
+
         const userId = interaction.customId.replace(
             "rejectRecruit_",
             ""
         );
+
 
 
         const member = await interaction.guild.members.fetch(userId);
@@ -165,7 +147,7 @@ Prosím domluvte s uchazečem termín pohovoru.`,
             content:
 `❌ ${member} byl odmítnut.`,
 
-            embeds: interaction.message.embeds,
+            embeds: [],
 
             components: []
 
@@ -173,18 +155,23 @@ Prosím domluvte s uchazečem termín pohovoru.`,
 
 
 
+
+
         setTimeout(() => {
+
 
             interaction.channel.delete()
                 .catch(() => {});
 
-        }, 5000);
+
+        },5000);
 
 
 
         return;
 
     }
+
 
 
 };
