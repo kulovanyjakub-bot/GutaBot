@@ -22,38 +22,52 @@ module.exports = {
         .setDescription("Vytvoří novou misi GUTALAX MILSIM")
 
 
-
         .addStringOption(option =>
             option
+
             .setName("nazev")
+
             .setDescription("Název mise")
+
             .setRequired(true)
+
         )
 
 
         .addStringOption(option =>
             option
+
             .setName("datum")
+
             .setDescription("Datum a čas mise")
+
             .setRequired(true)
+
         )
 
 
         .addStringOption(option =>
             option
+
             .setName("mapa")
+
             .setDescription("Mapa mise")
+
             .setRequired(true)
+
         )
 
 
         .addStringOption(option =>
             option
-            .setName("popis")
-            .setDescription("Popis mise")
-            .setRequired(true)
-        ),
 
+            .setName("popis")
+
+            .setDescription("Popis mise")
+
+            .setRequired(true)
+
+        ),
 
 
 
@@ -94,20 +108,6 @@ module.exports = {
 
 
 
-
-        await interaction.deferReply({
-
-            ephemeral:true
-
-        });
-
-
-
-
-
-
-
-
         const nazev =
             interaction.options.getString("nazev");
 
@@ -131,7 +131,6 @@ module.exports = {
 
         const missionId =
             Date.now().toString();
-
 
 
 
@@ -187,20 +186,16 @@ module.exports = {
             id:
             missionId,
 
-
             name:
             nazev,
 
-
             map:
             mapa,
-
 
             participants:
             []
 
         });
-
 
 
         console.log(
@@ -290,7 +285,6 @@ module.exports = {
 
                 }
 
-
             )
 
 
@@ -305,11 +299,9 @@ module.exports = {
 
         const buttons =
 
-
             new ActionRowBuilder()
 
             .addComponents(
-
 
 
                 new ButtonBuilder()
@@ -325,8 +317,6 @@ module.exports = {
                 .setStyle(
                     ButtonStyle.Success
                 ),
-
-
 
 
 
@@ -346,8 +336,6 @@ module.exports = {
 
 
 
-
-
                 new ButtonBuilder()
 
                 .setCustomId(
@@ -363,9 +351,7 @@ module.exports = {
                 )
 
 
-
             );
-
 
 
 
@@ -387,14 +373,15 @@ module.exports = {
 
 
 
-
         if(!channel){
 
 
-            return interaction.editReply({
+            return interaction.reply({
 
                 content:
-                "❌ Kanál misí nebyl nalezen."
+                "❌ Kanál misí nebyl nalezen.",
+
+                ephemeral:true
 
             });
 
@@ -408,40 +395,68 @@ module.exports = {
 
 
 
+        const message =
 
-        await channel.send({
-
-            content:
-            "@everyone",
+            await channel.send({
 
 
-
-            embeds:[
-
-                embed
-
-            ],
+                content:
+                "@everyone",
 
 
 
-            components:[
+                embeds:[
 
-                buttons
+                    embed
 
-            ],
+                ],
 
 
 
-            allowedMentions:{
+                components:[
 
-                parse:[
+                    buttons
 
-                    "everyone"
+                ],
 
-                ]
 
-            }
 
+                allowedMentions:{
+
+                    parse:[
+
+                        "everyone"
+
+                    ]
+
+                }
+
+
+            });
+
+
+
+
+
+
+
+        console.log(
+            "✅ MISE ODESLÁNA DO KANÁLU:"
+        );
+
+
+        console.log({
+
+            message:
+            message.id,
+
+
+            channel:
+            channel.id,
+
+
+            name:
+            channel.name
 
         });
 
@@ -452,15 +467,14 @@ module.exports = {
 
 
 
-
-        await interaction.editReply({
+        await interaction.reply({
 
             content:
-            "✅ Mise vytvořena."
+            "✅ Mise vytvořena.",
+
+            ephemeral:true
 
         });
-
-
 
 
 
