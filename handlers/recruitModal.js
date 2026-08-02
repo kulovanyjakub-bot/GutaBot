@@ -28,12 +28,15 @@ module.exports = async (interaction) => {
     }
 
 
-
     const vek = interaction.fields.getTextInputValue("vek");
     const platforma = interaction.fields.getTextInputValue("platforma");
     const mikrofon = interaction.fields.getTextInputValue("mikrofon");
     const zkusenosti = interaction.fields.getTextInputValue("zkusenosti");
     const proc = interaction.fields.getTextInputValue("proc");
+
+
+    // načte členy aby Discord znal ID uživatelů
+    await guild.members.fetch();
 
 
 
@@ -47,7 +50,7 @@ module.exports = async (interaction) => {
         permissionOverwrites: [
 
             {
-                id: guild.roles.everyone.id,
+                id: guild.id,
 
                 deny: [
                     PermissionsBitField.Flags.ViewChannel
@@ -156,7 +159,6 @@ module.exports = async (interaction) => {
                 .setStyle(ButtonStyle.Success),
 
 
-
             new ButtonBuilder()
 
                 .setCustomId(`interviewRecruit_${interaction.user.id}`)
@@ -164,7 +166,6 @@ module.exports = async (interaction) => {
                 .setLabel("🎤 Pohovor")
 
                 .setStyle(ButtonStyle.Primary),
-
 
 
             new ButtonBuilder()
