@@ -24,37 +24,25 @@ module.exports = {
 
         .addStringOption(option =>
             option
-
             .setName("nazev")
-
             .setDescription("Název výcviku")
-
             .setRequired(true)
-
         )
 
 
         .addStringOption(option =>
             option
-
             .setName("datum")
-
             .setDescription("Datum a čas výcviku")
-
             .setRequired(true)
-
         )
 
 
         .addStringOption(option =>
             option
-
             .setName("popis")
-
             .setDescription("Popis výcviku")
-
             .setRequired(true)
-
         ),
 
 
@@ -87,6 +75,19 @@ module.exports = {
 
 
         }
+
+
+
+
+
+
+        await interaction.deferReply({
+
+            ephemeral:true
+
+        });
+
+
 
 
 
@@ -148,7 +149,6 @@ module.exports = {
 
 
 
-        // TEST DATABASE
 
         console.log(
             "=============================="
@@ -162,11 +162,11 @@ module.exports = {
 
         console.log({
 
-            id: trainingId,
+            id:trainingId,
 
-            name: nazev,
+            name:nazev,
 
-            participants: []
+            participants:[]
 
         });
 
@@ -185,6 +185,7 @@ module.exports = {
         console.log(
             "=============================="
         );
+
 
 
 
@@ -320,12 +321,10 @@ module.exports = {
         if(!channel){
 
 
-            return interaction.reply({
+            return interaction.editReply({
 
                 content:
-                "❌ Kanál výcviků nebyl nalezen.",
-
-                ephemeral:true
+                "❌ Kanál výcviků nebyl nalezen."
 
             });
 
@@ -378,12 +377,10 @@ module.exports = {
 
 
 
-        await interaction.reply({
+        await interaction.editReply({
 
             content:
-            "✅ Výcvik vytvořen.",
-
-            ephemeral:true
+            "✅ Výcvik vytvořen."
 
         });
 
