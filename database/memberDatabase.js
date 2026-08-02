@@ -13,7 +13,6 @@ const filePath =
 
 
 
-
 function loadMembers(){
 
 
@@ -178,8 +177,18 @@ function updateMember(id,data){
 function addTraining(id){
 
 
-    let member =
-        getMember(id);
+    let members =
+        loadMembers();
+
+
+
+    const member =
+        members.find(
+
+            m =>
+            m.id === id
+
+        );
 
 
 
@@ -188,7 +197,17 @@ function addTraining(id){
 
 
 
+    if(!member.trainings){
+
+        member.trainings = 0;
+
+    }
+
+
+
     member.trainings++;
+
+
 
 
     member.lastActivity =
@@ -196,12 +215,9 @@ function addTraining(id){
 
 
 
-    updateMember(
 
-        id,
-
-        member
-
+    saveMembers(
+        members
     );
 
 
@@ -217,8 +233,18 @@ function addTraining(id){
 function addMission(id){
 
 
-    let member =
-        getMember(id);
+    let members =
+        loadMembers();
+
+
+
+    const member =
+        members.find(
+
+            m =>
+            m.id === id
+
+        );
 
 
 
@@ -227,7 +253,17 @@ function addMission(id){
 
 
 
+    if(!member.missions){
+
+        member.missions = 0;
+
+    }
+
+
+
     member.missions++;
+
+
 
 
     member.lastActivity =
@@ -235,12 +271,9 @@ function addMission(id){
 
 
 
-    updateMember(
 
-        id,
-
-        member
-
+    saveMembers(
+        members
     );
 
 
