@@ -2,16 +2,24 @@ const fs = require("fs");
 const path = require("path");
 
 
-const filePath = path.join(
-    __dirname,
-    "members.json"
-);
+
+const filePath =
+    path.join(
+        __dirname,
+        "members.json"
+    );
 
 
 
-function loadMembers() {
 
-    if (!fs.existsSync(filePath)) {
+
+
+function loadMembers(){
+
+
+    if(
+        !fs.existsSync(filePath)
+    ){
 
         fs.writeFileSync(
             filePath,
@@ -21,20 +29,16 @@ function loadMembers() {
     }
 
 
-    const data = fs.readFileSync(
-        filePath,
-        "utf8"
+
+    return JSON.parse(
+
+        fs.readFileSync(
+            filePath,
+            "utf8"
+        )
+
     );
 
-
-    if (!data) {
-
-        return [];
-
-    }
-
-
-    return JSON.parse(data);
 
 }
 
@@ -42,7 +46,9 @@ function loadMembers() {
 
 
 
-function saveMembers(data) {
+
+
+function saveMembers(data){
 
 
     fs.writeFileSync(
@@ -66,70 +72,93 @@ function saveMembers(data) {
 
 
 
-function addMember(member) {
 
 
-    console.log(
-        "📥 Ukládám člena:",
+
+function getMember(id){
+
+
+    const members =
+        loadMembers();
+
+
+
+    return members.find(
+
+        m =>
+        m.id === id
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+function createMember(member){
+
+
+    const members =
+        loadMembers();
+
+
+
+    members.push(
         member
     );
 
 
-    const members = loadMembers();
 
-
-    // ochrana proti duplicitě
-
-    const exists = members.find(
-        m => m.id === member.id
+    saveMembers(
+        members
     );
 
 
-    if (exists) {
+}
 
-        console.log(
-            "⚠️ Člen už existuje:",
-            member.id
+
+
+
+
+
+
+
+function updateMember(id,data){
+
+
+    const members =
+        loadMembers();
+
+
+
+    const index =
+        members.findIndex(
+
+            m =>
+            m.id === id
+
         );
 
+
+
+    if(index === -1)
         return;
 
-    }
 
 
+    members[index] = {
 
-    members.push(member);
+        ...members[index],
 
+        ...data
 
+    };
 
-    saveMembers(
-        members
-    );
-
-
-
-    console.log(
-        "✅ Člen uložen"
-    );
-
-
-}
-
-
-
-
-
-function removeMember(id) {
-
-
-    let members = loadMembers();
-
-
-    members = members.filter(
-
-        m => m.id !== id
-
-    );
 
 
     saveMembers(
@@ -143,13 +172,82 @@ function removeMember(id) {
 
 
 
-function getMembers() {
 
 
-    return loadMembers();
+
+function addTraining(id){
+
+
+    let member =
+        getMember(id);
+
+
+
+    if(!member)
+        return;
+
+
+
+    member.trainings++;
+
+
+    member.lastActivity =
+        new Date().toISOString();
+
+
+
+    updateMember(
+
+        id,
+
+        member
+
+    );
 
 
 }
+
+
+
+
+
+
+
+
+function addMission(id){
+
+
+    let member =
+        getMember(id);
+
+
+
+    if(!member)
+        return;
+
+
+
+    member.missions++;
+
+
+    member.lastActivity =
+        new Date().toISOString();
+
+
+
+    updateMember(
+
+        id,
+
+        member
+
+    );
+
+
+}
+
+
+
 
 
 
@@ -157,10 +255,18 @@ function getMembers() {
 
 module.exports = {
 
-    addMember,
 
-    removeMember,
+    loadMembers,
 
-    getMembers
+    getMember,
+
+    createMember,
+
+    updateMember,
+
+    addTraining,
+
+    addMission
+
 
 };
