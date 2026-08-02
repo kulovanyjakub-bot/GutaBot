@@ -1,45 +1,140 @@
-module.exports = async (interaction, client) => {
+module.exports = async (interaction) => {
 
 
-    // OTEVŘENÍ FORMULÁŘE
+    // ==========================
+    // PŘIJMOUT REKRUTA
+    // ==========================
 
-    if (
-        interaction.isButton() &&
-        interaction.customId === "openRecruit"
-    ) {
+    if (interaction.customId.startsWith("acceptRecruit_")) {
 
-        const openRecruit = require("../handlers/openRecruit");
 
-        return openRecruit(interaction);
+        const userId = interaction.customId.replace(
+            "acceptRecruit_",
+            ""
+        );
+
+
+        const member = await interaction.guild.members.fetch(userId);
+
+
+
+        await member.roles.add(
+            "1458487234989654201"
+        );
+
+
+
+        await interaction.update({
+
+            content:
+            `✅ ${member} byl přijat do GUTALAX MILSIM.`,
+
+            embeds: interaction.message.embeds,
+
+            components: []
+
+        });
+
+
+
+        return;
 
     }
 
 
 
-    // ODESLÁNÍ FORMULÁŘE
 
-    if (
-        interaction.isModalSubmit() &&
-        interaction.customId === "recruitForm"
-    ) {
 
-        const recruitModal = require("../handlers/recruitModal");
+    // ==========================
+    // POHOVOR
+    // ==========================
 
-        return recruitModal(interaction);
+    if (interaction.customId.startsWith("interviewRecruit_")) {
+
+
+        const userId = interaction.customId.replace(
+            "interviewRecruit_",
+            ""
+        );
+
+
+
+        // zabrání timeoutu Discordu
+        await interaction.deferReply();
+
+
+
+        const member =
+            await interaction.guild.members.fetch(userId);
+
+
+
+        await interaction.editReply({
+
+            content:
+`${member}
+
+🎤 Uchazeč byl pozván na pohovor.
+
+<@&1533447617957073117> prosím kontaktujte uchazeče.`
+
+        });
+
+
+
+        return;
 
     }
 
 
 
-    // TLAČÍTKA V TICKETU
 
-    if (
-        interaction.isButton()
-    ) {
 
-        const recruitButtons = require("../handlers/recruitButtons");
+    // ==========================
+    // ODMÍTNOUT
+    // ==========================
 
-        return recruitButtons(interaction);
+    if (interaction.customId.startsWith("rejectRecruit_")) {
+
+
+
+        const userId = interaction.customId.replace(
+            "rejectRecruit_",
+            ""
+        );
+
+
+
+        const member =
+            await interaction.guild.members.fetch(userId);
+
+
+
+        await interaction.update({
+
+            content:
+            `❌ ${member} byl odmítnut.`,
+
+            embeds: interaction.message.embeds,
+
+            components: []
+
+        });
+
+
+
+        setTimeout(() => {
+
+
+            interaction.channel.delete()
+                .catch(() => {});
+
+
+        }, 5000);
+
+
+
+        return;
 
     }
 
