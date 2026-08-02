@@ -126,7 +126,46 @@ function createMember(member){
 
 
         members.push(
-            member
+
+            {
+
+                id:
+                member.id,
+
+
+                username:
+                member.username || "Neznámý",
+
+
+                trainings:
+                member.trainings || 0,
+
+
+                missions:
+                member.missions || 0,
+
+
+                rank:
+                member.rank || "Rekrut",
+
+
+                activity:
+                member.activity || 0,
+
+
+                teamwork:
+                member.teamwork || 0,
+
+
+                joined:
+                member.joined || new Date().toISOString(),
+
+
+                lastActivity:
+                member.lastActivity || new Date().toISOString()
+
+            }
+
         );
 
 
@@ -237,6 +276,15 @@ function addTraining(
             missions:0,
 
 
+            rank:"Rekrut",
+
+
+            activity:0,
+
+
+            teamwork:0,
+
+
             joined:
             new Date().toISOString(),
 
@@ -266,9 +314,7 @@ function addTraining(
         }
 
 
-
         member.trainings++;
-
 
 
         member.lastActivity =
@@ -336,6 +382,15 @@ function addMission(
             missions:1,
 
 
+            rank:"Rekrut",
+
+
+            activity:0,
+
+
+            teamwork:0,
+
+
             joined:
             new Date().toISOString(),
 
@@ -365,9 +420,7 @@ function addMission(
         }
 
 
-
         member.missions++;
-
 
 
         member.lastActivity =
@@ -376,6 +429,104 @@ function addMission(
 
     }
 
+
+
+
+    saveMembers(
+        members
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+function updateEvaluation(
+    id,
+    activity,
+    teamwork
+){
+
+
+    const members =
+        loadMembers();
+
+
+
+    const member =
+        members.find(
+
+            m =>
+            m.id === id
+
+        );
+
+
+
+    if(!member)
+        return;
+
+
+
+    member.activity =
+    activity;
+
+
+
+    member.teamwork =
+    teamwork;
+
+
+
+    saveMembers(
+        members
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+function updateRank(
+    id,
+    rank
+){
+
+
+    const members =
+        loadMembers();
+
+
+
+    const member =
+        members.find(
+
+            m =>
+            m.id === id
+
+        );
+
+
+
+    if(!member)
+        return;
+
+
+
+    member.rank =
+    rank;
 
 
 
@@ -407,7 +558,11 @@ module.exports = {
 
     addTraining,
 
-    addMission
+    addMission,
+
+    updateEvaluation,
+
+    updateRank
 
 
 };
