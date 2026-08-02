@@ -27,7 +27,7 @@ module.exports = async (interaction) => {
 
 
 
-            // přidání role Rekrut
+            // Přidání role Rekrut
 
             await member.roles.add(
                 "1458487234989654201"
@@ -35,13 +35,93 @@ module.exports = async (interaction) => {
 
 
 
-            // přejmenování ticketu
+            // Přejmenování ticketu
 
             await interaction.channel.setName(
                 `rekrut-${member.user.username}`
             ).catch(() => {});
 
 
+
+
+
+            // ===============================
+            // LOG NÁBORU
+            // ===============================
+
+
+            const logChannel =
+                interaction.guild.channels.cache.get(
+                    "1533447352684380361"
+                );
+
+
+
+            const logEmbed = new EmbedBuilder()
+
+                .setColor("Green")
+
+                .setTitle("✅ Rekrut přijat")
+
+                .addFields(
+
+                    {
+                        name: "Uchazeč",
+                        value: `${member}`,
+                        inline: true
+                    },
+
+
+                    {
+                        name: "Přijal",
+                        value: `${interaction.user}`,
+                        inline: true
+                    },
+
+
+                    {
+                        name: "Role",
+                        value: "<@&1458487234989654201>",
+                        inline: true
+                    }
+
+                )
+
+                .setTimestamp();
+
+
+
+
+
+            if (logChannel) {
+
+
+                await logChannel.send({
+
+                    embeds: [
+                        logEmbed
+                    ]
+
+                });
+
+
+            } else {
+
+
+                console.log(
+                    "❌ Nenašel se log kanál"
+                );
+
+
+            }
+
+
+
+
+
+
+
+            // Upravení ticket zprávy
 
             const embed = new EmbedBuilder()
 
@@ -69,6 +149,8 @@ Vítej v jednotce!`
 
 
 
+
+
             await interaction.update({
 
                 content: null,
@@ -93,11 +175,13 @@ Vítej v jednotce!`
 
 
 
+
         // ===============================
         // POHOVOR
         // ===============================
 
         if (interaction.customId.startsWith("interviewRecruit_")) {
+
 
 
             const userId = interaction.customId.replace(
@@ -106,8 +190,10 @@ Vítej v jednotce!`
             );
 
 
+
             const member =
                 await interaction.guild.members.fetch(userId);
+
 
 
 
@@ -146,11 +232,13 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+
         // ===============================
         // ODMÍTNOUT
         // ===============================
 
         if (interaction.customId.startsWith("rejectRecruit_")) {
+
 
 
             const userId = interaction.customId.replace(
@@ -159,22 +247,32 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             );
 
 
+
             const member =
                 await interaction.guild.members.fetch(userId);
 
 
 
-            const embed = new EmbedBuilder()
+
+            const logChannel =
+                interaction.guild.channels.cache.get(
+                    "1533447352684380361"
+                );
+
+
+
+            const logEmbed = new EmbedBuilder()
 
                 .setColor("Red")
 
                 .setTitle("❌ Uchazeč odmítnut")
 
-                .setDescription(
-`${member} nebyl přijat do GUTALAX MILSIM.`
-                )
-
                 .addFields(
+
+                    {
+                        name: "Uchazeč",
+                        value: `${member}`
+                    },
 
                     {
                         name: "Rozhodl",
@@ -187,13 +285,29 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+
+            if(logChannel){
+
+                await logChannel.send({
+
+                    embeds:[
+                        logEmbed
+                    ]
+
+                });
+
+            }
+
+
+
+
+
             await interaction.update({
 
-                content: null,
+                content:
+                `❌ ${member} byl odmítnut.`,
 
-                embeds: [
-                    embed
-                ],
+                embeds: [],
 
                 components: []
 
@@ -201,7 +315,10 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+
+
             setTimeout(() => {
+
 
                 interaction.channel.delete()
                 .catch(() => {});
@@ -217,6 +334,8 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+
+
     } catch(err) {
 
 
@@ -229,13 +348,16 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-        if (!interaction.replied && !interaction.deferred) {
+        if(
+            !interaction.replied &&
+            !interaction.deferred
+        ){
 
 
             await interaction.reply({
 
                 content:
-                "❌ Nastala chyba při zpracování tlačítka.",
+                "❌ Chyba při zpracování tlačítka.",
 
                 ephemeral:true
 
