@@ -12,10 +12,13 @@ const memberDB =
 
 
 
+
+
 module.exports = async (interaction) => {
 
 
     try {
+
 
 
         console.log(
@@ -27,14 +30,19 @@ module.exports = async (interaction) => {
 
 
 
-        // ===============================
-        // ÚČAST NA MISI
-        // ===============================
+
+
+        // =================================
+        // PŘIHLÁŠENÍ NA MISI
+        // =================================
 
 
         if(
-            interaction.customId.startsWith("missionJoin_")
+            interaction.customId.startsWith(
+                "missionJoin_"
+            )
         ){
+
 
 
             const missionId =
@@ -42,6 +50,7 @@ module.exports = async (interaction) => {
                     "missionJoin_",
                     ""
                 );
+
 
 
 
@@ -66,10 +75,16 @@ module.exports = async (interaction) => {
 
 
 
+
             const embed =
                 EmbedBuilder.from(
+
                     interaction.message.embeds[0]
+
                 );
+
+
+
 
 
 
@@ -83,14 +98,23 @@ module.exports = async (interaction) => {
 
 
 
+
+
+
+
             let users =
+
+
                 field.value === "Nikdo přihlášen"
+
 
                 ?
 
                 []
 
+
                 :
+
 
                 field.value.split("\n");
 
@@ -98,8 +122,16 @@ module.exports = async (interaction) => {
 
 
 
+
+
+
             const entry =
+
                 `🪖 ${interaction.user.username}`;
+
+
+
+
 
 
 
@@ -107,14 +139,23 @@ module.exports = async (interaction) => {
                 !users.includes(entry)
             ){
 
+
                 users.push(entry);
+
 
             }
 
 
 
+
+
+
+
             field.value =
+
                 users.join("\n");
+
+
 
 
 
@@ -132,7 +173,10 @@ module.exports = async (interaction) => {
 
 
 
+
+
             return;
+
 
         }
 
@@ -144,13 +188,15 @@ module.exports = async (interaction) => {
 
 
 
-        // ===============================
+        // =================================
         // ODHLÁŠENÍ Z MISE
-        // ===============================
+        // =================================
 
 
         if(
-            interaction.customId.startsWith("missionLeave_")
+            interaction.customId.startsWith(
+                "missionLeave_"
+            )
         ){
 
 
@@ -160,6 +206,8 @@ module.exports = async (interaction) => {
                     "missionLeave_",
                     ""
                 );
+
+
 
 
 
@@ -176,10 +224,15 @@ module.exports = async (interaction) => {
 
 
 
+
             const embed =
                 EmbedBuilder.from(
+
                     interaction.message.embeds[0]
+
                 );
+
+
 
 
 
@@ -196,14 +249,21 @@ module.exports = async (interaction) => {
 
 
 
+
+
             let users =
+
+
                 field.value === "Nikdo přihlášen"
+
 
                 ?
 
                 []
 
+
                 :
+
 
                 field.value.split("\n");
 
@@ -212,7 +272,9 @@ module.exports = async (interaction) => {
 
 
 
+
             users =
+
                 users.filter(
 
                     u =>
@@ -227,7 +289,10 @@ module.exports = async (interaction) => {
 
 
 
+
+
             field.value =
+
 
                 users.length
 
@@ -235,9 +300,11 @@ module.exports = async (interaction) => {
 
                 users.join("\n")
 
+
                 :
 
                 "Nikdo přihlášen";
+
 
 
 
@@ -258,7 +325,9 @@ module.exports = async (interaction) => {
 
 
 
+
             return;
+
 
         }
 
@@ -270,14 +339,18 @@ module.exports = async (interaction) => {
 
 
 
-        // ===============================
+        // =================================
         // UKONČENÍ MISE
-        // ===============================
+        // =================================
 
 
         if(
-            interaction.customId.startsWith("missionClose_")
+            interaction.customId.startsWith(
+                "missionClose_"
+            )
         ){
+
+
 
 
 
@@ -289,9 +362,11 @@ module.exports = async (interaction) => {
 
 
             if(
+
                 !interaction.member.roles.cache.has(
                     milsimRole
                 )
+
             ){
 
 
@@ -300,7 +375,9 @@ module.exports = async (interaction) => {
                     content:
                     "❌ Pouze MILSIM může ukončit misi.",
 
+
                     ephemeral:true
+
 
                 });
 
@@ -313,12 +390,16 @@ module.exports = async (interaction) => {
 
 
 
-
             const missionId =
+
                 interaction.customId.replace(
+
                     "missionClose_",
+
                     ""
+
                 );
+
 
 
 
@@ -327,8 +408,11 @@ module.exports = async (interaction) => {
 
 
             const mission =
+
                 missionDB.getMission(
+
                     missionId
+
                 );
 
 
@@ -336,15 +420,14 @@ module.exports = async (interaction) => {
 
 
 
-            console.log(
-                "UKONČUJI MISI:",
-                JSON.stringify(
-                    mission,
-                    null,
-                    4
-                )
-            );
 
+            console.log(
+
+                "UKONČUJI MISI:",
+
+                mission
+
+            );
 
 
 
@@ -358,9 +441,13 @@ module.exports = async (interaction) => {
 
 
                 console.log(
+
                     "ÚČASTNÍCI MISE:",
+
                     mission.participants
+
                 );
+
 
 
 
@@ -371,21 +458,38 @@ module.exports = async (interaction) => {
 
 
 
+
+
                     console.log(
+
                         "PŘIDÁVÁM MISI:",
+
                         member.id,
+
                         member.username
+
                     );
+
+
+
+
 
 
 
                     memberDB.addMission(
-                        member.id
+
+                        member.id,
+
+                        member.username
+
                     );
 
 
 
+
+
                 }
+
 
 
             }
@@ -399,10 +503,12 @@ module.exports = async (interaction) => {
 
 
             const archive =
-                interaction.guild.channels.cache.get(
-                    "1533538567756972163"
-                );
 
+                interaction.guild.channels.cache.get(
+
+                    "1533538567756972163"
+
+                );
 
 
 
@@ -413,10 +519,13 @@ module.exports = async (interaction) => {
             if(archive){
 
 
+
                 await archive.send({
 
                     embeds:
+
                     interaction.message.embeds
+
 
                 });
 
@@ -430,14 +539,19 @@ module.exports = async (interaction) => {
 
 
 
+
             await interaction.update({
 
                 content:
+
                 "🔒 Mise ukončena. Statistiky účastníků aktualizovány.",
 
 
+
                 embeds:
+
                 interaction.message.embeds,
+
 
 
                 components:[]
@@ -448,7 +562,10 @@ module.exports = async (interaction) => {
 
 
 
+
+
             return;
+
 
         }
 
@@ -457,9 +574,11 @@ module.exports = async (interaction) => {
 
 
 
-
     }
+
+
     catch(err){
+
 
 
         console.error(
@@ -474,25 +593,34 @@ module.exports = async (interaction) => {
 
 
         if(
+
             !interaction.replied &&
+
             !interaction.deferred
+
         ){
 
 
-            interaction.reply({
+            await interaction.reply({
 
                 content:
+
                 "❌ Chyba při zpracování mise.",
+
 
                 ephemeral:true
 
+
             }).catch(()=>{});
+
 
 
         }
 
 
+
     }
+
 
 
 };
