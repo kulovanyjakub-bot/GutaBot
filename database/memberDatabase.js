@@ -11,34 +11,51 @@ const filePath = path.join(
 
 function loadMembers() {
 
+
     if (!fs.existsSync(filePath)) {
+
         fs.writeFileSync(
             filePath,
-            "[]"
+            "{}"
         );
+
     }
 
 
+
     return JSON.parse(
-        fs.readFileSync(filePath)
+        fs.readFileSync(
+            filePath,
+            "utf8"
+        )
     );
 
+
 }
+
+
 
 
 
 function saveMembers(data) {
 
+
     fs.writeFileSync(
+
         filePath,
+
         JSON.stringify(
             data,
             null,
             4
         )
+
     );
 
+
 }
+
+
 
 
 
@@ -48,44 +65,81 @@ function addMember(member) {
     const members = loadMembers();
 
 
-    members.push(member);
+
+    members[member.id] = member;
 
 
-    saveMembers(members);
+
+    saveMembers(
+        members
+    );
+
 
 }
+
+
 
 
 
 function removeMember(id) {
 
 
-    let members = loadMembers();
+    const members = loadMembers();
 
 
-    members = members.filter(
-        m => m.id !== id
+
+    delete members[id];
+
+
+
+    saveMembers(
+        members
     );
 
 
-    saveMembers(members);
+}
+
+
+
+
+
+function getMember(id) {
+
+
+    const members = loadMembers();
+
+
+
+    return members[id];
 
 }
+
+
 
 
 
 function getMembers() {
 
+
     return loadMembers();
+
 
 }
 
 
 
+
+
 module.exports = {
 
+
     addMember,
+
     removeMember,
+
+    getMember,
+
     getMembers
+
 
 };
