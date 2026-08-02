@@ -27,21 +27,55 @@ module.exports = async (interaction) => {
 
 
 
+            // přidání role Rekrut
+
             await member.roles.add(
                 "1458487234989654201"
             );
 
 
 
+            // přejmenování ticketu
+
+            await interaction.channel.setName(
+                `rekrut-${member.user.username}`
+            ).catch(() => {});
+
+
+
+            const embed = new EmbedBuilder()
+
+                .setColor("Green")
+
+                .setTitle("✅ Rekrut přijat")
+
+                .setDescription(
+`${member} byl přijat do **GUTALAX MILSIM**.
+
+🎖 Byla mu přidělena role **Rekrut**.
+Vítej v jednotce!`
+                )
+
+                .addFields(
+
+                    {
+                        name: "Přijal",
+                        value: `${interaction.user}`
+                    }
+
+                )
+
+                .setTimestamp();
+
+
+
             await interaction.update({
 
-                content:
-`✅ ${member} byl přijat do GUTALAX MILSIM.
+                content: null,
 
-🎖 Byla ti přidělena role Rekrut.
-Vítej v jednotce!`,
-
-                embeds: [],
+                embeds: [
+                    embed
+                ],
 
                 components: []
 
@@ -130,12 +164,36 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+            const embed = new EmbedBuilder()
+
+                .setColor("Red")
+
+                .setTitle("❌ Uchazeč odmítnut")
+
+                .setDescription(
+`${member} nebyl přijat do GUTALAX MILSIM.`
+                )
+
+                .addFields(
+
+                    {
+                        name: "Rozhodl",
+                        value: `${interaction.user}`
+                    }
+
+                )
+
+                .setTimestamp();
+
+
+
             await interaction.update({
 
-                content:
-`❌ ${member} byl odmítnut.`,
+                content: null,
 
-                embeds: [],
+                embeds: [
+                    embed
+                ],
 
                 components: []
 
@@ -146,7 +204,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             setTimeout(() => {
 
                 interaction.channel.delete()
-                .catch(()=>{});
+                .catch(() => {});
 
 
             },5000);
@@ -166,20 +224,18 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             "❌ RECRUIT BUTTON ERROR:"
         );
 
+
         console.error(err);
 
 
 
-        if (
-            !interaction.replied &&
-            !interaction.deferred
-        ) {
+        if (!interaction.replied && !interaction.deferred) {
 
 
             await interaction.reply({
 
                 content:
-                "❌ Chyba při zpracování tlačítka.",
+                "❌ Nastala chyba při zpracování tlačítka.",
 
                 ephemeral:true
 
