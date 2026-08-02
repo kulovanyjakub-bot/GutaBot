@@ -8,6 +8,13 @@ const {
 } = require("discord.js");
 
 
+
+const TICKET_CATEGORY_ID = "1533445763747807332";
+
+const RECRUITER_ROLE_ID = "1533447617957073117";
+
+
+
 module.exports = async (interaction) => {
 
 
@@ -26,101 +33,42 @@ module.exports = async (interaction) => {
     );
 
 
-    if (existing) {
+
+    if(existing){
+
 
         return interaction.editReply({
 
-            content: `❌ Už máš otevřený ticket: ${existing}`
+            content:
+            `❌ Už máš otevřený ticket: ${existing}`
 
         });
+
 
     }
 
 
 
-    const vek = interaction.fields.getTextInputValue("vek");
-
-    const platforma = interaction.fields.getTextInputValue("platforma");
-
-    const mikrofon = interaction.fields.getTextInputValue("mikrofon");
-
-    const zkusenosti = interaction.fields.getTextInputValue("zkusenosti");
-
-    const proc = interaction.fields.getTextInputValue("proc");
 
 
+    const vek =
+        interaction.fields.getTextInputValue("vek");
 
 
-
-    const channel = await guild.channels.create({
-
-        name: `ticket-${interaction.user.id}`,
-
-        type: ChannelType.GuildText,
+    const platforma =
+        interaction.fields.getTextInputValue("platforma");
 
 
-        // KATEGORIE NÁBOR
-        parent: "1533445763747807332",
+    const mikrofon =
+        interaction.fields.getTextInputValue("mikrofon");
 
 
-
-        permissionOverwrites: [
-
-
-            // skryje před všemi
-            {
-                id: guild.roles.everyone.id,
-
-                deny: [
-
-                    PermissionsBitField.Flags.ViewChannel
-
-                ]
-
-            },
+    const zkusenosti =
+        interaction.fields.getTextInputValue("zkusenosti");
 
 
-
-            // uchazeč
-            {
-                id: interaction.user.id,
-
-                allow: [
-
-                    PermissionsBitField.Flags.ViewChannel,
-
-                    PermissionsBitField.Flags.SendMessages,
-
-                    PermissionsBitField.Flags.ReadMessageHistory
-
-                ]
-
-            },
-
-
-
-            // náboráři
-            {
-                id: "1533447617957073117",
-
-                allow: [
-
-                    PermissionsBitField.Flags.ViewChannel,
-
-                    PermissionsBitField.Flags.SendMessages,
-
-                    PermissionsBitField.Flags.ReadMessageHistory,
-
-                    PermissionsBitField.Flags.ManageMessages
-
-                ]
-
-            }
-
-
-        ]
-
-    });
+    const proc =
+        interaction.fields.getTextInputValue("proc");
 
 
 
@@ -128,43 +76,155 @@ module.exports = async (interaction) => {
 
 
 
-    const embed = new EmbedBuilder()
+    const channel =
+        await guild.channels.create({
+
+
+            name:
+            `ticket-${interaction.user.id}`,
+
+
+            type:
+            ChannelType.GuildText,
+
+
+
+            parent:
+            TICKET_CATEGORY_ID,
+
+
+
+            permissionOverwrites:[
+
+
+
+                {
+
+                    id:
+                    guild.roles.everyone.id,
+
+
+                    deny:[
+
+                        PermissionsBitField.Flags.ViewChannel
+
+                    ]
+
+                },
+
+
+
+
+                // UCHAZEČ
+
+                {
+
+                    id:
+                    interaction.user.id,
+
+
+                    allow:[
+
+                        PermissionsBitField.Flags.ViewChannel,
+
+                        PermissionsBitField.Flags.SendMessages,
+
+                        PermissionsBitField.Flags.ReadMessageHistory
+
+                    ]
+
+                },
+
+
+
+
+
+                // NÁBORÁŘ
+
+                {
+
+                    id:
+                    RECRUITER_ROLE_ID,
+
+
+                    allow:[
+
+                        PermissionsBitField.Flags.ViewChannel,
+
+                        PermissionsBitField.Flags.SendMessages,
+
+                        PermissionsBitField.Flags.ReadMessageHistory
+
+                    ]
+
+                }
+
+
+            ]
+
+
+        });
+
+
+
+
+
+
+
+
+
+    const embed =
+        new EmbedBuilder()
+
 
         .setColor("#d4a017")
 
-        .setTitle("🎖 Nová přihláška GUTALAX MILSIM")
 
-        .setDescription(`Žadatel: ${interaction.user}`)
+        .setTitle(
+            "🎖 Nová přihláška"
+        )
+
+
+        .setDescription(
+            `Žadatel: ${interaction.user}`
+        )
 
 
         .addFields(
 
-            {
-                name: "Věk",
-                value: vek
-            },
 
             {
-                name: "Platforma",
-                value: platforma
+                name:"Věk",
+                value:vek
             },
 
-            {
-                name: "Mikrofon",
-                value: mikrofon
-            },
 
             {
-                name: "Zkušenosti s MILSIM",
-                value: zkusenosti
+                name:"Platforma",
+                value:platforma
             },
 
+
             {
-                name: "Proč se chce přidat",
-                value: proc
+                name:"Mikrofon",
+                value:mikrofon
+            },
+
+
+            {
+                name:"Zkušenosti",
+                value:zkusenosti
+            },
+
+
+            {
+                name:"Proč se chce přidat",
+                value:proc
             }
 
+
         )
+
 
         .setTimestamp();
 
@@ -174,38 +234,84 @@ module.exports = async (interaction) => {
 
 
 
-    const buttons = new ActionRowBuilder()
+
+
+    const buttons =
+        new ActionRowBuilder()
 
         .addComponents(
 
 
-            new ButtonBuilder()
-
-                .setCustomId(`acceptRecruit_${interaction.user.id}`)
-
-                .setLabel("✅ Přijmout")
-
-                .setStyle(ButtonStyle.Success),
-
 
 
             new ButtonBuilder()
 
-                .setCustomId(`interviewRecruit_${interaction.user.id}`)
+            .setCustomId(
+                `acceptRecruit_${interaction.user.id}`
+            )
 
-                .setLabel("🎤 Pohovor")
+            .setLabel(
+                "✅ Přijmout"
+            )
 
-                .setStyle(ButtonStyle.Primary),
+            .setStyle(
+                ButtonStyle.Success
+            ),
+
+
 
 
 
             new ButtonBuilder()
 
-                .setCustomId(`rejectRecruit_${interaction.user.id}`)
+            .setCustomId(
+                `interviewRecruit_${interaction.user.id}`
+            )
 
-                .setLabel("❌ Odmítnout")
+            .setLabel(
+                "🎤 Pohovor"
+            )
 
-                .setStyle(ButtonStyle.Danger)
+            .setStyle(
+                ButtonStyle.Primary
+            ),
+
+
+
+
+
+            new ButtonBuilder()
+
+            .setCustomId(
+                `rejectRecruit_${interaction.user.id}`
+            )
+
+            .setLabel(
+                "❌ Odmítnout"
+            )
+
+            .setStyle(
+                ButtonStyle.Danger
+            ),
+
+
+
+
+
+            new ButtonBuilder()
+
+            .setCustomId(
+                "closeRecruitTicket"
+            )
+
+            .setLabel(
+                "🔒 Uzavřít ticket"
+            )
+
+            .setStyle(
+                ButtonStyle.Secondary
+            )
+
 
 
         );
@@ -216,13 +322,50 @@ module.exports = async (interaction) => {
 
 
 
+
+
+
+
     await channel.send({
 
-        content: `👋 Vítej ${interaction.user}\n<@&1533447617957073117>`,
 
-        embeds: [embed],
+        content:
 
-        components: [buttons]
+        `👋 Vítej ${interaction.user}
+
+<@&${RECRUITER_ROLE_ID}> nový zájemce o vstup do jednotky.`,
+
+
+        embeds:[
+
+            embed
+
+        ],
+
+
+        components:[
+
+            buttons
+
+        ],
+
+
+        allowedMentions:{
+
+            users:[
+
+                interaction.user.id
+
+            ],
+
+            roles:[
+
+                RECRUITER_ROLE_ID
+
+            ]
+
+        }
+
 
     });
 
@@ -232,9 +375,14 @@ module.exports = async (interaction) => {
 
 
 
+
     await interaction.editReply({
 
-        content: `✅ Přihláška odeslána.\nTicket: ${channel}`
+
+        content:
+
+        `✅ Přihláška odeslána.\nTicket: ${channel}`
+
 
     });
 
