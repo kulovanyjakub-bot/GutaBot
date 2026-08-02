@@ -510,7 +510,7 @@ module.exports = async (interaction) => {
 
 
 
-                        await rankChecker.checkRank(
+                        await rankChecker(
 
                             discordMember,
 
