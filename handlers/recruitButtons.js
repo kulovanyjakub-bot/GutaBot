@@ -24,12 +24,13 @@ module.exports = async (interaction) => {
     try {
 
 
+
         // ===============================
         // PŘIJMOUT REKRUTA
         // ===============================
 
 
-        if (interaction.customId.startsWith("acceptRecruit_")) {
+        if(interaction.customId.startsWith("acceptRecruit_")){
 
 
             const userId = interaction.customId.replace(
@@ -43,22 +44,15 @@ module.exports = async (interaction) => {
 
 
 
-            // ROLE
-
             await member.roles.add(
                 RECRUIT_ROLE_ID
             );
 
 
 
-
-
-            // PŘEJMENOVÁNÍ TICKETU
-
             await interaction.channel.setName(
                 `rekrut-${member.user.username}`
             ).catch(()=>{});
-
 
 
 
@@ -70,7 +64,6 @@ module.exports = async (interaction) => {
                 interaction.guild.channels.cache.get(
                     LOG_CHANNEL_ID
                 );
-
 
 
             if(logChannel){
@@ -122,14 +115,12 @@ module.exports = async (interaction) => {
                 );
 
 
-
             if(archiveChannel){
 
 
                 await archiveChannel.send({
 
                     embeds:[
-
 
                         new EmbedBuilder()
 
@@ -144,12 +135,10 @@ module.exports = async (interaction) => {
                                 value:`${member}`
                             },
 
-
                             {
                                 name:"Výsledek",
                                 value:"✅ Přijat"
                             },
-
 
                             {
                                 name:"Rozhodl",
@@ -159,7 +148,6 @@ module.exports = async (interaction) => {
                         )
 
                         .setTimestamp()
-
 
                     ]
 
@@ -173,13 +161,13 @@ module.exports = async (interaction) => {
 
 
 
-            // DM UCHAZEČI
+
+            // DM UCHAZEČ
 
 
             await member.send({
 
                 embeds:[
-
 
                     new EmbedBuilder()
 
@@ -201,7 +189,6 @@ Náborář tě bude kontaktovat s dalšími informacemi.`
 
                     .setTimestamp()
 
-
                 ]
 
             }).catch(()=>{});
@@ -212,18 +199,15 @@ Náborář tě bude kontaktovat s dalšími informacemi.`
 
 
 
-            // ZPRÁVA V TICKETU
-
-
             await interaction.update({
 
                 content:
 
-`✅ ${member} byl přijat do GUTALAX MILSIM.
+`✅ ${member} byl přijat.
 
 📩 Uchazeči byla odeslána zpráva.
 
-🗑 Ticket bude uzavřen za 5 sekund.`,
+🗑 Ticket bude uzavřen.`,
 
                 embeds:[],
 
@@ -235,12 +219,10 @@ Náborář tě bude kontaktovat s dalšími informacemi.`
 
 
 
-
             setTimeout(()=>{
 
 
                 interaction.channel.delete()
-
                 .catch(()=>{});
 
 
@@ -250,7 +232,9 @@ Náborář tě bude kontaktovat s dalšími informacemi.`
 
             return;
 
+
         }
+
 
 
 
@@ -273,10 +257,8 @@ Náborář tě bude kontaktovat s dalšími informacemi.`
             );
 
 
-
             const member =
                 await interaction.guild.members.fetch(userId);
-
 
 
 
@@ -310,6 +292,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
             return;
 
+
         }
 
 
@@ -334,7 +317,6 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             );
 
 
-
             const member =
                 await interaction.guild.members.fetch(userId);
 
@@ -342,8 +324,138 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+            const archiveChannel =
+                interaction.guild.channels.cache.get(
+                    ARCHIVE_CHANNEL_ID
+                );
 
-            // ARCHIV
+
+            if(archiveChannel){
+
+
+                await archiveChannel.send({
+
+                    embeds:[
+
+                        new EmbedBuilder()
+
+                        .setColor("Red")
+
+                        .setTitle("📁 Nábor archiv - odmítnut")
+
+                        .addFields(
+
+                            {
+                                name:"Uchazeč",
+                                value:`${member}`
+                            },
+
+                            {
+                                name:"Výsledek",
+                                value:"❌ Odmítnut"
+                            },
+
+                            {
+                                name:"Rozhodl",
+                                value:`${interaction.user}`
+                            }
+
+                        )
+
+                        .setTimestamp()
+
+                    ]
+
+                });
+
+
+            }
+
+
+
+
+
+
+            await member.send({
+
+                embeds:[
+
+                    new EmbedBuilder()
+
+                    .setColor("Red")
+
+                    .setTitle("❌ Nábor zamítnut")
+
+                    .setDescription(
+
+`Děkujeme za zájem o **GUTALAX MILSIM**.
+
+Tentokrát jsme se rozhodli v náboru nepokračovat.`
+
+                    )
+
+                    .setTimestamp()
+
+                ]
+
+            }).catch(()=>{});
+
+
+
+
+
+
+
+            await interaction.update({
+
+                content:
+
+`❌ ${member} byl odmítnut.
+
+🗑 Ticket bude uzavřen.`,
+
+                embeds:[],
+
+                components:[]
+
+            });
+
+
+
+
+
+
+            setTimeout(()=>{
+
+
+                interaction.channel.delete()
+                .catch(()=>{});
+
+
+            },5000);
+
+
+
+            return;
+
+
+        }
+
+
+
+
+
+
+
+
+
+        // ===============================
+        // UZAVŘÍT TICKET
+        // ===============================
+
+
+        if(interaction.customId === "closeRecruitTicket"){
+
 
 
             const archiveChannel =
@@ -363,26 +475,19 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
                         new EmbedBuilder()
 
-                        .setColor("Red")
+                        .setColor("Grey")
 
-                        .setTitle("📁 Nábor archiv - odmítnut")
+                        .setTitle("🔒 Ticket uzavřen")
 
                         .addFields(
 
                             {
-                                name:"Uchazeč",
-                                value:`${member}`
+                                name:"Ticket",
+                                value:interaction.channel.name
                             },
 
-
                             {
-                                name:"Výsledek",
-                                value:"❌ Odmítnut"
-                            },
-
-
-                            {
-                                name:"Rozhodl",
+                                name:"Uzavřel",
                                 value:`${interaction.user}`
                             }
 
@@ -403,50 +508,14 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-            // DM
-
-
-            await member.send({
-
-                embeds:[
-
-
-                    new EmbedBuilder()
-
-                    .setColor("Red")
-
-                    .setTitle("❌ Nábor zamítnut")
-
-                    .setDescription(
-
-`Ahoj ${member}.
-
-Děkujeme za zájem o **GUTALAX MILSIM**.
-
-Tentokrát jsme se rozhodli v náboru nepokračovat.`
-
-                    )
-
-                    .setTimestamp()
-
-
-                ]
-
-            }).catch(()=>{});
-
-
-
-
-
-
 
             await interaction.update({
 
                 content:
 
-`❌ ${member} byl odmítnut.
+`🔒 Ticket uzavřen uživatelem ${interaction.user}.
 
-🗑 Ticket bude uzavřen za 5 sekund.`,
+🗑 Kanál bude odstraněn za 5 sekund.`,
 
                 embeds:[],
 
@@ -459,12 +528,10 @@ Tentokrát jsme se rozhodli v náboru nepokračovat.`
 
 
 
-
             setTimeout(()=>{
 
 
                 interaction.channel.delete()
-
                 .catch(()=>{});
 
 
@@ -474,7 +541,9 @@ Tentokrát jsme se rozhodli v náboru nepokračovat.`
 
             return;
 
+
         }
+
 
 
 
@@ -491,7 +560,10 @@ Tentokrát jsme se rozhodli v náboru nepokračovat.`
 
 
 
-        if(!interaction.replied && !interaction.deferred){
+        if(
+            !interaction.replied &&
+            !interaction.deferred
+        ){
 
 
             await interaction.reply({
