@@ -11,6 +11,7 @@ const {
 } = require("discord.js");
 
 
+
 const client = new Client({
 
     intents: [
@@ -31,10 +32,14 @@ const client = new Client({
 });
 
 
+
 client.commands = new Collection();
 
 
-// COMMANDY
+
+// ===============================
+// NAČTENÍ COMMANDŮ
+// ===============================
 
 const commandsPath = path.join(__dirname, "commands");
 
@@ -42,6 +47,7 @@ const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs
     .readdirSync(commandsPath)
     .filter(file => file.endsWith(".js"));
+
 
 
 for (const file of commandFiles) {
@@ -63,31 +69,36 @@ for (const file of commandFiles) {
             command
         );
 
-
     }
 
 }
 
 
 
+// ===============================
 // READY
+// ===============================
 
 client.once("ready", () => {
+
 
     console.log(
         `✅ Přihlášen jako ${client.user.tag}`
     );
 
+
 });
 
 
 
-
+// ===============================
 // INTERAKCE
+// ===============================
 
 const interactionHandler = require(
     "./events/interactionCreate"
 );
+
 
 
 client.on(
@@ -95,19 +106,27 @@ client.on(
     async (interaction) => {
 
 
+        // tlačítka + formuláře
+
         if (
             interaction.isButton() ||
             interaction.isModalSubmit()
         ) {
+
 
             return interactionHandler(
                 interaction,
                 client
             );
 
+
         }
 
 
+
+
+
+        // slash příkazy
 
         if (!interaction.isChatInputCommand())
             return;
@@ -119,8 +138,10 @@ client.on(
         );
 
 
+
         if (!command)
             return;
+
 
 
 
@@ -132,7 +153,7 @@ client.on(
             );
 
 
-        } catch(err) {
+        } catch (err) {
 
 
             console.error(err);
@@ -173,9 +194,25 @@ client.on(
 
 
     }
+
 );
 
 
+
+// ===============================
+// CHYBY CLIENTA
+// ===============================
+
+client.on(
+    "error",
+    console.error
+);
+
+
+
+// ===============================
+// START
+// ===============================
 
 client.login(
     process.env.TOKEN
