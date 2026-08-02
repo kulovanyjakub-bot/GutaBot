@@ -1,37 +1,198 @@
-const trainingButtons =
-    require("../handlers/trainingButtons");
+const recruitButtons =
+    require("../handlers/recruitButtons");
 
 
 const missionButtons =
     require("../handlers/missionButtons");
 
 
-
-module.exports = async (
-    interaction
-) => {
+const trainingButtons =
+    require("../handlers/trainingButtons");
 
 
-
-    // ===============================
-    // BUTTONY
-    // ===============================
-
-
-    if(
-        interaction.isButton()
-    ){
+const probationButtons =
+    require("../handlers/probationButtons");
 
 
 
-        if(
-            interaction.customId.startsWith("training")
-        ){
 
 
-            return trainingButtons(
-                interaction
-            );
+
+module.exports = async (interaction, client) => {
+
+
+    try {
+
+
+
+
+        // ===============================
+        // BUTTONY
+        // ===============================
+
+
+        if(interaction.isButton()){
+
+
+
+
+
+            // ===============================
+            // NÁBOR
+            // ===============================
+
+
+            if(
+
+                interaction.customId.startsWith(
+                    "acceptRecruit_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "interviewRecruit_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "rejectRecruit_"
+                )
+
+            ){
+
+
+                return recruitButtons(
+                    interaction
+                );
+
+
+            }
+
+
+
+
+
+
+
+            // ===============================
+            // MISE
+            // ===============================
+
+
+            if(
+
+                interaction.customId.startsWith(
+                    "missionJoin_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "missionLeave_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "missionClose_"
+                )
+
+            ){
+
+
+                return missionButtons(
+                    interaction
+                );
+
+
+            }
+
+
+
+
+
+
+
+
+            // ===============================
+            // VÝCVIK
+            // ===============================
+
+
+            if(
+
+                interaction.customId.startsWith(
+                    "trainingJoin_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "trainingLeave_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "trainingClose_"
+                )
+
+            ){
+
+
+                return trainingButtons(
+                    interaction
+                );
+
+
+            }
+
+
+
+
+
+
+
+
+            // ===============================
+            // ZKUŠEBNÍ DOBA MILSIM
+            // ===============================
+
+
+            if(
+
+                interaction.customId.startsWith(
+                    "acceptMilsim_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "extendProbation_"
+                )
+
+                ||
+
+                interaction.customId.startsWith(
+                    "rejectMilsim_"
+                )
+
+            ){
+
+
+                return probationButtons(
+                    interaction
+                );
+
+
+            }
+
+
+
+
+
 
 
         }
@@ -39,89 +200,143 @@ module.exports = async (
 
 
 
-        if(
-            interaction.customId.startsWith("mission")
-        ){
 
 
-            return missionButtons(
-                interaction
-            );
+
+
+        // ===============================
+        // MODALY
+        // ===============================
+
+
+        if(interaction.isModalSubmit()){
+
+
+
+            // pokud máš vlastní modal handlery,
+            // přidáme je sem později
+
+
+
+            return;
 
 
         }
 
 
 
-    }
+
+
+
+
+
+        // ===============================
+        // SLASH COMMANDY
+        // ===============================
+
+
+        if(
+
+            !interaction.isChatInputCommand()
+
+        )
+
+            return;
 
 
 
 
 
 
-    // ===============================
-    // SLASH COMMANDY
-    // ===============================
 
 
-    if(
-        !interaction.isChatInputCommand()
-    )
-        return;
+        const command =
 
+            client.commands.get(
 
+                interaction.commandName
 
-
-    const command =
-        interaction.client.commands.get(
-            interaction.commandName
-        );
+            );
 
 
 
-    if(!command)
-        return;
 
 
 
-    try{
+
+        if(!command)
+
+            return;
+
+
+
+
+
 
 
         await command.execute(
-            interaction
+
+            interaction,
+
+            client
+
         );
+
+
+
+
+
 
 
     }
+
     catch(err){
 
 
+
         console.error(
+
+            "❌ INTERACTION CREATE ERROR:",
+
             err
+
         );
+
+
 
 
 
         if(
-            !interaction.replied
+
+            !interaction.replied &&
+
+            !interaction.deferred
+
         ){
+
 
 
             await interaction.reply({
 
+
                 content:
-                "❌ Chyba při provádění příkazu.",
+
+                "❌ Nastala chyba při zpracování.",
+
 
                 ephemeral:true
 
-            });
+
+            }).catch(()=>{});
+
 
 
         }
 
 
+
     }
+
 
 
 };
