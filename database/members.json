@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "id": "1119313377257341129",
+        "username": "TestovacíVojak",
+
+        "trainings": 5,
+        "missions": 9,
+
+        "rank": "Rekrut",
+
+        "activity": 60,
+        "teamwork": 60,
+
+        "joined": "2026-08-02T00:00:00.000Z",
+
+        "lastActivity": "2026-08-02T00:00:00.000Z"
+    }
+]
