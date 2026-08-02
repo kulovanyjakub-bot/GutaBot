@@ -1,81 +1,165 @@
 const {
-    EmbedBuilder
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ActionRowBuilder
 } = require("discord.js");
 
 
-
-module.exports = async (interaction) => {
-
-
-
-    // ==========================
-    // PŘIJMOUT REKRUTA
-    // ==========================
-
-    if (interaction.customId.startsWith("acceptRecruit_")) {
-
-
-        const userId = interaction.customId.replace(
-            "acceptRecruit_",
-            ""
-        );
-
-
-        const member =
-            await interaction.guild.members.fetch(userId);
+const recruitModal = require("../handlers/recruitModal");
+const recruitButtons = require("../handlers/recruitButtons");
 
 
 
-        // Přidání členské role
-
-        await member.roles.add(
-            "1458487234989654201"
-        );
+module.exports = async (interaction, client) => {
 
 
 
-        const embed = new EmbedBuilder()
+    // =========================
+    // TLAČÍTKO PŘIHLÁŠKA
+    // =========================
 
-            .setColor("Green")
+    if (interaction.isButton()) {
 
-            .setTitle("✅ Člen přijat")
 
-            .addFields(
 
-                {
-                    name: "Uchazeč",
-                    value: `${member}`
-                },
+        if (interaction.customId === "recruit") {
 
-                {
-                    name: "Přijal",
-                    value: `${interaction.user}`
-                }
 
-            )
 
-            .setTimestamp();
+            const modal = new ModalBuilder()
+
+                .setCustomId("recruitModal")
+
+                .setTitle("Nábor GUTALAX MILSIM");
 
 
 
 
 
-        await interaction.update({
+            const vek = new TextInputBuilder()
 
-            content:
-            `✅ ${member} byl přijat do GUTALAX MILSIM.`,
+                .setCustomId("vek")
 
-            embeds: [
-                embed
-            ],
+                .setLabel("Tvůj věk")
 
-            components: []
+                .setStyle(TextInputStyle.Short)
 
-        });
+                .setRequired(true);
 
 
 
-        return;
+
+
+            const platforma = new TextInputBuilder()
+
+                .setCustomId("platforma")
+
+                .setLabel("Platforma (PC / Xbox / PS5)")
+
+                .setStyle(TextInputStyle.Short)
+
+                .setRequired(true);
+
+
+
+
+
+            const mikrofon = new TextInputBuilder()
+
+                .setCustomId("mikrofon")
+
+                .setLabel("Máš funkční mikrofon?")
+
+                .setStyle(TextInputStyle.Short)
+
+                .setRequired(true);
+
+
+
+
+
+            const zkusenosti = new TextInputBuilder()
+
+                .setCustomId("zkusenosti")
+
+                .setLabel("Zkušenosti s MILSIM")
+
+                .setStyle(TextInputStyle.Paragraph)
+
+                .setRequired(true);
+
+
+
+
+
+            const proc = new TextInputBuilder()
+
+                .setCustomId("proc")
+
+                .setLabel("Proč se chceš přidat?")
+
+                .setStyle(TextInputStyle.Paragraph)
+
+                .setRequired(true);
+
+
+
+
+
+
+
+            modal.addComponents(
+
+                new ActionRowBuilder().addComponents(vek),
+
+                new ActionRowBuilder().addComponents(platforma),
+
+                new ActionRowBuilder().addComponents(mikrofon),
+
+                new ActionRowBuilder().addComponents(zkusenosti),
+
+                new ActionRowBuilder().addComponents(proc)
+
+            );
+
+
+
+
+
+            return interaction.showModal(modal);
+
+
+
+        }
+
+
+
+
+
+        // =========================
+        // NÁBOROVÁ TLAČÍTKA
+        // =========================
+
+
+        if (
+
+            interaction.customId.startsWith("acceptRecruit_") ||
+
+            interaction.customId.startsWith("interviewRecruit_") ||
+
+            interaction.customId.startsWith("rejectRecruit_")
+
+        ) {
+
+
+            return recruitButtons(interaction);
+
+
+
+        }
+
+
 
     }
 
@@ -84,141 +168,27 @@ module.exports = async (interaction) => {
 
 
 
-
-    // ==========================
-    // POHOVOR
-    // ==========================
-
-    if (interaction.customId.startsWith("interviewRecruit_")) {
+    // =========================
+    // ODESLÁNÍ MODALU
+    // =========================
 
 
-
-        const userId = interaction.customId.replace(
-            "interviewRecruit_",
-            ""
-        );
+    if (interaction.isModalSubmit()) {
 
 
 
-        const member =
-            await interaction.guild.members.fetch(userId);
+        if (interaction.customId === "recruitModal") {
+
+
+            return recruitModal(interaction);
 
 
 
-        await interaction.reply({
+        }
 
-            content:
-`${member}
-
-🎤 Uchazeč byl pozván na pohovor.
-
-<@&1458487234989654201> prosím kontaktujte uchazeče.`,
-
-            allowedMentions: {
-
-                users: [
-                    member.id
-                ],
-
-                roles: [
-                    "1458487234989654201"
-                ]
-
-            }
-
-        });
-
-
-
-        return;
 
     }
 
-
-
-
-
-
-
-    // ==========================
-    // ODMÍTNOUT
-    // ==========================
-
-    if (interaction.customId.startsWith("rejectRecruit_")) {
-
-
-
-        const userId = interaction.customId.replace(
-            "rejectRecruit_",
-            ""
-        );
-
-
-
-        const member =
-            await interaction.guild.members.fetch(userId);
-
-
-
-
-
-        const embed = new EmbedBuilder()
-
-            .setColor("Red")
-
-            .setTitle("❌ Uchazeč odmítnut")
-
-            .addFields(
-
-                {
-                    name: "Uchazeč",
-                    value: `${member}`
-                },
-
-                {
-                    name: "Rozhodl",
-                    value: `${interaction.user}`
-                }
-
-            )
-
-            .setTimestamp();
-
-
-
-
-
-        await interaction.update({
-
-            content:
-            `❌ ${member} byl odmítnut.`,
-
-            embeds: [
-                embed
-            ],
-
-            components: []
-
-        });
-
-
-
-
-
-        setTimeout(() => {
-
-
-            interaction.channel.delete()
-                .catch(() => {});
-
-
-        },5000);
-
-
-
-        return;
-
-    }
 
 
 
