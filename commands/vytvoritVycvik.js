@@ -72,6 +72,7 @@ module.exports = {
 
 
 
+
         const nazev =
             interaction.options.getString("nazev");
 
@@ -107,7 +108,6 @@ module.exports = {
             participants: []
 
         });
-
 
 
 
@@ -153,12 +153,10 @@ module.exports = {
 
 
 
-
         const buttons =
             new ActionRowBuilder()
 
             .addComponents(
-
 
 
                 new ButtonBuilder()
@@ -203,9 +201,7 @@ module.exports = {
                     ButtonStyle.Secondary
                 )
 
-
             );
-
 
 
 
@@ -217,6 +213,8 @@ module.exports = {
             interaction.guild.channels.cache.get(
                 "1381674086089883698"
             );
+
+
 
 
 
@@ -244,27 +242,25 @@ module.exports = {
             content:
             "@everyone",
 
-            allowedMentions:{
-
-                parse:[
-                    "everyone"
-                ]
-
-            },
-
-
             embeds:[
 
                 embed
 
             ],
 
-
             components:[
 
                 buttons
 
-            ]
+            ],
+
+            allowedMentions:{
+
+                parse:[
+                    "everyone"
+                ]
+
+            }
 
         });
 
@@ -282,6 +278,7 @@ module.exports = {
             ephemeral:true
 
         });
+
 
 
     }
