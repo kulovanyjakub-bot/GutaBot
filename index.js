@@ -57,14 +57,19 @@ client.once("ready", () => {
 });
 
 // ---------- Interakce ----------
-client.on("interactionCreate", async interaction => {
+const interactionHandler = require("./events/interactionCreate");
 
+client.on("interactionCreate", async (interaction) => {
+
+    // Nejprve předáme tlačítka do interaction handleru
+    if (interaction.isButton()) {
+        return interactionHandler(interaction, client);
+    }
+
+    // Slash příkazy
     if (!interaction.isChatInputCommand()) return;
 
-    const command =
-        client.commands.get(
-            interaction.commandName
-        );
+    const command = client.commands.get(interaction.commandName);
 
     if (!command) return;
 
