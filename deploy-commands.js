@@ -9,15 +9,16 @@ const path = require("path");
 require("dotenv").config();
 
 
+
 const commands = [];
 
 
-// načtení všech commandů ze složky commands
-
+// složka commands
 const commandsPath = path.join(
     __dirname,
     "commands"
 );
+
 
 
 const commandFiles = fs.readdirSync(
@@ -27,6 +28,8 @@ const commandFiles = fs.readdirSync(
 
 
 
+
+// načtení commandů
 for (const file of commandFiles) {
 
 
@@ -38,11 +41,34 @@ for (const file of commandFiles) {
     );
 
 
-    commands.push(
-        command.data.toJSON()
-    );
+
+    // pouze skutečné slash commandy
+    if(command.data){
+
+
+        commands.push(
+            command.data.toJSON()
+        );
+
+
+        console.log(
+            `✅ Načten command: ${file}`
+        );
+
+
+    }
+    else {
+
+
+        console.log(
+            `⚠️ Přeskočen ${file} (není slash command)`
+        );
+
+
+    }
 
 }
+
 
 
 
@@ -52,6 +78,8 @@ const rest = new REST({
 .setToken(
     process.env.TOKEN
 );
+
+
 
 
 
@@ -66,7 +94,9 @@ const rest = new REST({
         );
 
 
+
         await rest.put(
+
 
             Routes.applicationGuildCommands(
 
@@ -76,24 +106,33 @@ const rest = new REST({
 
             ),
 
+
             {
                 body: commands
             }
 
+
         );
+
 
 
         console.log(
-            "Příkazy zaregistrovány."
+            `✅ Příkazy zaregistrovány (${commands.length})`
         );
+
 
 
     }
     catch(err){
 
-        console.error(err);
+
+        console.error(
+            err
+        );
+
 
     }
+
 
 
 })();
