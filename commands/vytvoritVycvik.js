@@ -7,6 +7,10 @@ const {
 } = require("discord.js");
 
 
+const trainingDB = require("../database/trainingDatabase");
+
+
+
 module.exports = {
 
 
@@ -65,6 +69,7 @@ module.exports = {
 
 
 
+
         const nazev =
             interaction.options.getString("nazev");
 
@@ -75,6 +80,32 @@ module.exports = {
 
         const popis =
             interaction.options.getString("popis");
+
+
+
+
+
+        const trainingId =
+            Date.now().toString();
+
+
+
+
+
+        trainingDB.createTraining({
+
+            id: trainingId,
+
+            name: nazev,
+
+            date: datum,
+
+            description: popis,
+
+            participants: []
+
+        });
+
 
 
 
@@ -127,7 +158,9 @@ module.exports = {
 
                 new ButtonBuilder()
 
-                .setCustomId("trainingJoin")
+                .setCustomId(
+                    `trainingJoin_${trainingId}`
+                )
 
                 .setLabel("✅ Účastním se")
 
@@ -135,10 +168,11 @@ module.exports = {
 
 
 
-
                 new ButtonBuilder()
 
-                .setCustomId("trainingLeave")
+                .setCustomId(
+                    `trainingLeave_${trainingId}`
+                )
 
                 .setLabel("❌ Neúčastním se")
 
@@ -146,10 +180,11 @@ module.exports = {
 
 
 
-
                 new ButtonBuilder()
 
-                .setCustomId("trainingClose")
+                .setCustomId(
+                    `trainingClose_${trainingId}`
+                )
 
                 .setLabel("🔒 Ukončit výcvik")
 
@@ -191,31 +226,22 @@ module.exports = {
 
         await channel.send({
 
+            content:"@everyone",
 
-            content:
-            "@everyone",
-
-
-            allowedMentions: {
-
+            allowedMentions:{
                 parse:[
                     "everyone"
                 ]
-
             },
 
 
             embeds:[
-
                 embed
-
             ],
 
 
             components:[
-
                 buttons
-
             ]
 
 
