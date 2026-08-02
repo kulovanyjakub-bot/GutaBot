@@ -27,9 +27,9 @@ module.exports = async (interaction) => {
 
 
 
-        // ===============================
+        // ==================================
         // ÚČAST NA VÝCVIKU
-        // ===============================
+        // ==================================
 
 
         if(
@@ -42,6 +42,7 @@ module.exports = async (interaction) => {
                     "trainingJoin_",
                     ""
                 );
+
 
 
 
@@ -66,234 +67,14 @@ module.exports = async (interaction) => {
 
 
 
-            const embed =
-                EmbedBuilder.from(
-                    interaction.message.embeds[0]
-                );
-
-
-
-            let field =
-                embed.data.fields.find(
-
-                    f =>
-                    f.name === "👥 Účast"
-
-                );
-
-
-
-            let users =
-                field.value === "Nikdo přihlášen"
-
-                ?
-
-                []
-
-                :
-
-                field.value.split("\n");
-
-
-
-
-
-            const entry =
-                `🪖 ${interaction.user.username}`;
-
-
-
-
-            if(
-                !users.includes(entry)
-            ){
-
-                users.push(entry);
-
-            }
-
-
-
-
-
-            field.value =
-                users.join("\n");
-
-
-
-
-
-            await interaction.update({
-
-                embeds:[
-
-                    embed
-
-                ]
-
-            });
-
-
-
-            return;
-
-        }
-
-
-
-
-
-
-
-
-        // ===============================
-        // ODHLÁŠENÍ
-        // ===============================
-
-
-        if(
-            interaction.customId.startsWith("trainingLeave_")
-        ){
-
-
-
-            const trainingId =
-                interaction.customId.replace(
-                    "trainingLeave_",
-                    ""
-                );
-
-
-
-            trainingDB.removeParticipant(
-
-                trainingId,
-
-                interaction.user.id
-
-            );
-
-
-
 
             const embed =
                 EmbedBuilder.from(
+
                     interaction.message.embeds[0]
-                );
-
-
-
-            let field =
-                embed.data.fields.find(
-
-                    f =>
-                    f.name === "👥 Účast"
 
                 );
 
-
-
-            let users =
-                field.value.split("\n");
-
-
-
-            users =
-                users.filter(
-
-                    u =>
-                    u !==
-                    `🪖 ${interaction.user.username}`
-
-                );
-
-
-
-
-            field.value =
-                users.length
-
-                ?
-
-                users.join("\n")
-
-                :
-
-                "Nikdo přihlášen";
-
-
-
-
-
-            await interaction.update({
-
-                embeds:[
-
-                    embed
-
-                ]
-
-            });
-
-
-
-            return;
-
-        }
-
-
-
-
-
-
-
-
-
-        // ===============================
-        // UKONČENÍ VÝCVIKU
-        // ===============================
-
-
-        if(
-            interaction.customId.startsWith("trainingClose_")
-        ){
-
-
-
-            const milsimRole =
-                "1381662796646973542";
-
-
-
-            if(
-                !interaction.member.roles.cache.has(
-                    milsimRole
-                )
-            ){
-
-
-                return interaction.reply({
-
-                    content:
-                    "❌ Pouze MILSIM může ukončit výcvik.",
-
-                    ephemeral:true
-
-                });
-
-
-            }
-
-
-
-
-
-
-
-            const embed =
-                EmbedBuilder.from(
-                    interaction.message.embeds[0]
-                );
 
 
 
@@ -310,29 +91,54 @@ module.exports = async (interaction) => {
 
 
 
-            let participants = [];
+
+            if(field){
+
+
+
+                let users =
+
+                    field.value === "Nikdo přihlášen"
+
+                    ?
+
+                    []
+
+                    :
+
+                    field.value.split("\n");
 
 
 
 
-            if(
-                field &&
-                field.value !== "Nikdo přihlášen"
-            ){
+
+                const entry =
+
+                    `🪖 ${interaction.user.username}`;
 
 
-                participants =
-                    field.value
-                    .split("\n")
-                    .map(
 
-                        x =>
-                        x.replace(
-                            "🪖 ",
-                            ""
-                        )
 
-                    );
+
+                if(
+                    !users.includes(entry)
+                ){
+
+
+                    users.push(entry);
+
+
+                }
+
+
+
+
+
+
+                field.value =
+
+                    users.join("\n");
+
 
 
             }
@@ -342,9 +148,67 @@ module.exports = async (interaction) => {
 
 
 
-            console.log(
-                "ÚČASTNÍCI VÝCVIKU:",
-                participants
+
+            await interaction.update({
+
+                embeds:[
+
+                    embed
+
+                ]
+
+            });
+
+
+
+
+            return;
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+        // ==================================
+        // ODHLÁŠENÍ Z VÝCVIKU
+        // ==================================
+
+
+        if(
+            interaction.customId.startsWith("trainingLeave_")
+        ){
+
+
+
+            const trainingId =
+
+                interaction.customId.replace(
+
+                    "trainingLeave_",
+
+                    ""
+
+                );
+
+
+
+
+
+
+
+            trainingDB.removeParticipant(
+
+                trainingId,
+
+                interaction.user.id
+
             );
 
 
@@ -352,69 +216,92 @@ module.exports = async (interaction) => {
 
 
 
-            // přidání statistiky
-
-            for(
-                const username of participants
-            ){
 
 
-                const members =
-                    interaction.guild.members.cache.find(
+            const embed =
 
-                        m =>
-                        m.user.username === username
+                EmbedBuilder.from(
 
-                    );
+                    interaction.message.embeds[0]
 
-
-
-                if(members){
-
-
-                    console.log(
-                        "PŘIDÁVÁM VÝCVIK:",
-                        members.id,
-                        members.user.username
-                    );
-
-
-
-                    memberDB.addTraining(
-                        members.id
-                    );
-
-
-                }
-
-
-            }
-
-
-
-
-
-
-
-
-            const archive =
-                interaction.guild.channels.cache.get(
-                    "1533504495437353120"
                 );
 
 
 
 
 
-            if(archive){
+
+            const field =
+
+                embed.data.fields.find(
+
+                    f =>
+                    f.name === "👥 Účast"
+
+                );
 
 
-                await archive.send({
 
-                    embeds:
-                    interaction.message.embeds
 
-                });
+
+
+
+            if(field){
+
+
+
+                let users =
+
+
+                    field.value === "Nikdo přihlášen"
+
+
+                    ?
+
+                    []
+
+
+                    :
+
+
+                    field.value.split("\n");
+
+
+
+
+
+
+                users =
+
+                    users.filter(
+
+                        u =>
+
+                        u !==
+                        `🪖 ${interaction.user.username}`
+
+                    );
+
+
+
+
+
+
+                field.value =
+
+
+                    users.length
+
+
+                    ?
+
+                    users.join("\n")
+
+
+                    :
+
+                    "Nikdo přihlášen";
+
 
 
             }
@@ -428,15 +315,11 @@ module.exports = async (interaction) => {
 
             await interaction.update({
 
-                content:
-                "🔒 Výcvik ukončen. Statistiky účastníků aktualizovány.",
+                embeds:[
 
+                    embed
 
-                embeds:
-                interaction.message.embeds,
-
-
-                components:[]
+                ]
 
             });
 
@@ -444,7 +327,9 @@ module.exports = async (interaction) => {
 
 
 
+
             return;
+
 
         }
 
@@ -453,17 +338,312 @@ module.exports = async (interaction) => {
 
 
 
+
+
+
+        // ==================================
+        // UKONČENÍ VÝCVIKU
+        // ==================================
+
+
+        if(
+            interaction.customId.startsWith("trainingClose_")
+        ){
+
+
+
+
+
+
+            const milsimRole =
+
+                "1381662796646973542";
+
+
+
+
+
+
+
+            if(
+
+                !interaction.member.roles.cache.has(
+
+                    milsimRole
+
+                )
+
+            ){
+
+
+                return interaction.reply({
+
+                    content:
+
+                    "❌ Pouze MILSIM může ukončit výcvik.",
+
+
+                    ephemeral:true
+
+
+                });
+
+
+            }
+
+
+
+
+
+
+
+
+
+            const trainingId =
+
+
+                interaction.customId.replace(
+
+                    "trainingClose_",
+
+                    ""
+
+                );
+
+
+
+
+
+
+
+
+
+            const training =
+
+
+                trainingDB.getTraining(
+
+                    trainingId
+
+                );
+
+
+
+
+
+
+
+            console.log(
+
+                "UKONČUJI VÝCVIK:",
+
+                training
+
+            );
+
+
+
+
+
+
+
+            if(training){
+
+
+
+                console.log(
+
+                    "ÚČASTNÍCI VÝCVIKU:",
+
+                    training.participants
+
+                );
+
+
+
+
+
+                for(
+
+                    const member of training.participants
+
+                ){
+
+
+
+
+
+
+                    console.log(
+
+                        "PŘIDÁVÁM VÝCVIK:",
+
+                        member.id,
+
+                        member.username
+
+                    );
+
+
+
+
+
+
+                    memberDB.addTraining(
+
+                        member.id,
+
+                        member.username
+
+                    );
+
+
+
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+            const archive =
+
+
+                interaction.guild.channels.cache.get(
+
+                    "1533504495437353120"
+
+                );
+
+
+
+
+
+
+
+
+            if(archive){
+
+
+
+                await archive.send({
+
+                    embeds:
+
+                    interaction.message.embeds
+
+
+                });
+
+
+            }
+
+
+
+
+
+
+
+
+
+            await interaction.update({
+
+
+                content:
+
+                "🔒 Výcvik ukončen. Statistiky účastníků aktualizovány.",
+
+
+
+
+                embeds:
+
+                interaction.message.embeds,
+
+
+
+
+
+                components:[]
+
+
+
+            });
+
+
+
+
+
+
+
+
+            return;
+
+
+        }
+
+
+
+
+
+
+
+
     }
+
     catch(err){
 
 
+
         console.error(
+
             "❌ TRAINING BUTTON ERROR:",
+
             err
+
         );
 
 
+
+
+
+        if(
+
+            !interaction.replied &&
+
+            !interaction.deferred
+
+        ){
+
+
+
+            await interaction.reply({
+
+                content:
+
+                "❌ Chyba při zpracování výcviku.",
+
+
+                ephemeral:true
+
+
+            }).catch(()=>{});
+
+
+
+        }
+
+
     }
+
 
 
 };
