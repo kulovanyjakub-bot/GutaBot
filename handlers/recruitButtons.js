@@ -35,65 +35,46 @@ module.exports = async (interaction) => {
 
 
 
-            // Přejmenování ticketu
-
-            await interaction.channel.setName(
-                `rekrut-${member.user.username}`
-            ).catch(() => {});
-
-
-
-
-
             // ===============================
-            // LOG NÁBORU
+            // LOG DO #NÁBOR-LOG
             // ===============================
-
 
             const logChannel =
                 interaction.guild.channels.cache.get(
-                    "1533447352684380361"
+                    "SEM_DEJ_ID_NÁBOR_LOGU"
                 );
 
 
-
-            const logEmbed = new EmbedBuilder()
-
-                .setColor("Green")
-
-                .setTitle("✅ Rekrut přijat")
-
-                .addFields(
-
-                    {
-                        name: "Uchazeč",
-                        value: `${member}`,
-                        inline: true
-                    },
-
-
-                    {
-                        name: "Přijal",
-                        value: `${interaction.user}`,
-                        inline: true
-                    },
-
-
-                    {
-                        name: "Role",
-                        value: "<@&1458487234989654201>",
-                        inline: true
-                    }
-
-                )
-
-                .setTimestamp();
-
-
-
-
-
             if (logChannel) {
+
+
+                const logEmbed = new EmbedBuilder()
+
+                    .setColor("Green")
+
+                    .setTitle("✅ Rekrut přijat")
+
+                    .addFields(
+
+                        {
+                            name: "Uchazeč",
+                            value: `${member}`
+                        },
+
+                        {
+                            name: "Přijal",
+                            value: `${interaction.user}`
+                        },
+
+                        {
+                            name: "Role",
+                            value: "<@&1458487234989654201>"
+                        }
+
+                    )
+
+                    .setTimestamp();
+
 
 
                 await logChannel.send({
@@ -105,59 +86,68 @@ module.exports = async (interaction) => {
                 });
 
 
-            } else {
-
-
-                console.log(
-                    "❌ Nenašel se log kanál"
-                );
-
-
             }
 
 
 
 
+            // ===============================
+            // DM UCHAZEČI
+            // ===============================
+
+            await member.send({
+
+                embeds: [
+
+                    new EmbedBuilder()
+
+                    .setColor("Green")
+
+                    .setTitle("🎖 Přijat do GUTALAX MILSIM")
+
+                    .setDescription(
+
+`Gratulujeme ${member}!
+
+Byl jsi přijat do jednotky **GUTALAX MILSIM**.
+
+Byla ti přidělena role **Rekrut**.
+
+Brzy tě bude kontaktovat náborář s dalšími informacemi.`
+
+                    )
+
+                    .setTimestamp()
+
+                ]
+
+            }).catch(() => {
+
+                console.log(
+                    "Nelze poslat DM uchazeči."
+                );
+
+            });
 
 
 
-            // Upravení ticket zprávy
-
-            const embed = new EmbedBuilder()
-
-                .setColor("Green")
-
-                .setTitle("✅ Rekrut přijat")
-
-                .setDescription(
-`${member} byl přijat do **GUTALAX MILSIM**.
-
-🎖 Byla mu přidělena role **Rekrut**.
-Vítej v jednotce!`
-                )
-
-                .addFields(
-
-                    {
-                        name: "Přijal",
-                        value: `${interaction.user}`
-                    }
-
-                )
-
-                .setTimestamp();
 
 
-
-
+            // ===============================
+            // ZPRÁVA V TICKETU
+            // ===============================
 
             await interaction.update({
 
-                content: null,
+                content:
 
-                embeds: [
-                    embed
-                ],
+`✅ ${member} byl přijat do GUTALAX MILSIM.
+
+📩 Uchazeči byla odeslána zpráva.
+
+🗑 Ticket bude uzavřen.`,
+
+                embeds: [],
 
                 components: []
 
@@ -165,10 +155,27 @@ Vítej v jednotce!`
 
 
 
+
+
+            // ===============================
+            // SMAZÁNÍ TICKETU
+            // ===============================
+
+            setTimeout(() => {
+
+
+                interaction.channel.delete()
+
+                .catch(() => {});
+
+
+            },5000);
+
+
+
             return;
 
         }
-
 
 
 
@@ -190,16 +197,15 @@ Vítej v jednotce!`
             );
 
 
-
             const member =
                 await interaction.guild.members.fetch(userId);
-
 
 
 
             await interaction.reply({
 
                 content:
+
 `🎤 **Pohovor požaduje ${member}**
 
 <@&1533447617957073117>
@@ -232,7 +238,6 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-
         // ===============================
         // ODMÍTNOUT
         // ===============================
@@ -247,51 +252,79 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             );
 
 
-
             const member =
                 await interaction.guild.members.fetch(userId);
 
 
 
 
+            await member.send({
+
+                embeds:[
+
+                    new EmbedBuilder()
+
+                    .setColor("Red")
+
+                    .setTitle("❌ Přihláška zamítnuta")
+
+                    .setDescription(
+
+`Ahoj ${member},
+
+děkujeme za tvůj zájem o **GUTALAX MILSIM**.
+
+Tentokrát jsme se rozhodli nepokračovat v náboru.
+
+Přejeme hodně štěstí.`
+
+                    )
+
+                    .setTimestamp()
+
+                ]
+
+            }).catch(()=>{});
+
+
+
+
+
             const logChannel =
                 interaction.guild.channels.cache.get(
-                    "1533447352684380361"
+                    "SEM_DEJ_ID_NÁBOR_LOGU"
                 );
-
-
-
-            const logEmbed = new EmbedBuilder()
-
-                .setColor("Red")
-
-                .setTitle("❌ Uchazeč odmítnut")
-
-                .addFields(
-
-                    {
-                        name: "Uchazeč",
-                        value: `${member}`
-                    },
-
-                    {
-                        name: "Rozhodl",
-                        value: `${interaction.user}`
-                    }
-
-                )
-
-                .setTimestamp();
-
-
 
 
             if(logChannel){
 
+
                 await logChannel.send({
 
                     embeds:[
-                        logEmbed
+
+                        new EmbedBuilder()
+
+                        .setColor("Red")
+
+                        .setTitle("❌ Rekrut odmítnut")
+
+                        .addFields(
+
+                            {
+                                name:"Uchazeč",
+                                value:`${member}`
+                            },
+
+                            {
+                                name:"Rozhodl",
+                                value:`${interaction.user}`
+                            }
+
+                        )
+
+                        .setTimestamp()
+
                     ]
 
                 });
@@ -305,11 +338,14 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             await interaction.update({
 
                 content:
-                `❌ ${member} byl odmítnut.`,
 
-                embeds: [],
+`❌ ${member} byl odmítnut.
 
-                components: []
+🗑 Ticket bude uzavřen.`,
+
+                embeds:[],
+
+                components:[]
 
             });
 
@@ -317,11 +353,12 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-            setTimeout(() => {
+            setTimeout(()=>{
 
 
                 interaction.channel.delete()
-                .catch(() => {});
+
+                .catch(()=>{});
 
 
             },5000);
@@ -336,7 +373,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-    } catch(err) {
+    } catch(err){
 
 
         console.error(
@@ -348,10 +385,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-        if(
-            !interaction.replied &&
-            !interaction.deferred
-        ){
+        if(!interaction.replied && !interaction.deferred){
 
 
             await interaction.reply({
