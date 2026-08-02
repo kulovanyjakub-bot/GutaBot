@@ -7,171 +7,214 @@ const {
 module.exports = async (interaction) => {
 
 
-
-    // ===============================
-    // PŘIJMOUT REKRUTA
-    // ===============================
-
-    if (interaction.customId.startsWith("acceptRecruit_")) {
+    try {
 
 
 
-        const userId = interaction.customId.replace(
-            "acceptRecruit_",
-            ""
-        );
+        // ===============================
+        // PŘIJMOUT REKRUTA
+        // ===============================
+
+        if (interaction.customId.startsWith("acceptRecruit_")) {
 
 
 
-        const member = await interaction.guild.members.fetch(userId);
+            const userId = interaction.customId.replace(
+                "acceptRecruit_",
+                ""
+            );
 
 
 
-        // Přidání role Rekrut
-
-        await member.roles.add(
-            "1458487234989654201"
-        );
+            const member = await interaction.guild.members.fetch(
+                userId
+            );
 
 
 
-        // Přejmenování ticketu
+            // Přidání role Rekrut
 
-        await interaction.channel.setName(
-            `rekrut-${member.user.username}`
-        );
+            await member.roles.add(
+                "1458487234989654201"
+            );
 
 
 
-        await interaction.update({
+            // Přejmenování ticketu
 
-            content:
+            await interaction.channel.setName(
+                `rekrut-${member.user.username}`
+            ).catch(()=>{});
+
+
+
+            await interaction.update({
+
+                content:
 `✅ ${member} byl přijat do GUTALAX MILSIM.
 
 🎖 Byla ti přidělena role Rekrut.
 Vítej v jednotce!`,
 
-            embeds: [],
+                embeds: [],
 
-            components: []
+                components: []
 
-        });
-
-
-
-        return;
-
-    }
+            });
 
 
+
+            return;
+
+        }
 
 
 
 
 
-    // ===============================
-    // POHOVOR
-    // ===============================
 
-    if (interaction.customId.startsWith("interviewRecruit_")) {
+        // ===============================
+        // POHOVOR
+        // ===============================
 
-
-
-        const userId = interaction.customId.replace(
-            "interviewRecruit_",
-            ""
-        );
+        if (interaction.customId.startsWith("interviewRecruit_")) {
 
 
 
-        const member = await interaction.guild.members.fetch(userId);
+            const userId = interaction.customId.replace(
+                "interviewRecruit_",
+                ""
+            );
 
 
 
-        await interaction.reply({
+            const member = await interaction.guild.members.fetch(
+                userId
+            );
 
-            content:
-`🎤 **Pohovor požaduje ${member}**
+
+
+            await interaction.reply({
+
+                content:
+`${member}
+
+🎤 **Pohovor požadován**
 
 <@&1533447617957073117>
 
 Náborář prosím zahajte pohovor s uchazečem.`,
 
-            allowedMentions: {
+                allowedMentions: {
 
-                users: [
-                    member.id
-                ],
+                    users: [
+                        member.id
+                    ],
 
-                roles: [
-                    "1533447617957073117"
-                ]
+                    roles: [
+                        "1533447617957073117"
+                    ]
 
-            }
+                }
 
-        });
+            });
 
 
 
-        return;
+            return;
+
+        }
+
+
+
+
+
+
+        // ===============================
+        // ODMÍTNOUT
+        // ===============================
+
+        if (interaction.customId.startsWith("rejectRecruit_")) {
+
+
+
+            const userId = interaction.customId.replace(
+                "rejectRecruit_",
+                ""
+            );
+
+
+
+            const member = await interaction.guild.members.fetch(
+                userId
+            );
+
+
+
+            await interaction.update({
+
+                content:
+`❌ ${member} byl odmítnut.`,
+
+                embeds: [],
+
+                components: []
+
+            });
+
+
+
+            setTimeout(() => {
+
+
+                interaction.channel.delete()
+                .catch(()=>{});
+
+
+            },5000);
+
+
+
+            return;
+
+        }
+
+
 
     }
+    catch(err) {
 
 
 
-
-
-
-
-    // ===============================
-    // ODMÍTNOUT
-    // ===============================
-
-    if (interaction.customId.startsWith("rejectRecruit_")) {
-
-
-
-        const userId = interaction.customId.replace(
-            "rejectRecruit_",
-            ""
+        console.error(
+            "❌ recruitButtons chyba:"
         );
 
 
-
-        const member = await interaction.guild.members.fetch(userId);
-
-
-
-        await interaction.update({
-
-            content:
-`❌ ${member} byl odmítnut.`,
-
-            embeds: [],
-
-            components: []
-
-        });
+        console.error(err);
 
 
 
+        if(
+            !interaction.replied &&
+            !interaction.deferred
+        ){
 
 
-        setTimeout(() => {
+            await interaction.reply({
+
+                content:
+                "❌ Nastala chyba při zpracování tlačítka.",
+
+                ephemeral:true
+
+            }).catch(()=>{});
 
 
-            interaction.channel.delete()
-                .catch(() => {});
+        }
 
-
-        },5000);
-
-
-
-        return;
 
     }
-
 
 
 };
