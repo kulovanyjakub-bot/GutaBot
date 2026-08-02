@@ -29,52 +29,42 @@ async function rankChecker(member, guild){
 
 
 
-        let currentRank =
-            ranks.find(
 
-                r =>
+
+        // =================================
+        // NAJDI AKTUÁLNÍ NEJVYŠŠÍ HODNOST
+        // =================================
+
+
+        let currentRank = null;
+
+        let currentLevel = 0;
+
+
+
+
+        for(const rank of ranks){
+
+
+
+            if(
+
                 member.roles.cache.has(
-                    r.id
+                    rank.id
                 )
 
-            );
+                &&
 
-
-
-
-
-        let newRank = null;
-
-
-
-
-
-        for(
-            const rank of ranks
-        ){
-
-
-            if(
-                !rank.automatic
-            )
-                continue;
-
-
-
-
-            if(
-
-                data.missions >= rank.missions &&
-
-                data.trainings >= rank.trainings &&
-
-                data.activity >= rank.activity &&
-
-                data.teamwork >= rank.teamwork
+                rank.level > currentLevel
 
             ){
 
-                newRank = rank;
+
+                currentRank = rank;
+
+
+                currentLevel = rank.level;
+
 
             }
 
@@ -87,7 +77,83 @@ async function rankChecker(member, guild){
 
 
 
+        let newRank = null;
+
+
+
+
+
+
+
+        // =================================
+        // KONTROLA AUTOMATICKÝCH HODNOSTÍ
+        // =================================
+
+
+        for(const rank of ranks){
+
+
+
+            // pouze automatické hodnosti
+
+            if(
+                !rank.automatic
+            )
+                continue;
+
+
+
+
+
+            // maximálně Rotný
+
+            if(
+                rank.level > 5
+            )
+                continue;
+
+
+
+
+
+
+            if(
+
+
+                data.missions >= rank.missions &&
+
+
+                data.trainings >= rank.trainings &&
+
+
+                data.activity >= rank.activity &&
+
+
+                data.teamwork >= rank.teamwork
+
+
+
+            ){
+
+
+                newRank = rank;
+
+
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
         if(!newRank)
+
             return;
 
 
@@ -96,11 +162,12 @@ async function rankChecker(member, guild){
 
 
 
+
+        // už má stejnou nebo vyšší hodnost
+
         if(
 
-            currentRank &&
-
-            currentRank.level >= newRank.level
+            currentLevel >= newRank.level
 
         ){
 
@@ -114,23 +181,30 @@ async function rankChecker(member, guild){
 
 
 
-        // odebrání starých hodností
 
 
-        for(
-            const rank of ranks
-        ){
+        // =================================
+        // ODEBRÁNÍ STARÉ HODNOSTI
+        // =================================
+
+
+        for(const rank of ranks){
+
 
 
             if(
+
                 member.roles.cache.has(
                     rank.id
                 )
+
             ){
 
 
                 await member.roles.remove(
+
                     rank.id
+
                 );
 
 
@@ -146,7 +220,9 @@ async function rankChecker(member, guild){
 
 
 
-        // přidání nové hodnosti
+        // =================================
+        // PŘIDÁNÍ NOVÉ HODNOSTI
+        // =================================
 
 
         await member.roles.add(
@@ -154,6 +230,8 @@ async function rankChecker(member, guild){
             newRank.id
 
         );
+
+
 
 
 
@@ -177,6 +255,11 @@ async function rankChecker(member, guild){
 
 
 
+        // =================================
+        // LOG POVÝŠENÍ
+        // =================================
+
+
         const channel =
 
             guild.channels.cache.get(
@@ -194,28 +277,40 @@ async function rankChecker(member, guild){
         if(channel){
 
 
+
             await channel.send({
+
 
 
                 content:
 
+
                 `🎖 **POVÝŠENÍ ČLENA**\n\n` +
+
 
                 `🪖 Člen: ${member}\n\n` +
 
-                `⬆️ Nová hodnost: **${newRank.name}**\n\n` +
 
-                `🎯 Mise: ${data.missions}\n` +
+                `⬆️ Hodnost:\n` +
 
-                `🏋️ Výcviky: ${data.trainings}\n` +
+                `**${currentRank ? currentRank.name : "Bez hodnosti"}** ➡️ **${newRank.name}**\n\n` +
 
-                `⚡ Aktivita: ${data.activity}/100\n` +
 
-                `🤝 Týmová práce: ${data.teamwork}/100\n\n` +
+                `📊 Statistiky:\n` +
+
+                `🎯 Mise: **${data.missions}**\n` +
+
+                `🏋️ Výcviky: **${data.trainings}**\n` +
+
+                `⚡ Aktivita: **${data.activity}/100**\n` +
+
+                `🤝 Týmová práce: **${data.teamwork}/100**\n\n` +
+
 
                 `🪖 **GUTALAX MILSIM**\n` +
 
                 `Respekt. Komunikace. Tým.`
+
 
 
             });
@@ -228,11 +323,18 @@ async function rankChecker(member, guild){
 
 
 
+
+
+
         console.log(
 
-            `🎖 ${member.user.username} povýšen na ${newRank.name}`
+
+            `🎖 ${member.user.username} povýšen ${currentRank ? currentRank.name : "bez hodnosti"} → ${newRank.name}`
+
 
         );
+
+
 
 
 
@@ -240,6 +342,7 @@ async function rankChecker(member, guild){
 
 
     catch(err){
+
 
 
         console.error(
@@ -255,6 +358,7 @@ async function rankChecker(member, guild){
 
 
 }
+
 
 
 
