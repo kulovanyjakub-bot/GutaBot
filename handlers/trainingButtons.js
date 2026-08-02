@@ -3,6 +3,11 @@ const {
 } = require("discord.js");
 
 
+const trainingDB =
+    require("../database/trainingDatabase");
+
+
+
 module.exports = async (interaction) => {
 
 
@@ -13,13 +18,43 @@ module.exports = async (interaction) => {
         // ÚČAST NA VÝCVIKU
         // ===============================
 
-        if (interaction.customId === "trainingJoin") {
+
+        if(
+            interaction.customId.startsWith("trainingJoin_")
+        ){
+
+
+            const trainingId =
+                interaction.customId.replace(
+                    "trainingJoin_",
+                    ""
+                );
+
+
+
+            trainingDB.addParticipant(
+
+                trainingId,
+
+                {
+
+                    id: interaction.user.id,
+
+                    username: interaction.user.username
+
+                }
+
+            );
+
+
+
 
 
             const embed =
                 EmbedBuilder.from(
                     interaction.message.embeds[0]
                 );
+
 
 
             let field =
@@ -42,28 +77,19 @@ module.exports = async (interaction) => {
 
 
             if(
-                members.includes(entry)
+                !members.includes(entry)
             ){
 
-                return interaction.reply({
-
-                    content:
-                    "⚠️ Už jsi přihlášen.",
-
-                    ephemeral:true
-
-                });
+                members.push(entry);
 
             }
 
 
 
-            members.push(entry);
-
-
-
             field.value =
                 members.join("\n");
+
+
 
 
 
@@ -87,11 +113,36 @@ module.exports = async (interaction) => {
 
 
 
+
         // ===============================
         // ODHLÁŠENÍ
         // ===============================
 
-        if (interaction.customId === "trainingLeave") {
+
+        if(
+            interaction.customId.startsWith("trainingLeave_")
+        ){
+
+
+
+            const trainingId =
+                interaction.customId.replace(
+                    "trainingLeave_",
+                    ""
+                );
+
+
+
+            trainingDB.removeParticipant(
+
+                trainingId,
+
+                interaction.user.id
+
+            );
+
+
+
 
 
             const embed =
@@ -117,16 +168,23 @@ module.exports = async (interaction) => {
 
             members =
                 members.filter(
+
                     m =>
-                    m !== `🪖 ${interaction.user.username}`
+                    m !==
+                    `🪖 ${interaction.user.username}`
+
                 );
 
 
 
             field.value =
                 members.length
-                ? members.join("\n")
-                : "Nikdo přihlášen";
+                ?
+                members.join("\n")
+                :
+                "Nikdo přihlášen";
+
+
 
 
 
@@ -150,11 +208,15 @@ module.exports = async (interaction) => {
 
 
 
+
         // ===============================
         // UKONČENÍ VÝCVIKU
         // ===============================
 
-        if (interaction.customId === "trainingClose") {
+
+        if(
+            interaction.customId.startsWith("trainingClose_")
+        ){
 
 
 
@@ -164,7 +226,9 @@ module.exports = async (interaction) => {
 
 
             if(
-                !interaction.member.roles.cache.has(milsimRole)
+                !interaction.member.roles.cache.has(
+                    milsimRole
+                )
             ){
 
                 return interaction.reply({
@@ -188,6 +252,7 @@ module.exports = async (interaction) => {
 
 
 
+
             if(archive){
 
 
@@ -205,17 +270,21 @@ module.exports = async (interaction) => {
 
 
 
+
             await interaction.update({
 
                 content:
                 "🔒 Výcvik byl ukončen a uložen do archivu.",
 
+
                 embeds:
                 interaction.message.embeds,
+
 
                 components:[]
 
             });
+
 
 
 
@@ -243,7 +312,7 @@ module.exports = async (interaction) => {
             !interaction.deferred
         ){
 
-            interaction.reply({
+            await interaction.reply({
 
                 content:
                 "❌ Chyba při zpracování výcviku.",
