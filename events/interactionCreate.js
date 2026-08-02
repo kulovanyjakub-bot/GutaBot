@@ -4,11 +4,25 @@ module.exports = async (interaction, client) => {
     try {
 
 
+        console.log(
+            "INTERACTION:",
+            interaction.type,
+            interaction.customId || interaction.commandName
+        );
+
+
+
         // ===============================
         // TLAČÍTKA
         // ===============================
 
         if (interaction.isButton()) {
+
+
+            console.log(
+                "BUTTON:",
+                interaction.customId
+            );
 
 
             const recruitButtons = require(
@@ -34,6 +48,12 @@ module.exports = async (interaction, client) => {
         if (interaction.isModalSubmit()) {
 
 
+            console.log(
+                "MODAL:",
+                interaction.customId
+            );
+
+
             const recruitModal = require(
                 "../handlers/recruitModal"
             );
@@ -56,6 +76,13 @@ module.exports = async (interaction, client) => {
 
         if (!interaction.isChatInputCommand())
             return;
+
+
+
+        console.log(
+            "COMMAND:",
+            interaction.commandName
+        );
 
 
 
@@ -101,9 +128,9 @@ module.exports = async (interaction, client) => {
                 content:
                 "❌ Nastala chyba při zpracování.",
 
-                ephemeral:true
+                ephemeral: true
 
-            }).catch(()=>{});
+            }).catch(() => {});
 
 
         }
