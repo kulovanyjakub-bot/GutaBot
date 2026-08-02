@@ -192,10 +192,15 @@ module.exports = {
             nazev,
 
 
+            map:
+            mapa,
+
+
             participants:
             []
 
         });
+
 
 
         console.log(
@@ -373,7 +378,7 @@ module.exports = {
 
             interaction.guild.channels.cache.get(
 
-                "1381674086089883698"
+                "1381666660318056621"
 
             );
 
