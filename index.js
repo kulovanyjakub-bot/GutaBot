@@ -19,28 +19,41 @@ const {
 // VYTVOŘENÍ CLIENTA
 // ==========================
 
+
 const client = new Client({
+
 
     intents: [
 
+
         GatewayIntentBits.Guilds,
+
 
         GatewayIntentBits.GuildMembers,
 
+
         GatewayIntentBits.GuildMessages,
 
+
         GatewayIntentBits.MessageContent
+
 
     ],
 
 
+
     partials: [
+
 
         Partials.Channel
 
+
     ]
 
+
 });
+
+
 
 
 
@@ -63,41 +76,74 @@ const commandsPath = path.join(
 
 
 
-if (fs.existsSync(commandsPath)) {
+
+if(fs.existsSync(commandsPath)){
 
 
     const commandFiles = fs
+
         .readdirSync(commandsPath)
+
         .filter(
-            file => file.endsWith(".js")
+
+            file =>
+
+            file.endsWith(".js")
+
         );
 
 
 
-    for (const file of commandFiles) {
+
+
+    for(const file of commandFiles){
+
 
 
         const command = require(
-            path.join(commandsPath, file)
+
+            path.join(
+
+                commandsPath,
+
+                file
+
+            )
+
         );
 
 
 
-        if (
+
+
+        if(
+
             command.data &&
+
             command.execute
-        ) {
+
+        ){
+
 
 
             client.commands.set(
+
                 command.data.name,
+
                 command
+
             );
+
+
+
 
 
             console.log(
+
                 `✅ Načten command: ${command.data.name}`
+
             );
+
 
 
         }
@@ -114,23 +160,136 @@ if (fs.existsSync(commandsPath)) {
 
 
 
+
+// ==========================
+// NAČTENÍ EVENTŮ
+// ==========================
+
+
+const eventsPath = path.join(
+
+    __dirname,
+
+    "events"
+
+);
+
+
+
+
+
+if(fs.existsSync(eventsPath)){
+
+
+
+    const eventFiles = fs
+
+        .readdirSync(eventsPath)
+
+        .filter(
+
+            file =>
+
+            file.endsWith(".js")
+
+        );
+
+
+
+
+
+
+
+    for(const file of eventFiles){
+
+
+
+        const event = require(
+
+            path.join(
+
+                eventsPath,
+
+                file
+
+            )
+
+        );
+
+
+
+
+
+
+        if(event.name){
+
+
+
+            client.on(
+
+                event.name,
+
+                (...args) =>
+
+                event.execute(...args)
+
+            );
+
+
+
+
+
+
+            console.log(
+
+                `✅ Načten event: ${event.name}`
+
+            );
+
+
+
+        }
+
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
 // ==========================
 // READY
 // ==========================
 
 
 client.once(
+
     "ready",
+
     () => {
 
 
         console.log(
+
             `✅ Přihlášen jako ${client.user.tag}`
+
         );
 
 
     }
+
+
 );
+
 
 
 
@@ -145,36 +304,51 @@ client.once(
 
 
 const interactionHandler = require(
+
     "./events/interactionCreate"
+
 );
 
 
 
 
 
+
 client.on(
+
     "interactionCreate",
+
     async (interaction) => {
+
 
 
         try {
 
 
 
+
             // BUTTONY + MODALY
 
-            if (
+
+            if(
+
 
                 interaction.isButton() ||
 
+
                 interaction.isModalSubmit()
 
-            ) {
+
+            ){
+
 
 
                 return await interactionHandler(
+
                     interaction,
+
                     client
+
                 );
 
 
@@ -186,37 +360,55 @@ client.on(
 
 
 
+
             // SLASH COMMANDY
 
 
-            if (
+            if(
+
                 !interaction.isChatInputCommand()
+
             )
+
                 return;
+
+
 
 
 
 
 
             const command =
+
                 client.commands.get(
+
                     interaction.commandName
+
                 );
 
 
 
 
 
-            if (!command)
+
+
+            if(!command)
+
                 return;
 
 
 
 
 
+
+
+
             await command.execute(
+
                 interaction,
+
                 client
+
             );
 
 
@@ -224,45 +416,71 @@ client.on(
 
 
 
-        } catch (error) {
+        }
+
+
+
+        catch(error){
+
 
 
             console.error(
+
                 "❌ Interaction error:",
+
                 error
+
             );
 
 
 
 
-            if (
+
+
+            if(
+
                 interaction.replied ||
+
                 interaction.deferred
-            ) {
+
+            ){
+
 
 
                 await interaction.followUp({
 
                     content:
+
                     "❌ Nastala chyba.",
+
 
                     ephemeral:true
 
-                }).catch(() => {});
+
+                }).catch(()=>{});
 
 
 
-            } else {
+            }
+
+            else {
+
 
 
                 await interaction.reply({
 
+
                     content:
+
                     "❌ Nastala chyba.",
+
 
                     ephemeral:true
 
-                }).catch(() => {});
+
+
+                }).catch(()=>{});
+
 
 
             }
@@ -275,7 +493,9 @@ client.on(
 
     }
 
+
 );
+
 
 
 
@@ -290,9 +510,14 @@ client.on(
 
 
 client.on(
+
     "error",
+
     console.error
+
 );
+
+
 
 
 
@@ -306,5 +531,7 @@ client.on(
 
 
 client.login(
+
     process.env.TOKEN
+
 );
