@@ -22,7 +22,8 @@ function loadMembers(){
 
         fs.writeFileSync(
             filePath,
-            "[]"
+            "[]",
+            "utf8"
         );
 
     }
@@ -107,6 +108,21 @@ function createMember(member){
 
 
 
+    const exists =
+        members.find(
+
+            m =>
+            m.id === member.id
+
+        );
+
+
+
+    if(exists)
+        return;
+
+
+
     members.push(
         member
     );
@@ -152,9 +168,12 @@ function updateMember(id,data){
 
     members[index] = {
 
+
         ...members[index],
 
+
         ...data
+
 
     };
 
@@ -174,12 +193,12 @@ function updateMember(id,data){
 
 
 
+
 function addTraining(id){
 
 
     let members =
         loadMembers();
-
 
 
 
@@ -194,21 +213,26 @@ function addTraining(id){
 
 
 
-    // pokud člen ještě není v databázi
-    // automaticky ho vytvoříme
+
+    // AUTOMATICKÉ VYTVOŘENÍ ČLENA
 
     if(!member){
 
 
         member = {
 
+
             id:id,
+
 
             trainings:0,
 
+
             missions:0,
 
+
             lastActivity:null
+
 
         };
 
@@ -226,11 +250,17 @@ function addTraining(id){
 
 
 
+
+
     if(!member.trainings){
+
 
         member.trainings = 0;
 
+
     }
+
+
 
 
 
@@ -246,12 +276,21 @@ function addTraining(id){
 
 
 
+
     saveMembers(
         members
     );
 
 
+
+    console.log(
+        "✅ ULOŽEN VÝCVIK ČLENOVI:",
+        member
+    );
+
+
 }
+
 
 
 
@@ -268,7 +307,6 @@ function addMission(id){
 
 
 
-
     let member =
         members.find(
 
@@ -286,13 +324,18 @@ function addMission(id){
 
         member = {
 
+
             id:id,
+
 
             trainings:0,
 
+
             missions:0,
 
+
             lastActivity:null
+
 
         };
 
@@ -310,9 +353,13 @@ function addMission(id){
 
 
 
+
+
     if(!member.missions){
 
+
         member.missions = 0;
+
 
     }
 
@@ -331,8 +378,16 @@ function addMission(id){
 
 
 
+
     saveMembers(
         members
+    );
+
+
+
+    console.log(
+        "✅ ULOŽENA MISE ČLENOVI:",
+        member
     );
 
 
@@ -350,13 +405,18 @@ module.exports = {
 
     loadMembers,
 
+
     getMember,
+
 
     createMember,
 
+
     updateMember,
 
+
     addTraining,
+
 
     addMission
 
