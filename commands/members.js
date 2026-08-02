@@ -18,7 +18,6 @@ module.exports = {
         await interaction.deferReply();
 
 
-
         await interaction.guild.members.fetch();
 
 
@@ -28,69 +27,71 @@ module.exports = {
 
 
 
-        const recruits = interaction.guild.members.cache
-            .filter(member =>
-                member.roles.cache.has(recruitRole)
-            )
-            .map((member, index) =>
-                `**${index + 1}.** ${member}`
-            )
-            .join("\n") || "*Žádní rekruti*";
-
-
-
-        const milsim = interaction.guild.members.cache
+        const milsimMembers = interaction.guild.members.cache
             .filter(member =>
                 member.roles.cache.has(milsimRole)
-            )
-            .map((member, index) =>
-                `**${index + 1}.** ${member}`
-            )
-            .join("\n") || "*Žádní členové*";
+            );
 
 
-
-        const total =
-            interaction.guild.members.cache.filter(member =>
-                member.roles.cache.has(milsimRole) ||
+        const recruitMembers = interaction.guild.members.cache
+            .filter(member =>
                 member.roles.cache.has(recruitRole)
-            ).size;
+            );
+
+
+
+        const milsimList = milsimMembers
+            .map(member =>
+                `🪖 ${member.user.username}`
+            )
+            .slice(0, 30)
+            .join("\n") || "Žádní členové";
+
+
+
+        const recruitList = recruitMembers
+            .map(member =>
+                `🎖 ${member.user.username}`
+            )
+            .slice(0, 30)
+            .join("\n") || "Žádní rekruti";
+
 
 
 
         const embed = new EmbedBuilder()
 
-            .setColor(0x1f8b4c)
+            .setColor("#1f8b4c")
 
             .setTitle("📋 GUTALAX MILSIM")
-            
+
             .setDescription(
-                "## Personální evidence jednotky"
+                "Personální evidence jednotky"
             )
+
 
             .addFields(
 
                 {
-                    name: "🪖 MILSIM",
-                    value: milsim,
-                    inline: false
-                },
-
-
-                {
-                    name: "🎖 Rekruti",
-                    value: recruits,
-                    inline: false
-                },
-
-
-                {
-                    name: "📊 Statistiky",
-                    value:
-                    `👥 Celkem evidováno: **${total}**\n` +
-                    `🪖 Aktivní členové: **${interaction.guild.members.cache.filter(m => m.roles.cache.has(milsimRole)).size}**\n` +
-                    `🎖 Rekruti: **${interaction.guild.members.cache.filter(m => m.roles.cache.has(recruitRole)).size}**`,
+                    name:`🪖 MILSIM (${milsimMembers.size})`,
+                    value:milsimList,
                     inline:false
+                },
+
+
+                {
+                    name:`🎖 Rekruti (${recruitMembers.size})`,
+                    value:recruitList,
+                    inline:false
+                },
+
+
+                {
+                    name:"📊 Statistiky",
+                    value:
+                    `👥 Celkem: **${milsimMembers.size + recruitMembers.size}**\n` +
+                    `🪖 Aktivní členové: **${milsimMembers.size}**\n` +
+                    `🎖 Rekruti: **${recruitMembers.size}**`
                 }
 
             )
@@ -106,11 +107,9 @@ module.exports = {
 
 
         await interaction.editReply({
-
             embeds:[
                 embed
             ]
-
         });
 
 
