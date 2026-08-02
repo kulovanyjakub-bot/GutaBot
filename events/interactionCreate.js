@@ -1,14 +1,7 @@
 module.exports = async (interaction, client) => {
 
+
     try {
-
-
-        console.log(
-            "INTERACTION:",
-            interaction.type,
-            interaction.customId || interaction.commandName
-        );
-
 
 
         // ===============================
@@ -25,30 +18,36 @@ module.exports = async (interaction, client) => {
 
 
 
-            // Otevření náborového formuláře
+            // OTEVŘÍT NÁBOROVÝ MODAL
 
             if (
                 interaction.customId === "openRecruit"
             ) {
 
 
-                const recruitModal = require(
-                    "../handlers/recruitModal"
-                );
+                const recruitOpen =
+                    require(
+                        "../handlers/recruitOpen"
+                    );
 
 
-                return await recruitModal(
+                return await recruitOpen(
                     interaction
                 );
+
 
             }
 
 
 
 
-            const recruitButtons = require(
-                "../handlers/recruitButtons"
-            );
+
+            // TLAČÍTKA V TICKETU
+
+            const recruitButtons =
+                require(
+                    "../handlers/recruitButtons"
+                );
 
 
             return await recruitButtons(
@@ -63,10 +62,12 @@ module.exports = async (interaction, client) => {
 
 
         // ===============================
-        // MODAL
+        // MODAL SUBMIT
         // ===============================
 
-        if (interaction.isModalSubmit()) {
+        if (
+            interaction.isModalSubmit()
+        ) {
 
 
             console.log(
@@ -76,14 +77,23 @@ module.exports = async (interaction, client) => {
 
 
 
-            const recruitModal = require(
-                "../handlers/recruitModal"
-            );
+            if (
+                interaction.customId === "recruitModal"
+            ) {
 
 
-            return await recruitModal(
-                interaction
-            );
+                const recruitModal =
+                    require(
+                        "../handlers/recruitModal"
+                    );
+
+
+                return await recruitModal(
+                    interaction
+                );
+
+
+            }
 
 
         }
@@ -96,8 +106,11 @@ module.exports = async (interaction, client) => {
         // SLASH COMMANDY
         // ===============================
 
-        if (!interaction.isChatInputCommand())
+        if (
+            !interaction.isChatInputCommand()
+        )
             return;
+
 
 
 
@@ -108,8 +121,10 @@ module.exports = async (interaction, client) => {
 
 
 
+
         if (!command)
             return;
+
 
 
 
@@ -119,7 +134,10 @@ module.exports = async (interaction, client) => {
 
 
 
-    } catch(err) {
+
+
+    } catch (err) {
+
 
 
         console.error(
@@ -128,6 +146,7 @@ module.exports = async (interaction, client) => {
 
 
         console.error(err);
+
 
 
 
@@ -142,12 +161,13 @@ module.exports = async (interaction, client) => {
                 content:
                 "❌ Nastala chyba při zpracování.",
 
-                ephemeral:true
+                ephemeral: true
 
-            }).catch(()=>{});
+            }).catch(() => {});
 
 
         }
+
 
 
     }
