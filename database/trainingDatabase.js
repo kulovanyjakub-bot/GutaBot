@@ -1,4 +1,3 @@
-
 const fs = require("fs");
 const path = require("path");
 
@@ -13,7 +12,7 @@ const filePath = path.join(
 function loadTrainings() {
 
 
-    if(!fs.existsSync(filePath)){
+    if (!fs.existsSync(filePath)) {
 
         fs.writeFileSync(
             filePath,
@@ -25,18 +24,17 @@ function loadTrainings() {
 
     return JSON.parse(
         fs.readFileSync(
-            filePath
+            filePath,
+            "utf8"
         )
     );
-
 
 }
 
 
 
 
-
-function saveTrainings(data){
+function saveTrainings(data) {
 
 
     fs.writeFileSync(
@@ -47,10 +45,11 @@ function saveTrainings(data){
             data,
             null,
             4
-        )
+        ),
+
+        "utf8"
 
     );
-
 
 }
 
@@ -58,14 +57,22 @@ function saveTrainings(data){
 
 
 
-function createTraining(training){
+function createTraining(training) {
+
+
+    console.log(
+        "📅 Vytvářím výcvik:",
+        training
+    );
 
 
     const trainings =
         loadTrainings();
 
 
-    trainings.push(training);
+    trainings.push(
+        training
+    );
 
 
     saveTrainings(
@@ -79,7 +86,9 @@ function createTraining(training){
 
 
 
-function getTraining(id){
+
+
+function getTraining(id) {
 
 
     const trainings =
@@ -87,7 +96,9 @@ function getTraining(id){
 
 
     return trainings.find(
+
         t => t.id === id
+
     );
 
 
@@ -97,48 +108,9 @@ function getTraining(id){
 
 
 
-function updateTraining(id,data){
 
 
-    const trainings =
-        loadTrainings();
-
-
-
-    const index =
-        trainings.findIndex(
-            t => t.id === id
-        );
-
-
-
-    if(index === -1)
-        return;
-
-
-
-    trainings[index] = {
-
-        ...trainings[index],
-
-        ...data
-
-    };
-
-
-
-    saveTrainings(
-        trainings
-    );
-
-
-}
-
-
-
-
-
-function addParticipant(trainingId,user){
+function addParticipant(trainingId, user) {
 
 
     const training =
@@ -151,8 +123,16 @@ function addParticipant(trainingId,user){
 
 
 
-    if(!training.participants.includes(user.id)){
+    const exists =
+        training.participants.find(
 
+            p => p.id === user.id
+
+        );
+
+
+
+    if(!exists){
 
         training.participants.push({
 
@@ -162,17 +142,21 @@ function addParticipant(trainingId,user){
 
         });
 
-
     }
 
 
 
-    updateTraining(
+    saveTrainings(
+        loadTrainings().map(
 
-        trainingId,
+            t =>
+            t.id === trainingId
+            ?
+            training
+            :
+            t
 
-        training
-
+        )
     );
 
 
@@ -182,7 +166,9 @@ function addParticipant(trainingId,user){
 
 
 
-function removeParticipant(trainingId,userId){
+
+
+function removeParticipant(trainingId, userId) {
 
 
     const training =
@@ -198,22 +184,30 @@ function removeParticipant(trainingId,userId){
     training.participants =
         training.participants.filter(
 
-            u => u.id !== userId
+            p =>
+            p.id !== userId
 
         );
 
 
 
-    updateTraining(
+    saveTrainings(
+        loadTrainings().map(
 
-        trainingId,
+            t =>
+            t.id === trainingId
+            ?
+            training
+            :
+            t
 
-        training
-
+        )
     );
 
 
 }
+
+
 
 
 
@@ -225,8 +219,6 @@ module.exports = {
     createTraining,
 
     getTraining,
-
-    updateTraining,
 
     addParticipant,
 
