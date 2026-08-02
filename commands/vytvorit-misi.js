@@ -19,7 +19,7 @@ module.exports = {
 
         .setName("vytvorit-misi")
 
-        .setDescription("Vytvoří novou misi GUTALAX MILSIM")
+        .setDescription("Vytvoří novou MILSIM misi")
 
 
         .addStringOption(option =>
@@ -28,18 +28,6 @@ module.exports = {
             .setName("nazev")
 
             .setDescription("Název mise")
-
-            .setRequired(true)
-
-        )
-
-
-        .addStringOption(option =>
-            option
-
-            .setName("datum")
-
-            .setDescription("Datum a čas mise")
 
             .setRequired(true)
 
@@ -61,6 +49,18 @@ module.exports = {
         .addStringOption(option =>
             option
 
+            .setName("datum")
+
+            .setDescription("Datum a čas mise")
+
+            .setRequired(true)
+
+        )
+
+
+        .addStringOption(option =>
+            option
+
             .setName("popis")
 
             .setDescription("Popis mise")
@@ -73,7 +73,7 @@ module.exports = {
 
 
 
-    async execute(interaction) {
+    async execute(interaction){
 
 
 
@@ -83,11 +83,8 @@ module.exports = {
 
 
 
-
         if(
-            !interaction.member.roles.cache.has(
-                milsimRole
-            )
+            !interaction.member.roles.cache.has(milsimRole)
         ){
 
 
@@ -112,12 +109,12 @@ module.exports = {
             interaction.options.getString("nazev");
 
 
-        const datum =
-            interaction.options.getString("datum");
-
-
         const mapa =
             interaction.options.getString("mapa");
+
+
+        const datum =
+            interaction.options.getString("datum");
 
 
         const popis =
@@ -138,6 +135,7 @@ module.exports = {
 
 
 
+
         missionDB.createMission({
 
             id:
@@ -148,12 +146,12 @@ module.exports = {
             nazev,
 
 
-            date:
-            datum,
-
-
             map:
             mapa,
+
+
+            date:
+            datum,
 
 
             description:
@@ -183,17 +181,13 @@ module.exports = {
 
         console.log({
 
-            id:
-            missionId,
+            id: missionId,
 
-            name:
-            nazev,
+            name: nazev,
 
-            map:
-            mapa,
+            map: mapa,
 
-            participants:
-            []
+            participants: []
 
         });
 
@@ -219,76 +213,78 @@ module.exports = {
 
 
 
+
         const embed =
-            new EmbedBuilder()
+
+        new EmbedBuilder()
+
+        .setColor("#b30000")
 
 
-
-            .setColor("#c0392b")
-
-
-
-            .setTitle("🎯 MISE")
+        .setTitle(
+            "🎯 MISE"
+        )
 
 
+        .setDescription(
 
-            .setDescription(
+            `**${nazev}**`
 
-                `**${nazev}**`
-
-            )
-
+        )
 
 
-            .addFields(
-
-                {
-
-                    name:
-                    "🗺 Mapa",
-
-                    value:
-                    mapa
-
-                },
+        .addFields(
 
 
-                {
+            {
 
-                    name:
-                    "📅 Datum",
+                name:
+                "🗺 Mapa",
 
-                    value:
-                    datum
+                value:
+                mapa
 
-                },
-
-
-                {
-
-                    name:
-                    "📋 Popis",
-
-                    value:
-                    popis
-
-                },
+            },
 
 
-                {
+            {
 
-                    name:
-                    "👥 Účast",
+                name:
+                "📅 Datum",
 
-                    value:
-                    "Nikdo přihlášen"
+                value:
+                datum
 
-                }
-
-            )
+            },
 
 
-            .setTimestamp();
+            {
+
+                name:
+                "📋 Popis",
+
+                value:
+                popis
+
+            },
+
+
+            {
+
+                name:
+                "👥 Účast",
+
+                value:
+                "Nikdo přihlášen"
+
+            }
+
+
+        )
+
+
+        .setTimestamp();
+
 
 
 
@@ -299,59 +295,71 @@ module.exports = {
 
         const buttons =
 
-            new ActionRowBuilder()
-
-            .addComponents(
+        new ActionRowBuilder()
 
 
-                new ButtonBuilder()
-
-                .setCustomId(
-                    `missionJoin_${missionId}`
-                )
-
-                .setLabel(
-                    "✅ Účastním se"
-                )
-
-                .setStyle(
-                    ButtonStyle.Success
-                ),
+        .addComponents(
 
 
 
-                new ButtonBuilder()
+            new ButtonBuilder()
 
-                .setCustomId(
-                    `missionLeave_${missionId}`
-                )
+            .setCustomId(
 
-                .setLabel(
-                    "❌ Neúčastním se"
-                )
+                `missionJoin_${missionId}`
 
-                .setStyle(
-                    ButtonStyle.Danger
-                ),
+            )
 
+            .setLabel(
+                "✅ Účastním se"
+            )
 
-
-                new ButtonBuilder()
-
-                .setCustomId(
-                    `missionClose_${missionId}`
-                )
-
-                .setLabel(
-                    "🔒 Ukončit misi"
-                )
-
-                .setStyle(
-                    ButtonStyle.Secondary
-                )
+            .setStyle(
+                ButtonStyle.Success
+            ),
 
 
-            );
+
+
+
+            new ButtonBuilder()
+
+            .setCustomId(
+
+                `missionLeave_${missionId}`
+
+            )
+
+            .setLabel(
+                "❌ Neúčastním se"
+            )
+
+            .setStyle(
+                ButtonStyle.Danger
+            ),
+
+
+
+
+
+            new ButtonBuilder()
+
+            .setCustomId(
+
+                `missionClose_${missionId}`
+
+            )
+
+            .setLabel(
+                "🔒 Ukončit misi"
+            )
+
+            .setStyle(
+                ButtonStyle.Secondary
+            )
+
+
+        );
 
 
 
@@ -395,44 +403,52 @@ module.exports = {
 
 
 
-        const message =
 
-            await channel.send({
-
-
-                content:
-                "@everyone",
+        await channel.send({
 
 
+            content:
 
-                embeds:[
-
-                    embed
-
-                ],
+            "@everyone",
 
 
 
-                components:[
 
-                    buttons
+            embeds:[
 
-                ],
+                embed
 
-
-
-                allowedMentions:{
-
-                    parse:[
-
-                        "everyone"
-
-                    ]
-
-                }
+            ],
 
 
-            });
+
+
+            components:[
+
+                buttons
+
+            ],
+
+
+
+
+            allowedMentions:{
+
+
+                parse:[
+
+                    "everyone"
+
+                ]
+
+
+            }
+
+
+
+        });
+
+
 
 
 
@@ -447,18 +463,14 @@ module.exports = {
 
         console.log({
 
-            message:
-            message.id,
-
-
             channel:
             channel.id,
-
 
             name:
             channel.name
 
         });
+
 
 
 
