@@ -64,6 +64,8 @@ module.exports = async (interaction) => {
 
 
 
+
+
             const embed =
                 EmbedBuilder.from(
                     interaction.message.embeds[0]
@@ -94,8 +96,11 @@ module.exports = async (interaction) => {
 
 
 
+
+
             const entry =
                 `🪖 ${interaction.user.username}`;
+
 
 
 
@@ -106,6 +111,8 @@ module.exports = async (interaction) => {
                 users.push(entry);
 
             }
+
+
 
 
 
@@ -169,7 +176,6 @@ module.exports = async (interaction) => {
 
 
 
-
             const embed =
                 EmbedBuilder.from(
                     interaction.message.embeds[0]
@@ -188,17 +194,7 @@ module.exports = async (interaction) => {
 
 
             let users =
-                field.value === "Nikdo přihlášen"
-
-                ?
-
-                []
-
-                :
-
                 field.value.split("\n");
-
-
 
 
 
@@ -210,7 +206,6 @@ module.exports = async (interaction) => {
                     `🪖 ${interaction.user.username}`
 
                 );
-
 
 
 
@@ -294,32 +289,62 @@ module.exports = async (interaction) => {
 
 
 
-            const trainingId =
-                interaction.customId.replace(
-                    "trainingClose_",
-                    ""
+
+            const embed =
+                EmbedBuilder.from(
+                    interaction.message.embeds[0]
+                );
+
+
+
+
+            const field =
+                embed.data.fields.find(
+
+                    f =>
+                    f.name === "👥 Účast"
+
                 );
 
 
 
 
 
-            const training =
-                trainingDB.getTraining(
-                    trainingId
-                );
+            let participants = [];
+
+
+
+
+            if(
+                field &&
+                field.value !== "Nikdo přihlášen"
+            ){
+
+
+                participants =
+                    field.value
+                    .split("\n")
+                    .map(
+
+                        x =>
+                        x.replace(
+                            "🪖 ",
+                            ""
+                        )
+
+                    );
+
+
+            }
+
 
 
 
 
 
             console.log(
-                "UKONČUJI VÝCVIK:",
-                JSON.stringify(
-                    training,
-                    null,
-                    4
-                )
+                "ÚČASTNÍCI VÝCVIKU:",
+                participants
             );
 
 
@@ -327,35 +352,44 @@ module.exports = async (interaction) => {
 
 
 
-            if(training){
+            // přidání statistiky
+
+            for(
+                const username of participants
+            ){
+
+
+                const members =
+                    interaction.guild.members.cache.find(
+
+                        m =>
+                        m.user.username === username
+
+                    );
 
 
 
-                for(
-                    const member of training.participants
-                ){
-
+                if(members){
 
 
                     console.log(
-                        "PŘIDÁVÁM VÝCVIK ČLENOVI:",
-                        member.id,
-                        member.username
+                        "PŘIDÁVÁM VÝCVIK:",
+                        members.id,
+                        members.user.username
                     );
 
 
 
                     memberDB.addTraining(
-                        member.id
+                        members.id
                     );
-
 
 
                 }
 
 
-
             }
+
 
 
 
@@ -390,6 +424,8 @@ module.exports = async (interaction) => {
 
 
 
+
+
             await interaction.update({
 
                 content:
@@ -417,7 +453,6 @@ module.exports = async (interaction) => {
 
 
 
-
     }
     catch(err){
 
@@ -426,26 +461,6 @@ module.exports = async (interaction) => {
             "❌ TRAINING BUTTON ERROR:",
             err
         );
-
-
-
-        if(
-            !interaction.replied &&
-            !interaction.deferred
-        ){
-
-
-            interaction.reply({
-
-                content:
-                "❌ Chyba při zpracování výcviku.",
-
-                ephemeral:true
-
-            }).catch(()=>{});
-
-
-        }
 
 
     }
