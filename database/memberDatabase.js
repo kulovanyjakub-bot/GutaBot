@@ -182,7 +182,7 @@ function addTraining(id){
 
 
 
-    const member =
+    let member =
         members.find(
 
             m =>
@@ -192,14 +192,49 @@ function addTraining(id){
 
 
 
-    if(!member)
-        return;
+
+
+    // automatické vytvoření člena,
+    // pokud ještě není v databázi
+
+    if(!member){
+
+
+        member = {
+
+
+            id:id,
+
+
+            trainings:0,
+
+
+            missions:0,
+
+
+            lastActivity:null
+
+
+        };
+
+
+        members.push(
+            member
+        );
+
+
+    }
+
+
+
 
 
 
     if(!member.trainings){
 
+
         member.trainings = 0;
+
 
     }
 
@@ -209,9 +244,9 @@ function addTraining(id){
 
 
 
-
     member.lastActivity =
         new Date().toISOString();
+
 
 
 
@@ -219,6 +254,7 @@ function addTraining(id){
     saveMembers(
         members
     );
+
 
 
 }
@@ -238,7 +274,7 @@ function addMission(id){
 
 
 
-    const member =
+    let member =
         members.find(
 
             m =>
@@ -248,14 +284,45 @@ function addMission(id){
 
 
 
-    if(!member)
-        return;
+
+
+    if(!member){
+
+
+        member = {
+
+
+            id:id,
+
+
+            trainings:0,
+
+
+            missions:0,
+
+
+            lastActivity:null
+
+
+        };
+
+
+        members.push(
+            member
+        );
+
+
+    }
+
+
 
 
 
     if(!member.missions){
 
+
         member.missions = 0;
+
 
     }
 
@@ -291,13 +358,18 @@ module.exports = {
 
     loadMembers,
 
+
     getMember,
+
 
     createMember,
 
+
     updateMember,
 
+
     addTraining,
+
 
     addMission
 
