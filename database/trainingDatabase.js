@@ -2,17 +2,23 @@ const fs = require("fs");
 const path = require("path");
 
 
-const filePath = path.join(
-    __dirname,
-    "trainings.json"
-);
+
+const filePath =
+    path.join(
+        __dirname,
+        "trainings.json"
+    );
 
 
 
-function loadTrainings() {
 
 
-    if (!fs.existsSync(filePath)) {
+function loadTrainings(){
+
+
+    if(
+        !fs.existsSync(filePath)
+    ){
 
         fs.writeFileSync(
             filePath,
@@ -22,6 +28,7 @@ function loadTrainings() {
     }
 
 
+
     return JSON.parse(
         fs.readFileSync(
             filePath,
@@ -29,12 +36,15 @@ function loadTrainings() {
         )
     );
 
+
 }
 
 
 
 
-function saveTrainings(data) {
+
+
+function saveTrainings(data){
 
 
     fs.writeFileSync(
@@ -45,11 +55,10 @@ function saveTrainings(data) {
             data,
             null,
             4
-        ),
-
-        "utf8"
+        )
 
     );
+
 
 }
 
@@ -57,22 +66,84 @@ function saveTrainings(data) {
 
 
 
-function createTraining(training) {
 
 
-    console.log(
-        "📅 Vytvářím výcvik:",
-        training
-    );
+function createTraining(training){
 
 
     const trainings =
         loadTrainings();
 
 
+
     trainings.push(
         training
     );
+
+
+
+    saveTrainings(
+        trainings
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+function addParticipant(
+    trainingId,
+    user
+){
+
+
+    const trainings =
+        loadTrainings();
+
+
+
+    const training =
+        trainings.find(
+
+            t =>
+            t.id === trainingId
+
+        );
+
+
+
+    if(!training)
+        return;
+
+
+
+
+    const exists =
+        training.participants.find(
+
+            p =>
+            p.id === user.id
+
+        );
+
+
+
+    if(!exists){
+
+
+        training.participants.push(
+            user
+        );
+
+
+    }
+
 
 
     saveTrainings(
@@ -88,96 +159,32 @@ function createTraining(training) {
 
 
 
-function getTraining(id) {
+
+function removeParticipant(
+    trainingId,
+    userId
+){
 
 
     const trainings =
         loadTrainings();
 
 
-    return trainings.find(
-
-        t => t.id === id
-
-    );
-
-
-}
-
-
-
-
-
-
-
-function addParticipant(trainingId, user) {
-
 
     const training =
-        getTraining(trainingId);
+        trainings.find(
 
-
-
-    if(!training)
-        return;
-
-
-
-    const exists =
-        training.participants.find(
-
-            p => p.id === user.id
+            t =>
+            t.id === trainingId
 
         );
 
 
 
-    if(!exists){
-
-        training.participants.push({
-
-            id:user.id,
-
-            username:user.username
-
-        });
-
-    }
-
-
-
-    saveTrainings(
-        loadTrainings().map(
-
-            t =>
-            t.id === trainingId
-            ?
-            training
-            :
-            t
-
-        )
-    );
-
-
-}
-
-
-
-
-
-
-
-function removeParticipant(trainingId, userId) {
-
-
-    const training =
-        getTraining(trainingId);
-
-
-
     if(!training)
         return;
+
+
 
 
 
@@ -191,21 +198,29 @@ function removeParticipant(trainingId, userId) {
 
 
 
+
     saveTrainings(
-        loadTrainings().map(
-
-            t =>
-            t.id === trainingId
-            ?
-            training
-            :
-            t
-
-        )
+        trainings
     );
 
 
 }
+
+
+
+
+
+
+
+
+function getTrainings(){
+
+
+    return loadTrainings();
+
+
+}
+
 
 
 
@@ -218,11 +233,11 @@ module.exports = {
 
     createTraining,
 
-    getTraining,
-
     addParticipant,
 
-    removeParticipant
+    removeParticipant,
+
+    getTrainings
 
 
 };
