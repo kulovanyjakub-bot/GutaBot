@@ -9,7 +9,8 @@ module.exports = async (interaction, client) => {
         // TLAČÍTKA
         // ===============================
 
-        if (interaction.isButton()) {
+
+        if(interaction.isButton()) {
 
 
 
@@ -17,14 +18,17 @@ module.exports = async (interaction, client) => {
             // VÝCVIKY
             // ===============================
 
-            if (
+
+            if(
                 interaction.customId.startsWith("training")
             ) {
 
 
-                const trainingButtons = require(
-                    "../handlers/trainingButtons"
-                );
+                const trainingButtons =
+                    require(
+                        "../handlers/trainingButtons"
+                    );
+
 
 
                 return await trainingButtons(
@@ -38,14 +42,48 @@ module.exports = async (interaction, client) => {
 
 
 
+
+
+            // ===============================
+            // MISE
+            // ===============================
+
+
+            if(
+                interaction.customId.startsWith("mission")
+            ) {
+
+
+                const missionButtons =
+                    require(
+                        "../handlers/missionButtons"
+                    );
+
+
+
+                return await missionButtons(
+                    interaction
+                );
+
+
+            }
+
+
+
+
+
+
+
             // ===============================
             // NÁBOR
             // ===============================
 
 
-            const recruitButtons = require(
-                "../handlers/recruitButtons"
-            );
+            const recruitButtons =
+                require(
+                    "../handlers/recruitButtons"
+                );
+
 
 
             return await recruitButtons(
@@ -53,7 +91,9 @@ module.exports = async (interaction, client) => {
             );
 
 
+
         }
+
 
 
 
@@ -65,13 +105,16 @@ module.exports = async (interaction, client) => {
         // MODAL (PŘIHLÁŠKA)
         // ===============================
 
-        if (interaction.isModalSubmit()) {
+
+        if(interaction.isModalSubmit()) {
 
 
 
-            const recruitModal = require(
-                "../handlers/recruitModal"
-            );
+            const recruitModal =
+                require(
+                    "../handlers/recruitModal"
+                );
+
 
 
             return await recruitModal(
@@ -87,13 +130,18 @@ module.exports = async (interaction, client) => {
 
 
 
+
         // ===============================
         // SLASH COMMANDY
         // ===============================
 
 
-        if (!interaction.isChatInputCommand())
+        if(
+            !interaction.isChatInputCommand()
+        )
             return;
+
+
 
 
 
@@ -105,14 +153,18 @@ module.exports = async (interaction, client) => {
 
 
 
-        if (!command)
+
+
+        if(!command)
             return;
 
 
 
 
+
         await command.execute(
-            interaction
+            interaction,
+            client
         );
 
 
@@ -135,10 +187,11 @@ module.exports = async (interaction, client) => {
 
 
 
+
         if(
             !interaction.replied &&
             !interaction.deferred
-        ) {
+        ){
 
 
 
