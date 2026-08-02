@@ -30,10 +30,12 @@ function loadTrainings(){
 
 
     return JSON.parse(
+
         fs.readFileSync(
             filePath,
             "utf8"
         )
+
     );
 
 
@@ -47,6 +49,12 @@ function loadTrainings(){
 function saveTrainings(data){
 
 
+    console.log(
+        "💾 Ukládám výcviky:",
+        data
+    );
+
+
     fs.writeFileSync(
 
         filePath,
@@ -55,12 +63,21 @@ function saveTrainings(data){
             data,
             null,
             4
-        )
+        ),
+
+        "utf8"
 
     );
 
 
+    console.log(
+        "✅ Uloženo do:",
+        filePath
+    );
+
+
 }
+
 
 
 
@@ -87,8 +104,8 @@ function createTraining(training){
     );
 
 
-
 }
+
 
 
 
@@ -118,8 +135,17 @@ function addParticipant(
 
 
 
-    if(!training)
+    if(!training){
+
+        console.log(
+            "❌ Výcvik nenalezen:",
+            trainingId
+        );
+
         return;
+
+    }
+
 
 
 
@@ -137,9 +163,13 @@ function addParticipant(
     if(!exists){
 
 
-        training.participants.push(
-            user
-        );
+        training.participants.push({
+
+            id:user.id,
+
+            username:user.username
+
+        });
 
 
     }
@@ -152,6 +182,7 @@ function addParticipant(
 
 
 }
+
 
 
 
@@ -213,6 +244,7 @@ function removeParticipant(
 
 
 
+
 function getTrainings(){
 
 
@@ -220,6 +252,7 @@ function getTrainings(){
 
 
 }
+
 
 
 
