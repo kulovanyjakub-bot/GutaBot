@@ -3,8 +3,7 @@ const {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle,
-    PermissionFlagsBits
+    ButtonStyle
 } = require("discord.js");
 
 
@@ -81,6 +80,7 @@ module.exports = {
 
 
 
+
         const embed =
             new EmbedBuilder()
 
@@ -118,6 +118,7 @@ module.exports = {
 
 
 
+
         const buttons =
             new ActionRowBuilder()
 
@@ -134,6 +135,7 @@ module.exports = {
 
 
 
+
                 new ButtonBuilder()
 
                 .setCustomId("trainingLeave")
@@ -141,6 +143,7 @@ module.exports = {
                 .setLabel("❌ Neúčastním se")
 
                 .setStyle(ButtonStyle.Danger),
+
 
 
 
@@ -153,6 +156,7 @@ module.exports = {
                 .setStyle(ButtonStyle.Secondary)
 
             );
+
 
 
 
@@ -184,17 +188,40 @@ module.exports = {
 
 
 
+
         await channel.send({
 
+
+            content:
+            "@everyone",
+
+
+            allowedMentions: {
+
+                parse:[
+                    "everyone"
+                ]
+
+            },
+
+
             embeds:[
+
                 embed
+
             ],
 
+
             components:[
+
                 buttons
+
             ]
 
+
         });
+
+
 
 
 
