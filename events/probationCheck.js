@@ -1,11 +1,16 @@
 const {
     Events,
-    EmbedBuilder
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
 } = require("discord.js");
 
 
 const memberDB =
     require("../database/memberDatabase");
+
+
 
 
 
@@ -27,6 +32,9 @@ module.exports = {
 
 
 
+
+
+
         async function checkProbation(){
 
 
@@ -39,12 +47,7 @@ module.exports = {
 
 
 
-
-            const now =
-
-                new Date();
-
-
+            const now = new Date();
 
 
 
@@ -67,8 +70,6 @@ module.exports = {
                     data.probationChecked
                 )
                     continue;
-
-
 
 
 
@@ -98,52 +99,29 @@ module.exports = {
 
 
 
-                const diff =
 
-                    now - joinDate;
+                const days =
 
+                    (now - joinDate)
 
+                    /
 
-
-
-
-
-                const threeMonths =
-
-                    1000 *
-
-                    60 *
-
-                    60 *
-
-                    24 *
-
-                    90;
+                    (1000 * 60 * 60 * 24);
 
 
 
 
 
+
+
+
+                // 3 měsíce cca 90 dní
 
 
                 if(
-                    diff >= threeMonths
-                ){
-
-
-
-
-
-                    const guild =
-
-                        client.guilds.cache.first();
-
-
-
-
-
-                    if(!guild)
-                        continue;
+                    days < 90
+                )
+                    continue;
 
 
 
@@ -151,23 +129,249 @@ module.exports = {
 
 
 
-                    const member =
 
-                        await guild.members.fetch(
 
-                            data.id
+                const guild =
 
-                        ).catch(()=>null);
+                    client.guilds.cache.first();
 
 
 
 
 
-                    const channel =
+                if(!guild)
+                    continue;
 
-                        guild.channels.cache.get(
 
-                            "1471077301105197180"
+
+
+
+
+
+
+
+                const member =
+
+                    await guild.members.fetch(
+
+                        data.id
+
+                    )
+
+                    .catch(()=>null);
+
+
+
+
+
+
+
+                if(!member)
+                    continue;
+
+
+
+
+
+
+
+
+                const channel =
+
+                    guild.channels.cache.get(
+
+                        "1471077301105197180"
+
+                    );
+
+
+
+
+
+
+
+                if(channel){
+
+
+
+                    const embed =
+
+
+                        new EmbedBuilder()
+
+
+                        .setColor("Orange")
+
+
+                        .setTitle(
+
+                            "🪖 Kontrola zkušební doby"
+
+                        )
+
+
+                        .setDescription(
+
+`Člen ${member} dokončil 3 měsíční zkušební období.
+
+Je potřeba rozhodnutí velení.`
+
+                        )
+
+
+
+                        .addFields(
+
+
+
+                            {
+
+                                name:"🎯 Mise",
+
+                                value:
+
+                                `${data.missions || 0}`,
+
+                                inline:true
+
+                            },
+
+
+
+                            {
+
+                                name:"🏋️ Výcviky",
+
+                                value:
+
+                                `${data.trainings || 0}`,
+
+                                inline:true
+
+                            },
+
+
+
+                            {
+
+                                name:"⚡ Aktivita",
+
+                                value:
+
+                                `${data.activity || 0}/100`,
+
+                                inline:true
+
+                            },
+
+
+
+                            {
+
+                                name:"🤝 Týmová práce",
+
+                                value:
+
+                                `${data.teamwork || 0}/100`,
+
+                                inline:true
+
+                            }
+
+
+                        )
+
+
+
+                        .setTimestamp();
+
+
+
+
+
+
+
+
+                    const buttons =
+
+
+                        new ActionRowBuilder()
+
+
+
+                        .addComponents(
+
+
+
+                            new ButtonBuilder()
+
+                            .setCustomId(
+
+                                `acceptMilsim_${data.id}`
+
+                            )
+
+                            .setLabel(
+
+                                "Přijmout MILSIM"
+
+                            )
+
+                            .setStyle(
+
+                                ButtonStyle.Success
+
+                            ),
+
+
+
+
+
+                            new ButtonBuilder()
+
+                            .setCustomId(
+
+                                `extendProbation_${data.id}`
+
+                            )
+
+                            .setLabel(
+
+                                "Prodloužit"
+
+                            )
+
+                            .setStyle(
+
+                                ButtonStyle.Secondary
+
+                            ),
+
+
+
+
+
+                            new ButtonBuilder()
+
+                            .setCustomId(
+
+                                `rejectMilsim_${data.id}`
+
+                            )
+
+                            .setLabel(
+
+                                "Ukončit členství"
+
+                            )
+
+                            .setStyle(
+
+                                ButtonStyle.Danger
+
+                            )
+
+
 
                         );
 
@@ -177,171 +381,35 @@ module.exports = {
 
 
 
-                    if(channel && member){
 
 
+                    await channel.send({
 
-                        const embed =
 
 
-                            new EmbedBuilder()
+                        content:
 
+                        `<@&1533447617957073117>`,
 
 
-                            .setColor("Orange")
 
+                        embeds:[
 
+                            embed
 
-                            .setTitle(
+                        ],
 
-                                "🪖 Kontrola zkušební doby"
 
-                            )
 
+                        components:[
 
+                            buttons
 
-                            .setDescription(
+                        ]
 
-`Člen ${member} dokončil 3 měsíční zkušební období.
 
-Vyžaduje se vyhodnocení velením.`
 
-                            )
-
-
-
-                            .addFields(
-
-
-                                {
-
-                                    name:
-
-                                    "🎯 Mise",
-
-                                    value:
-
-                                    `${data.missions || 0}`,
-
-                                    inline:true
-
-                                },
-
-
-                                {
-
-                                    name:
-
-                                    "🏋️ Výcviky",
-
-                                    value:
-
-                                    `${data.trainings || 0}`,
-
-                                    inline:true
-
-                                },
-
-
-                                {
-
-                                    name:
-
-                                    "⚡ Aktivita",
-
-                                    value:
-
-                                    `${data.activity || 0}/100`,
-
-                                    inline:true
-
-                                },
-
-
-                                {
-
-                                    name:
-
-                                    "🤝 Týmová práce",
-
-                                    value:
-
-                                    `${data.teamwork || 0}/100`,
-
-                                    inline:true
-
-                                }
-
-
-                            )
-
-
-                            .setTimestamp();
-
-
-
-
-
-
-
-                        await channel.send({
-
-
-
-                            content:
-
-                            `<@&1533447617957073117>`,
-
-
-                            embeds:[
-
-                                embed
-
-                            ]
-
-
-
-                        });
-
-
-
-                    }
-
-
-
-
-
-
-
-
-
-                    memberDB.updateMember(
-
-
-                        data.id,
-
-
-                        {
-
-                            probationChecked:true
-
-                        }
-
-
-                    );
-
-
-
-
-
-
-
-                    console.log(
-
-                        `⏳ Zkušební doba dokončena: ${data.username}`
-
-                    );
-
+                    });
 
 
 
@@ -350,9 +418,45 @@ Vyžaduje se vyhodnocení velením.`
 
 
 
+
+
+
+
+
+                memberDB.updateMember(
+
+
+                    data.id,
+
+
+                    {
+
+                        probationChecked:true
+
+                    }
+
+
+                );
+
+
+
+
+
+
+
+
+
+                console.log(
+
+                    `⏳ Zkušební doba dokončena: ${data.username}`
+
+                );
+
+
+
+
+
             }
-
-
 
 
 
@@ -366,9 +470,12 @@ Vyžaduje se vyhodnocení velením.`
 
 
 
-        // kontrola při startu
+        // kontrola po startu bota
+
 
         checkProbation();
+
+
 
 
 
@@ -378,6 +485,7 @@ Vyžaduje se vyhodnocení velením.`
 
 
         setInterval(
+
 
             checkProbation,
 
@@ -390,8 +498,8 @@ Vyžaduje se vyhodnocení velením.`
 
             24
 
-        );
 
+        );
 
 
 
