@@ -26,20 +26,11 @@ module.exports = async (interaction) => {
 
 
 
-        // Přidání role člena
+        // Přidání členské role
 
         await member.roles.add(
             "1458487234989654201"
         );
-
-
-
-        // LOG
-
-        const logChannel =
-            interaction.guild.channels.cache.get(
-                "1533447352684380361"
-            );
 
 
 
@@ -67,16 +58,6 @@ module.exports = async (interaction) => {
 
 
 
-        if (logChannel) {
-
-            logChannel.send({
-                embeds: [embed]
-            });
-
-        }
-
-
-
 
 
         await interaction.update({
@@ -84,7 +65,9 @@ module.exports = async (interaction) => {
             content:
             `✅ ${member} byl přijat do GUTALAX MILSIM.`,
 
-            embeds: interaction.message.embeds,
+            embeds: [
+                embed
+            ],
 
             components: []
 
@@ -95,6 +78,7 @@ module.exports = async (interaction) => {
         return;
 
     }
+
 
 
 
@@ -116,72 +100,31 @@ module.exports = async (interaction) => {
 
 
 
-        // ochrana proti timeoutu
-
-        await interaction.deferReply();
-
-
-
         const member =
             await interaction.guild.members.fetch(userId);
 
 
 
-
-
-        // LOG
-
-        const logChannel =
-            interaction.guild.channels.cache.get(
-                "1533447352684380361"
-            );
-
-
-
-        const embed = new EmbedBuilder()
-
-            .setColor("Blue")
-
-            .setTitle("🎤 Pohovor zahájen")
-
-            .addFields(
-
-                {
-                    name: "Uchazeč",
-                    value: `${member}`
-                },
-
-                {
-                    name: "Náborář",
-                    value: `${interaction.user}`
-                }
-
-            )
-
-            .setTimestamp();
-
-
-
-        if (logChannel) {
-
-            logChannel.send({
-                embeds: [embed]
-            });
-
-        }
-
-
-
-
-
-        await interaction.editReply({
+        await interaction.reply({
 
             content:
 `${member}
 
 🎤 Uchazeč byl pozván na pohovor.
 
-<@&1533447617957073117> prosím kontaktujte uchazeče.`
+<@&1458487234989654201> prosím kontaktujte uchazeče.`,
+
+            allowedMentions: {
+
+                users: [
+                    member.id
+                ],
+
+                roles: [
+                    "1458487234989654201"
+                ]
+
+            }
 
         });
 
@@ -219,15 +162,6 @@ module.exports = async (interaction) => {
 
 
 
-        // LOG
-
-        const logChannel =
-            interaction.guild.channels.cache.get(
-                "1533447352684380361"
-            );
-
-
-
         const embed = new EmbedBuilder()
 
             .setColor("Red")
@@ -253,24 +187,15 @@ module.exports = async (interaction) => {
 
 
 
-        if (logChannel) {
-
-            logChannel.send({
-                embeds: [embed]
-            });
-
-        }
-
-
-
-
 
         await interaction.update({
 
             content:
             `❌ ${member} byl odmítnut.`,
 
-            embeds: interaction.message.embeds,
+            embeds: [
+                embed
+            ],
 
             components: []
 
