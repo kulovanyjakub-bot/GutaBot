@@ -1,130 +1,67 @@
-module.exports = async (interaction, client) => {
+const {
+    Events
+} = require("discord.js");
 
 
-    try {
+const trainingButtons =
+    require("../handlers/trainingButtons");
+
+
+const missionButtons =
+    require("../handlers/missionButtons");
+
+
+
+module.exports = {
+
+
+    name: Events.InteractionCreate,
+
+
+    async execute(interaction) {
 
 
 
         // ===============================
-        // TLAČÍTKA
+        // BUTTONY
         // ===============================
 
 
-        if(interaction.isButton()) {
+        if(
+            interaction.isButton()
+        ){
 
 
-
-            // ===============================
             // VÝCVIKY
-            // ===============================
-
 
             if(
                 interaction.customId.startsWith("training")
-            ) {
+            ){
 
-
-                const trainingButtons =
-                    require(
-                        "../handlers/trainingButtons"
-                    );
-
-
-
-                return await trainingButtons(
+                return trainingButtons(
                     interaction
                 );
-
 
             }
 
 
 
 
-
-
-
-            // ===============================
             // MISE
-            // ===============================
-
 
             if(
                 interaction.customId.startsWith("mission")
-            ) {
+            ){
 
-
-                const missionButtons =
-                    require(
-                        "../handlers/missionButtons"
-                    );
-
-
-
-                return await missionButtons(
+                return missionButtons(
                     interaction
                 );
-
 
             }
 
 
 
-
-
-
-
-            // ===============================
-            // NÁBOR
-            // ===============================
-
-
-            const recruitButtons =
-                require(
-                    "../handlers/recruitButtons"
-                );
-
-
-
-            return await recruitButtons(
-                interaction
-            );
-
-
-
         }
-
-
-
-
-
-
-
-
-        // ===============================
-        // MODAL (PŘIHLÁŠKA)
-        // ===============================
-
-
-        if(interaction.isModalSubmit()) {
-
-
-
-            const recruitModal =
-                require(
-                    "../handlers/recruitModal"
-                );
-
-
-
-            return await recruitModal(
-                interaction
-            );
-
-
-        }
-
-
 
 
 
@@ -144,14 +81,10 @@ module.exports = async (interaction, client) => {
 
 
 
-
-
         const command =
-            client.commands.get(
+            interaction.client.commands.get(
                 interaction.commandName
             );
-
-
 
 
 
@@ -160,52 +93,42 @@ module.exports = async (interaction, client) => {
 
 
 
+        try{
 
 
-        await command.execute(
-            interaction,
-            client
-        );
-
-
-
-
-
-    }
-    catch(err) {
-
-
-
-        console.error(
-            "❌ INTERACTION CREATE ERROR:"
-        );
-
-
-        console.error(err);
-
-
-
-
-
-
-        if(
-            !interaction.replied &&
-            !interaction.deferred
-        ){
-
-
-
-            await interaction.reply({
-
-                content:
-                "❌ Nastala chyba při zpracování.",
-
-                ephemeral:true
-
-            }).catch(()=>{});
+            await command.execute(
+                interaction
+            );
 
 
         }
+        catch(err){
+
+
+            console.error(err);
+
+
+
+            if(
+                !interaction.replied
+            ){
+
+
+                await interaction.reply({
+
+                    content:
+                    "❌ Chyba při provádění příkazu.",
+
+                    ephemeral:true
+
+                });
+
+
+            }
+
+
+        }
+
 
 
     }
