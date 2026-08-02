@@ -1,6 +1,5 @@
 module.exports = async (interaction, client) => {
 
-
     try {
 
 
@@ -25,6 +24,28 @@ module.exports = async (interaction, client) => {
             );
 
 
+
+            // Otevření náborového formuláře
+
+            if (
+                interaction.customId === "openRecruit"
+            ) {
+
+
+                const recruitModal = require(
+                    "../handlers/recruitModal"
+                );
+
+
+                return await recruitModal(
+                    interaction
+                );
+
+            }
+
+
+
+
             const recruitButtons = require(
                 "../handlers/recruitButtons"
             );
@@ -42,7 +63,7 @@ module.exports = async (interaction, client) => {
 
 
         // ===============================
-        // MODAL (PŘIHLÁŠKA)
+        // MODAL
         // ===============================
 
         if (interaction.isModalSubmit()) {
@@ -52,6 +73,7 @@ module.exports = async (interaction, client) => {
                 "MODAL:",
                 interaction.customId
             );
+
 
 
             const recruitModal = require(
@@ -79,13 +101,6 @@ module.exports = async (interaction, client) => {
 
 
 
-        console.log(
-            "COMMAND:",
-            interaction.commandName
-        );
-
-
-
         const command =
             client.commands.get(
                 interaction.commandName
@@ -104,8 +119,7 @@ module.exports = async (interaction, client) => {
 
 
 
-    }
-    catch (err) {
+    } catch(err) {
 
 
         console.error(
@@ -128,9 +142,9 @@ module.exports = async (interaction, client) => {
                 content:
                 "❌ Nastala chyba při zpracování.",
 
-                ephemeral: true
+                ephemeral:true
 
-            }).catch(() => {});
+            }).catch(()=>{});
 
 
         }
