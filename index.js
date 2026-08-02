@@ -1,193 +1,34 @@
-require("dotenv").config();
+client.on("interactionCreate", async (interaction) => {
 
-const fs = require("fs");
-const path = require("path");
-
-const {
-    Client,
-    Collection,
-    GatewayIntentBits,
-    Partials
-} = require("discord.js");
-
-
-const client = new Client({
-
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
-    ],
-
-    partials: [
-        Partials.Channel
-    ]
-
-});
-
-
-client.commands = new Collection();
-
-
-// ===============================
-// NAČTENÍ COMMANDŮ
-// ===============================
-
-const commandsPath = path.join(__dirname, "commands");
-
-
-const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter(file => file.endsWith(".js"));
-
-
-for (const file of commandFiles) {
-
-    const command = require(
-        path.join(commandsPath, file)
-    );
-
+    const interactionHandler = require("./events/interactionCreate");
 
     if (
-        command.data &&
-        command.execute
+        interaction.isButton() ||
+        interaction.isModalSubmit()
     ) {
-
-        client.commands.set(
-            command.data.name,
-            command
-        );
-
+        return interactionHandler(interaction, client);
     }
 
-}
+
+    if (!interaction.isChatInputCommand()) return;
 
 
-
-// ===============================
-// READY
-// ===============================
-
-client.once("ready", () => {
-
-    console.log(
-        `✅ Přihlášen jako ${client.user.tag}`
+    const command = client.commands.get(
+        interaction.commandName
     );
 
-});
+
+    if (!command) return;
 
 
+    try {
 
-// ===============================
-// INTERAKCE
-// ===============================
+        await command.execute(interaction);
 
+    } catch(err){
 
-const interactionHandler = require(
-    "./events/interactionCreate"
-);
-
-
-
-client.on(
-    "interactionCreate",
-    async (interaction) => {
-
-
-        // Nábor tlačítka + formuláře
-
-        if (
-            interaction.isButton() ||
-            interaction.isModalSubmit()
-        ) {
-
-            return interactionHandler(
-                interaction,
-                client
-            );
-
-        }
-
-
-
-        // Slash commandy
-
-        if (
-            !interaction.isChatInputCommand()
-        ) return;
-
-
-
-        const command =
-            client.commands.get(
-                interaction.commandName
-            );
-
-
-
-        if (!command) return;
-
-
-
-        try {
-
-
-            await command.execute(
-                interaction
-            );
-
-
-        } catch (err) {
-
-
-            console.error(err);
-
-
-
-            if (
-                interaction.replied ||
-                interaction.deferred
-            ) {
-
-
-                await interaction.followUp({
-
-                    content:
-                        "❌ Nastala chyba.",
-
-                    ephemeral: true
-
-                });
-
-
-            } else {
-
-
-                await interaction.reply({
-
-                    content:
-                        "❌ Nastala chyba.",
-
-                    ephemeral: true
-
-                });
-
-            }
-
-        }
-
+        console.error(err);
 
     }
 
-);
-
-
-
-// ===============================
-// LOGIN
-// ===============================
-
-client.login(
-    process.env.TOKEN
-);
+});
