@@ -22,7 +22,8 @@ module.exports = async (interaction) => {
             );
 
 
-            const member = await interaction.guild.members.fetch(userId);
+            const member =
+                await interaction.guild.members.fetch(userId);
 
 
 
@@ -32,11 +33,7 @@ module.exports = async (interaction) => {
 
 
 
-            await interaction.deferUpdate();
-
-
-
-            await interaction.message.edit({
+            await interaction.update({
 
                 content:
 `✅ ${member} byl přijat do GUTALAX MILSIM.
@@ -60,6 +57,8 @@ Vítej v jednotce!`,
 
 
 
+
+
         // ===============================
         // POHOVOR
         // ===============================
@@ -73,7 +72,8 @@ Vítej v jednotce!`,
             );
 
 
-            const member = await interaction.guild.members.fetch(userId);
+            const member =
+                await interaction.guild.members.fetch(userId);
 
 
 
@@ -110,6 +110,8 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
+
+
         // ===============================
         // ODMÍTNOUT
         // ===============================
@@ -123,15 +125,12 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             );
 
 
-            const member = await interaction.guild.members.fetch(userId);
+            const member =
+                await interaction.guild.members.fetch(userId);
 
 
 
-            await interaction.deferUpdate();
-
-
-
-            await interaction.message.edit({
+            await interaction.update({
 
                 content:
 `❌ ${member} byl odmítnut.`,
@@ -171,7 +170,10 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-        if (!interaction.replied && !interaction.deferred) {
+        if (
+            !interaction.replied &&
+            !interaction.deferred
+        ) {
 
 
             await interaction.reply({
