@@ -35,13 +35,9 @@ module.exports = async (interaction) => {
 
 
     const vek = interaction.fields.getTextInputValue("vek");
-
     const platforma = interaction.fields.getTextInputValue("platforma");
-
     const mikrofon = interaction.fields.getTextInputValue("mikrofon");
-
     const zkusenosti = interaction.fields.getTextInputValue("zkusenosti");
-
     const proc = interaction.fields.getTextInputValue("proc");
 
 
@@ -49,9 +45,7 @@ module.exports = async (interaction) => {
 
     const channel = await guild.channels.create({
 
-
         name: `ticket-${interaction.user.id}`,
-
 
         type: ChannelType.GuildText,
 
@@ -63,101 +57,41 @@ module.exports = async (interaction) => {
 
         permissionOverwrites: [
 
-    // Skryje ticket před všemi
-    {
-        id: guild.roles.everyone.id,
+            // Skryje kanál před všemi
+            {
+                id: guild.roles.everyone.id,
 
-        deny: [
-            PermissionsBitField.Flags.ViewChannel
-        ]
-    },
-
-
-    // Uchazeč
-    {
-        id: interaction.user.id,
-
-        allow: [
-            PermissionsBitField.Flags.ViewChannel,
-            PermissionsBitField.Flags.SendMessages,
-            PermissionsBitField.Flags.ReadMessageHistory
-        ]
-    },
-
-
-    // Ty - náborář
-    {
-        id: "1533447617957073117",
-
-        allow: [
-            PermissionsBitField.Flags.ViewChannel,
-            PermissionsBitField.Flags.SendMessages,
-            PermissionsBitField.Flags.ReadMessageHistory,
-            PermissionsBitField.Flags.ManageMessages
-        ]
-    }
-
-]
-
+                deny: [
+                    PermissionsBitField.Flags.ViewChannel
+                ]
             },
 
 
-
+            // Uchazeč
             {
-
-                id: "701088576779059200",
+                id: interaction.user.id,
 
                 allow: [
-
                     PermissionsBitField.Flags.ViewChannel,
-
                     PermissionsBitField.Flags.SendMessages,
-
                     PermissionsBitField.Flags.ReadMessageHistory
-
                 ]
-
             },
 
 
-
+            // Náborář
             {
-
-                id: "807310842713735178",
+                id: "1533447617957073117",
 
                 allow: [
-
                     PermissionsBitField.Flags.ViewChannel,
-
                     PermissionsBitField.Flags.SendMessages,
-
-                    PermissionsBitField.Flags.ReadMessageHistory
-
+                    PermissionsBitField.Flags.ReadMessageHistory,
+                    PermissionsBitField.Flags.ManageMessages
                 ]
-
-            },
-
-
-
-            {
-
-                id: "1119313377257341129",
-
-                allow: [
-
-                    PermissionsBitField.Flags.ViewChannel,
-
-                    PermissionsBitField.Flags.SendMessages,
-
-                    PermissionsBitField.Flags.ReadMessageHistory
-
-                ]
-
             }
 
-
         ]
-
 
     });
 
@@ -165,67 +99,41 @@ module.exports = async (interaction) => {
 
 
 
-
     const embed = new EmbedBuilder()
-
 
         .setColor("#d4a017")
 
-
         .setTitle("🎖 Nová přihláška")
-
 
         .setDescription(`Žadatel: ${interaction.user}`)
 
 
-
         .addFields(
 
-
             {
-
                 name: "Věk",
-
                 value: vek
-
             },
 
-
             {
-
                 name: "Platforma",
-
                 value: platforma
-
             },
 
-
             {
-
                 name: "Mikrofon",
-
                 value: mikrofon
-
             },
 
-
             {
-
                 name: "Zkušenosti",
-
                 value: zkusenosti
-
             },
 
-
             {
-
                 name: "Proč se chce přidat",
-
                 value: proc
-
             }
-
 
         );
 
@@ -233,13 +141,9 @@ module.exports = async (interaction) => {
 
 
 
-
-
     const buttons = new ActionRowBuilder()
 
-
         .addComponents(
-
 
             new ButtonBuilder()
 
@@ -248,7 +152,6 @@ module.exports = async (interaction) => {
                 .setLabel("✅ Přijmout")
 
                 .setStyle(ButtonStyle.Success),
-
 
 
 
@@ -262,7 +165,6 @@ module.exports = async (interaction) => {
 
 
 
-
             new ButtonBuilder()
 
                 .setCustomId(`rejectRecruit_${interaction.user.id}`)
@@ -271,10 +173,7 @@ module.exports = async (interaction) => {
 
                 .setStyle(ButtonStyle.Danger)
 
-
         );
-
-
 
 
 
@@ -282,19 +181,13 @@ module.exports = async (interaction) => {
 
     await channel.send({
 
-
         content: `👋 Vítej ${interaction.user}`,
-
 
         embeds: [embed],
 
-
         components: [buttons]
 
-
     });
-
-
 
 
 
@@ -302,15 +195,11 @@ module.exports = async (interaction) => {
 
     await interaction.reply({
 
-
         content: `✅ Přihláška odeslána.\nTicket: ${channel}`,
-
 
         ephemeral: true
 
-
     });
-
 
 
 };
