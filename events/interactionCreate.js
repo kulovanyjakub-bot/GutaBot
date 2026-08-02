@@ -1,195 +1,43 @@
-const {
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
-    ActionRowBuilder
-} = require("discord.js");
-
-
-const recruitModal = require("../handlers/recruitModal");
-const recruitButtons = require("../handlers/recruitButtons");
-
-
-
 module.exports = async (interaction, client) => {
 
+    try {
 
+        if (interaction.isButton()) {
 
-    // =========================
-    // TLAČÍTKO PŘIHLÁŠKA
-    // =========================
+            const recruitButtons = require("../handlers/recruitButtons");
 
-    if (interaction.isButton()) {
-
-
-
-        if (interaction.customId === "recruit") {
-
-
-
-            const modal = new ModalBuilder()
-
-                .setCustomId("recruitModal")
-
-                .setTitle("Nábor GUTALAX MILSIM");
-
-
-
-
-
-            const vek = new TextInputBuilder()
-
-                .setCustomId("vek")
-
-                .setLabel("Tvůj věk")
-
-                .setStyle(TextInputStyle.Short)
-
-                .setRequired(true);
-
-
-
-
-
-            const platforma = new TextInputBuilder()
-
-                .setCustomId("platforma")
-
-                .setLabel("Platforma (PC / Xbox / PS5)")
-
-                .setStyle(TextInputStyle.Short)
-
-                .setRequired(true);
-
-
-
-
-
-            const mikrofon = new TextInputBuilder()
-
-                .setCustomId("mikrofon")
-
-                .setLabel("Máš funkční mikrofon?")
-
-                .setStyle(TextInputStyle.Short)
-
-                .setRequired(true);
-
-
-
-
-
-            const zkusenosti = new TextInputBuilder()
-
-                .setCustomId("zkusenosti")
-
-                .setLabel("Zkušenosti s MILSIM")
-
-                .setStyle(TextInputStyle.Paragraph)
-
-                .setRequired(true);
-
-
-
-
-
-            const proc = new TextInputBuilder()
-
-                .setCustomId("proc")
-
-                .setLabel("Proč se chceš přidat?")
-
-                .setStyle(TextInputStyle.Paragraph)
-
-                .setRequired(true);
-
-
-
-
-
-
-
-            modal.addComponents(
-
-                new ActionRowBuilder().addComponents(vek),
-
-                new ActionRowBuilder().addComponents(platforma),
-
-                new ActionRowBuilder().addComponents(mikrofon),
-
-                new ActionRowBuilder().addComponents(zkusenosti),
-
-                new ActionRowBuilder().addComponents(proc)
-
-            );
-
-
-
-
-
-            return interaction.showModal(modal);
-
-
+            return await recruitButtons(interaction);
 
         }
 
 
+        if (interaction.isModalSubmit()) {
 
+            const recruitModal = require("../handlers/recruitModal");
 
-
-        // =========================
-        // NÁBOROVÁ TLAČÍTKA
-        // =========================
-
-
-        if (
-
-            interaction.customId.startsWith("acceptRecruit_") ||
-
-            interaction.customId.startsWith("interviewRecruit_") ||
-
-            interaction.customId.startsWith("rejectRecruit_")
-
-        ) {
-
-
-            return recruitButtons(interaction);
-
-
+            return await recruitModal(interaction);
 
         }
 
 
+    } catch (err) {
+
+        console.error("❌ INTERACTION ERROR:");
+        console.error(err);
+
+
+        if (!interaction.replied && !interaction.deferred) {
+
+            await interaction.reply({
+
+                content: "❌ Nastala chyba při zpracování.",
+
+                ephemeral: true
+
+            }).catch(()=>{});
+
+        }
 
     }
-
-
-
-
-
-
-    // =========================
-    // ODESLÁNÍ MODALU
-    // =========================
-
-
-    if (interaction.isModalSubmit()) {
-
-
-
-        if (interaction.customId === "recruitModal") {
-
-
-            return recruitModal(interaction);
-
-
-
-        }
-
-
-    }
-
-
-
 
 };
