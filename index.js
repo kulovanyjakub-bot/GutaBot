@@ -1,34 +1,182 @@
-client.on("interactionCreate", async (interaction) => {
+require("dotenv").config();
 
-    const interactionHandler = require("./events/interactionCreate");
+const fs = require("fs");
+const path = require("path");
 
-    if (
-        interaction.isButton() ||
-        interaction.isModalSubmit()
-    ) {
-        return interactionHandler(interaction, client);
-    }
-
-
-    if (!interaction.isChatInputCommand()) return;
+const {
+    Client,
+    Collection,
+    GatewayIntentBits,
+    Partials
+} = require("discord.js");
 
 
-    const command = client.commands.get(
-        interaction.commandName
+const client = new Client({
+
+    intents: [
+
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+
+    ],
+
+    partials: [
+
+        Partials.Channel
+
+    ]
+
+});
+
+
+client.commands = new Collection();
+
+
+// COMMANDY
+
+const commandsPath = path.join(__dirname, "commands");
+
+
+const commandFiles = fs
+    .readdirSync(commandsPath)
+    .filter(file => file.endsWith(".js"));
+
+
+for (const file of commandFiles) {
+
+
+    const command = require(
+        path.join(commandsPath, file)
     );
 
 
-    if (!command) return;
+    if (
+        command.data &&
+        command.execute
+    ) {
 
 
-    try {
+        client.commands.set(
+            command.data.name,
+            command
+        );
 
-        await command.execute(interaction);
-
-    } catch(err){
-
-        console.error(err);
 
     }
 
+}
+
+
+
+// READY
+
+client.once("ready", () => {
+
+    console.log(
+        `✅ Přihlášen jako ${client.user.tag}`
+    );
+
 });
+
+
+
+
+// INTERAKCE
+
+const interactionHandler = require(
+    "./events/interactionCreate"
+);
+
+
+client.on(
+    "interactionCreate",
+    async (interaction) => {
+
+
+        if (
+            interaction.isButton() ||
+            interaction.isModalSubmit()
+        ) {
+
+            return interactionHandler(
+                interaction,
+                client
+            );
+
+        }
+
+
+
+        if (!interaction.isChatInputCommand())
+            return;
+
+
+
+        const command = client.commands.get(
+            interaction.commandName
+        );
+
+
+        if (!command)
+            return;
+
+
+
+        try {
+
+
+            await command.execute(
+                interaction
+            );
+
+
+        } catch(err) {
+
+
+            console.error(err);
+
+
+
+            if (
+                interaction.replied ||
+                interaction.deferred
+            ) {
+
+
+                await interaction.followUp({
+
+                    content: "❌ Nastala chyba.",
+
+                    ephemeral: true
+
+                });
+
+
+            } else {
+
+
+                await interaction.reply({
+
+                    content: "❌ Nastala chyba.",
+
+                    ephemeral: true
+
+                });
+
+
+            }
+
+
+        }
+
+
+    }
+);
+
+
+
+client.login(
+    process.env.TOKEN
+);
