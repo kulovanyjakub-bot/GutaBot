@@ -63,35 +63,41 @@ module.exports = async (interaction) => {
 
         permissionOverwrites: [
 
+    // Skryje ticket před všemi
+    {
+        id: guild.roles.everyone.id,
 
-            {
-
-                id: guild.roles.everyone.id,
-
-                deny: [
-
-                    PermissionsBitField.Flags.ViewChannel
-
-                ]
-
-            },
+        deny: [
+            PermissionsBitField.Flags.ViewChannel
+        ]
+    },
 
 
+    // Uchazeč
+    {
+        id: interaction.user.id,
 
-            {
+        allow: [
+            PermissionsBitField.Flags.ViewChannel,
+            PermissionsBitField.Flags.SendMessages,
+            PermissionsBitField.Flags.ReadMessageHistory
+        ]
+    },
 
 
-                id: interaction.user.id,
+    // Ty - náborář
+    {
+        id: "1533447617957073117",
 
-                allow: [
+        allow: [
+            PermissionsBitField.Flags.ViewChannel,
+            PermissionsBitField.Flags.SendMessages,
+            PermissionsBitField.Flags.ReadMessageHistory,
+            PermissionsBitField.Flags.ManageMessages
+        ]
+    }
 
-                    PermissionsBitField.Flags.ViewChannel,
-
-                    PermissionsBitField.Flags.SendMessages,
-
-                    PermissionsBitField.Flags.ReadMessageHistory
-
-                ]
+]
 
             },
 
