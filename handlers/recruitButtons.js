@@ -12,7 +12,43 @@ module.exports = async (interaction) => {
     // PŘIJMOUT REKRUTA
     // ===============================
 
-    if (interaction.customId.startsWith("acceptRecruit_")) {
+    // ===============================
+// POHOVOR
+// ===============================
+
+if (interaction.customId.startsWith("interviewRecruit_")) {
+
+
+    const userId = interaction.customId.replace(
+        "interviewRecruit_",
+        ""
+    );
+
+
+    const member = await interaction.guild.members.fetch(userId);
+
+
+
+    await interaction.reply({
+
+        content:
+`${member}
+
+🎤 **Pohovor požadován**
+
+<@&1533447617957073117>
+
+Náborář prosím zahajte pohovor s uchazečem.`,
+
+        ephemeral: false
+
+    });
+
+
+
+    return;
+
+}
 
 
         const userId = interaction.customId.replace(
