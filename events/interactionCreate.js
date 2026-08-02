@@ -7,56 +7,56 @@ module.exports = async (interaction, client) => {
 
     if (interaction.isButton()) {
 
-        if (interaction.customId === "openRecruit") {
+        const {
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ActionRowBuilder
+} = require("discord.js");
 
-            const guild = interaction.guild;
+if (interaction.customId === "openRecruit") {
 
-            const existing = guild.channels.cache.find(c =>
-                c.name === `ticket-${interaction.user.username.toLowerCase()}`
-            );
+    const modal = new ModalBuilder()
+        .setCustomId("recruitForm")
+        .setTitle("Nábor GUTALAX MILSIM");
 
-            if (existing) {
-                return interaction.reply({
-                    content: "❌ Už máš otevřený ticket.",
-                    ephemeral: true
-                });
-            }
+    const vek = new TextInputBuilder()
+        .setCustomId("vek")
+        .setLabel("Tvůj věk")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
 
-            const channel = await guild.channels.create({
-                name: `ticket-${interaction.user.username}`,
-                type: ChannelType.GuildText,
-                permissionOverwrites: [
-                    {
-                        id: guild.roles.everyone.id,
-                        deny: [PermissionsBitField.Flags.ViewChannel]
-                    },
-                    {
-                        id: interaction.user.id,
-                        allow: [
-                            PermissionsBitField.Flags.ViewChannel,
-                            PermissionsBitField.Flags.SendMessages
-                        ]
-                    }
-                ]
-            });
+    const platforma = new TextInputBuilder()
+        .setCustomId("platforma")
+        .setLabel("Na čem hraješ? (PC/Xbox/PS5)")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
 
-            await channel.send(
-`# 🎖 Nábor GUTALAX MILSIM
+    const mikrofon = new TextInputBuilder()
+        .setCustomId("mikrofon")
+        .setLabel("Máš funkční mikrofon? (ANO/NE)")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
 
-Vítej ${interaction.user}
+    const zkusenosti = new TextInputBuilder()
+        .setCustomId("zkusenosti")
+        .setLabel("Jaké máš zkušenosti s MILSIM?")
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true);
 
-Brzy zde bude formulář.
+    const proc = new TextInputBuilder()
+        .setCustomId("proc")
+        .setLabel("Proč se chceš přidat?")
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true);
 
-Prosíme zatím vyčkej.`
-            );
+    modal.addComponents(
+        new ActionRowBuilder().addComponents(vek),
+        new ActionRowBuilder().addComponents(platforma),
+        new ActionRowBuilder().addComponents(mikrofon),
+        new ActionRowBuilder().addComponents(zkusenosti),
+        new ActionRowBuilder().addComponents(proc)
+    );
 
-            return interaction.reply({
-                content: `✅ Ticket vytvořen: ${channel}`,
-                ephemeral: true
-            });
-
-        }
-
-    }
-
-};
+    return interaction.showModal(modal);
+}
