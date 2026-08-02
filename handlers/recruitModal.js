@@ -51,6 +51,7 @@ module.exports = async (interaction) => {
 
 
 
+
     const channel = await guild.channels.create({
 
         name: `ticket-${interaction.user.id}`,
@@ -58,12 +59,15 @@ module.exports = async (interaction) => {
         type: ChannelType.GuildText,
 
 
-        parent: "1533447352684380361",
+        // KATEGORIE NÁBOR
+        parent: "1533445763747807332",
+
 
 
         permissionOverwrites: [
 
 
+            // skryje před všemi
             {
                 id: guild.roles.everyone.id,
 
@@ -77,6 +81,7 @@ module.exports = async (interaction) => {
 
 
 
+            // uchazeč
             {
                 id: interaction.user.id,
 
@@ -94,6 +99,7 @@ module.exports = async (interaction) => {
 
 
 
+            // náboráři
             {
                 id: "1533447617957073117",
 
@@ -111,9 +117,12 @@ module.exports = async (interaction) => {
 
             }
 
+
         ]
 
     });
+
+
 
 
 
@@ -123,7 +132,7 @@ module.exports = async (interaction) => {
 
         .setColor("#d4a017")
 
-        .setTitle("🎖 Nová přihláška")
+        .setTitle("🎖 Nová přihláška GUTALAX MILSIM")
 
         .setDescription(`Žadatel: ${interaction.user}`)
 
@@ -146,7 +155,7 @@ module.exports = async (interaction) => {
             },
 
             {
-                name: "Zkušenosti",
+                name: "Zkušenosti s MILSIM",
                 value: zkusenosti
             },
 
@@ -155,7 +164,11 @@ module.exports = async (interaction) => {
                 value: proc
             }
 
-        );
+        )
+
+        .setTimestamp();
+
+
 
 
 
@@ -176,7 +189,6 @@ module.exports = async (interaction) => {
 
 
 
-
             new ButtonBuilder()
 
                 .setCustomId(`interviewRecruit_${interaction.user.id}`)
@@ -184,7 +196,6 @@ module.exports = async (interaction) => {
                 .setLabel("🎤 Pohovor")
 
                 .setStyle(ButtonStyle.Primary),
-
 
 
 
@@ -203,15 +214,19 @@ module.exports = async (interaction) => {
 
 
 
+
+
     await channel.send({
 
-        content: `👋 Vítej ${interaction.user}`,
+        content: `👋 Vítej ${interaction.user}\n<@&1533447617957073117>`,
 
         embeds: [embed],
 
         components: [buttons]
 
     });
+
+
 
 
 
