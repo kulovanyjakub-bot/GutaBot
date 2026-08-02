@@ -14,6 +14,8 @@ const {
 
 
 
+// VYTVOŘENÍ BOTA
+
 const client = new Client({
 
     intents: [
@@ -52,36 +54,46 @@ const commandsPath = path.join(
 );
 
 
-
-const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter(
-        file => file.endsWith(".js")
-    );
+if (fs.existsSync(commandsPath)) {
 
 
-
-for (const file of commandFiles) {
-
-
-    const command = require(
-        path.join(commandsPath, file)
-    );
-
-
-    if (
-        command.data &&
-        command.execute
-    ) {
-
-
-        client.commands.set(
-            command.data.name,
-            command
+    const commandFiles = fs
+        .readdirSync(commandsPath)
+        .filter(
+            file => file.endsWith(".js")
         );
 
 
+    for (const file of commandFiles) {
+
+
+        const command = require(
+            path.join(commandsPath, file)
+        );
+
+
+        if (
+            command.data &&
+            command.execute
+        ) {
+
+
+            client.commands.set(
+                command.data.name,
+                command
+            );
+
+
+            console.log(
+                `✅ Načten command: ${command.data.name}`
+            );
+
+
+        }
+
+
     }
+
 
 }
 
@@ -107,11 +119,12 @@ client.once(
 
 
 
-// INTERAKCE
+// EVENTY
 
 const interactionHandler = require(
     "./events/interactionCreate"
 );
+
 
 
 
@@ -121,67 +134,72 @@ client.on(
     async (interaction) => {
 
 
-
-        // tlačítka + modal
-
-        if (
-
-            interaction.isButton() ||
-
-            interaction.isModalSubmit()
-
-        ) {
+        try {
 
 
-            return interactionHandler(
+
+            // BUTTONY + MODALY
+
+            if (
+
+                interaction.isButton() ||
+
+                interaction.isModalSubmit()
+
+            ) {
+
+
+                return await interactionHandler(
+                    interaction,
+                    client
+                );
+
+
+            }
+
+
+
+
+
+            // SLASH COMMANDY
+
+            if (
+                !interaction.isChatInputCommand()
+            )
+                return;
+
+
+
+
+
+            const command = client.commands.get(
+                interaction.commandName
+            );
+
+
+
+            if (!command)
+                return;
+
+
+
+
+            await command.execute(
                 interaction,
                 client
             );
 
 
-        }
 
 
 
+        } catch (err) {
 
 
-        // slash command
-
-        if (
-            !interaction.isChatInputCommand()
-        )
-            return;
-
-
-
-
-
-        const command = client.commands.get(
-            interaction.commandName
-        );
-
-
-
-        if (!command)
-            return;
-
-
-
-
-
-        try {
-
-
-            await command.execute(
-                interaction
+            console.error(
+                "❌ Interaction error:",
+                err
             );
-
-
-
-        } catch(err) {
-
-
-            console.error(err);
 
 
 
@@ -223,13 +241,15 @@ client.on(
         }
 
 
-
     }
 );
 
 
 
 
+
+
+// LOGIN
 
 client.login(
     process.env.TOKEN
