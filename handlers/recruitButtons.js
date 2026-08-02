@@ -8,7 +8,9 @@ const {
 module.exports = async (interaction) => {
 
 
+    // ===============================
     // PŘIJMOUT REKRUTA
+    // ===============================
 
     if (interaction.customId.startsWith("acceptRecruit_")) {
 
@@ -22,14 +24,30 @@ module.exports = async (interaction) => {
         const member = await interaction.guild.members.fetch(userId);
 
 
+
+        // Přidání role Rekrut
+
         await member.roles.add(
             "1458487234989654201"
         );
 
 
+
+        // Přejmenování ticketu
+
+        await interaction.channel.setName(
+            `rekrut-${member.user.username}`
+        );
+
+
+
         await interaction.update({
 
-            content: `✅ ${member} byl přijat do GUTALAX MILSIM.`,
+            content:
+`✅ ${member} byl přijat do GUTALAX MILSIM.
+
+🎖 Byla ti přidělena role Rekrut.
+Vítej v jednotce!`,
 
             embeds: interaction.message.embeds,
 
@@ -38,13 +56,18 @@ module.exports = async (interaction) => {
         });
 
 
+
         return;
 
     }
 
 
 
+
+
+    // ===============================
     // POHOVOR
+    // ===============================
 
     if (interaction.customId.startsWith("interviewRecruit_")) {
 
@@ -62,13 +85,18 @@ module.exports = async (interaction) => {
         await interaction.reply({
 
             content:
-`${member}
+`🎤 **Pohovor požaduje ${member}**
 
-🎤 Uchazeč byl pozván na pohovor.`,
+<@701088576779059200>
+<@807310842713735178>
+<@1119313377257341129>
+
+Prosím domluvte s uchazečem termín pohovoru.`,
 
             ephemeral: false
 
         });
+
 
 
         return;
@@ -78,8 +106,10 @@ module.exports = async (interaction) => {
 
 
 
-    // ODMÍTNOUT
 
+    // ===============================
+    // ODMÍTNOUT
+    // ===============================
 
     if (interaction.customId.startsWith("rejectRecruit_")) {
 
@@ -96,7 +126,8 @@ module.exports = async (interaction) => {
 
         await interaction.update({
 
-            content: `❌ ${member} byl odmítnut.`,
+            content:
+`❌ ${member} byl odmítnut.`,
 
             embeds: interaction.message.embeds,
 
