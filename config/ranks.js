@@ -35,8 +35,8 @@ module.exports = [
 
         missions: 40,
         trainings: 15,
-        activity: 80,
-        teamwork: 85,
+        activity: 75,
+        teamwork: 80,
 
         automatic: true
     },
@@ -49,8 +49,8 @@ module.exports = [
 
         missions: 60,
         trainings: 25,
-        activity: 85,
-        teamwork: 90,
+        activity: 80,
+        teamwork: 85,
 
         automatic: true
     },
@@ -63,7 +63,7 @@ module.exports = [
 
         missions: 80,
         trainings: 35,
-        activity: 90,
+        activity: 85,
         teamwork: 90,
 
         automatic: true
@@ -72,7 +72,7 @@ module.exports = [
 
 
     // ==========================
-    // RUČNÍ POVÝŠENÍ - VELENÍ
+    // RUČNÍ POVÝŠENÍ
     // ==========================
 
 
