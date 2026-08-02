@@ -32,9 +32,10 @@ module.exports = {
 
             .setDescription("Člen")
 
-            .setRequired(true)
+            .setRequired(false)
 
         ),
+
 
 
 
@@ -45,8 +46,20 @@ module.exports = {
 
 
 
-        const user =
+        let user =
             interaction.options.getUser("clen");
+
+
+
+        if(!user){
+
+            user =
+            interaction.user;
+
+        }
+
+
+
 
 
 
@@ -54,6 +67,8 @@ module.exports = {
             await interaction.guild.members.fetch(
                 user.id
             );
+
+
 
 
 
@@ -69,7 +84,7 @@ module.exports = {
 
 
 
-        let rankLevel = 0;
+        let highestLevel = 0;
 
 
 
@@ -79,23 +94,28 @@ module.exports = {
 
 
             if(
+
                 member.roles.cache.has(r.id)
+
                 &&
-                r.level > rankLevel
+
+                r.level > highestLevel
+
             ){
+
 
                 rank =
                 r.name;
 
 
-                rankLevel =
+                highestLevel =
                 r.level;
+
 
             }
 
 
         }
-
 
 
 
@@ -115,25 +135,40 @@ module.exports = {
 
 
 
+
+
         if(!data){
 
 
             data = {
 
-                id:user.id,
 
-                username:user.username,
+                id:
+                user.id,
 
-                trainings:0,
 
-                missions:0,
+                username:
+                user.username,
+
+
+                trainings:
+                0,
+
+
+                missions:
+                0,
+
 
                 joined:
                 new Date().toISOString(),
 
-                lastActivity:null
+
+                lastActivity:
+                null
+
 
             };
+
 
 
             memberDB.createMember(
@@ -166,51 +201,64 @@ module.exports = {
 
         .addFields(
 
+
             {
 
-                name:"👤 Člen",
+                name:
+                "👤 Člen",
 
-                value:`${user}`
+                value:
+                `${user}`
 
             },
 
+
             {
 
-                name:"🎖 Hodnost",
+                name:
+                "🎖 Hodnost",
 
-                value:rank
+                value:
+                rank
 
             },
 
+
             {
 
-                name:"🏋️ Výcviky",
+                name:
+                "🏋️ Výcviky",
 
                 value:
                 `${data.trainings}`
 
             },
 
+
             {
 
-                name:"🎯 Mise",
+                name:
+                "🎯 Mise",
 
                 value:
                 `${data.missions}`
 
             },
 
+
             {
 
-                name:"📅 Člen od",
+                name:
+                "📅 Člen od",
 
                 value:
                 `<t:${Math.floor(
                     new Date(data.joined)
-                    .getTime()/1000
+                    .getTime() / 1000
                 )}:d>`
 
             }
+
 
         )
 
