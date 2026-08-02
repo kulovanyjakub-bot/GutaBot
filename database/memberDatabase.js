@@ -11,25 +11,30 @@ const filePath = path.join(
 
 function loadMembers() {
 
-
     if (!fs.existsSync(filePath)) {
 
         fs.writeFileSync(
             filePath,
-            "{}"
+            "[]"
         );
 
     }
 
 
-
-    return JSON.parse(
-        fs.readFileSync(
-            filePath,
-            "utf8"
-        )
+    const data = fs.readFileSync(
+        filePath,
+        "utf8"
     );
 
+
+    if (!data) {
+
+        return [];
+
+    }
+
+
+    return JSON.parse(data);
 
 }
 
@@ -48,7 +53,9 @@ function saveMembers(data) {
             data,
             null,
             4
-        )
+        ),
+
+        "utf8"
 
     );
 
@@ -62,16 +69,47 @@ function saveMembers(data) {
 function addMember(member) {
 
 
+    console.log(
+        "📥 Ukládám člena:",
+        member
+    );
+
+
     const members = loadMembers();
 
 
+    // ochrana proti duplicitě
 
-    members[member.id] = member;
+    const exists = members.find(
+        m => m.id === member.id
+    );
+
+
+    if (exists) {
+
+        console.log(
+            "⚠️ Člen už existuje:",
+            member.id
+        );
+
+        return;
+
+    }
+
+
+
+    members.push(member);
 
 
 
     saveMembers(
         members
+    );
+
+
+
+    console.log(
+        "✅ Člen uložen"
     );
 
 
@@ -84,33 +122,20 @@ function addMember(member) {
 function removeMember(id) {
 
 
-    const members = loadMembers();
+    let members = loadMembers();
 
 
+    members = members.filter(
 
-    delete members[id];
+        m => m.id !== id
 
+    );
 
 
     saveMembers(
         members
     );
 
-
-}
-
-
-
-
-
-function getMember(id) {
-
-
-    const members = loadMembers();
-
-
-
-    return members[id];
 
 }
 
@@ -132,14 +157,10 @@ function getMembers() {
 
 module.exports = {
 
-
     addMember,
 
     removeMember,
 
-    getMember,
-
     getMembers
-
 
 };
