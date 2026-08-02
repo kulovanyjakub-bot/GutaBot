@@ -1,22 +1,26 @@
+const openRecruit = require("../handlers/openRecruit");
 const recruitModal = require("../handlers/recruitModal");
 const recruitButtons = require("../handlers/recruitButtons");
+
 
 module.exports = async (interaction, client) => {
 
 
-    // OTEVŘENÍ FORMULÁŘE
+    // Otevření náborového formuláře
+
     if (
         interaction.isButton() &&
         interaction.customId === "openRecruit"
     ) {
 
-        return recruitModal(interaction, client);
+        return openRecruit(interaction, client);
 
     }
 
 
 
-    // ODESLÁNÍ FORMULÁŘE
+    // Odeslání formuláře
+
     if (
         interaction.isModalSubmit() &&
         interaction.customId === "recruitForm"
@@ -28,13 +32,20 @@ module.exports = async (interaction, client) => {
 
 
 
-    // TLAČÍTKA NÁBORÁŘŮ
+    // Náborová tlačítka
+
     if (
-        interaction.isButton()
+        interaction.isButton() &&
+        (
+            interaction.customId.startsWith("acceptRecruit_") ||
+            interaction.customId.startsWith("interviewRecruit_") ||
+            interaction.customId.startsWith("rejectRecruit_")
+        )
     ) {
 
         return recruitButtons(interaction, client);
 
     }
+
 
 };
