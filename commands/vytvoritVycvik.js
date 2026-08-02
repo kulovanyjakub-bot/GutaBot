@@ -7,7 +7,8 @@ const {
 } = require("discord.js");
 
 
-const trainingDB = require("../database/trainingDatabase");
+const trainingDB =
+    require("../database/trainingDatabase");
 
 
 
@@ -43,7 +44,9 @@ module.exports = {
 
 
 
+
     async execute(interaction) {
+
 
 
         const milsimRole =
@@ -65,7 +68,6 @@ module.exports = {
             });
 
         }
-
 
 
 
@@ -112,6 +114,7 @@ module.exports = {
 
 
 
+
         const embed =
             new EmbedBuilder()
 
@@ -150,10 +153,12 @@ module.exports = {
 
 
 
+
         const buttons =
             new ActionRowBuilder()
 
             .addComponents(
+
 
 
                 new ButtonBuilder()
@@ -164,7 +169,10 @@ module.exports = {
 
                 .setLabel("✅ Účastním se")
 
-                .setStyle(ButtonStyle.Success),
+                .setStyle(
+                    ButtonStyle.Success
+                ),
+
 
 
 
@@ -176,7 +184,10 @@ module.exports = {
 
                 .setLabel("❌ Neúčastním se")
 
-                .setStyle(ButtonStyle.Danger),
+                .setStyle(
+                    ButtonStyle.Danger
+                ),
+
 
 
 
@@ -188,9 +199,13 @@ module.exports = {
 
                 .setLabel("🔒 Ukončit výcvik")
 
-                .setStyle(ButtonStyle.Secondary)
+                .setStyle(
+                    ButtonStyle.Secondary
+                )
+
 
             );
+
 
 
 
@@ -226,24 +241,30 @@ module.exports = {
 
         await channel.send({
 
-            content:"@everyone",
+            content:
+            "@everyone",
 
             allowedMentions:{
+
                 parse:[
                     "everyone"
                 ]
+
             },
 
 
             embeds:[
+
                 embed
+
             ],
 
 
             components:[
-                buttons
-            ]
 
+                buttons
+
+            ]
 
         });
 
