@@ -25,7 +25,11 @@ module.exports = async (interaction) => {
 
 
 
-        // ÚČAST
+
+
+        // ===============================
+        // ÚČAST NA VÝCVIKU
+        // ===============================
 
 
         if(
@@ -38,14 +42,6 @@ module.exports = async (interaction) => {
                     "trainingJoin_",
                     ""
                 );
-
-
-
-            console.log(
-                "PŘIHLAŠUJI NA VÝCVIK:",
-                trainingId,
-                interaction.user.id
-            );
 
 
 
@@ -68,9 +64,106 @@ module.exports = async (interaction) => {
 
 
 
-            console.log(
-                "DB VÝCVIKY:",
-                trainingDB.getTrainings()
+            const embed =
+                EmbedBuilder.from(
+                    interaction.message.embeds[0]
+                );
+
+
+
+            let field =
+                embed.data.fields.find(
+
+                    f =>
+                    f.name === "👥 Účast"
+
+                );
+
+
+
+            let users =
+                field.value === "Nikdo přihlášen"
+
+                ?
+
+                []
+
+                :
+
+                field.value.split("\n");
+
+
+
+            const entry =
+                `🪖 ${interaction.user.username}`;
+
+
+
+            if(
+                !users.includes(entry)
+            ){
+
+                users.push(entry);
+
+            }
+
+
+
+            field.value =
+                users.join("\n");
+
+
+
+
+
+            await interaction.update({
+
+                embeds:[
+
+                    embed
+
+                ]
+
+            });
+
+
+
+            return;
+
+        }
+
+
+
+
+
+
+
+
+        // ===============================
+        // ODHLÁŠENÍ
+        // ===============================
+
+
+        if(
+            interaction.customId.startsWith("trainingLeave_")
+        ){
+
+
+
+            const trainingId =
+                interaction.customId.replace(
+                    "trainingLeave_",
+                    ""
+                );
+
+
+
+            trainingDB.removeParticipant(
+
+                trainingId,
+
+                interaction.user.id
+
             );
 
 
@@ -107,14 +200,31 @@ module.exports = async (interaction) => {
 
 
 
-            users.push(
-                `🪖 ${interaction.user.username}`
-            );
+
+
+            users =
+                users.filter(
+
+                    u =>
+                    u !==
+                    `🪖 ${interaction.user.username}`
+
+                );
+
+
 
 
 
             field.value =
-                users.join("\n");
+                users.length
+
+                ?
+
+                users.join("\n")
+
+                :
+
+                "Nikdo přihlášen";
 
 
 
@@ -123,7 +233,9 @@ module.exports = async (interaction) => {
             await interaction.update({
 
                 embeds:[
+
                     embed
+
                 ]
 
             });
@@ -139,38 +251,160 @@ module.exports = async (interaction) => {
 
 
 
-        // ODHLÁŠENÍ
+
+
+
+        // ===============================
+        // UKONČENÍ VÝCVIKU
+        // ===============================
 
 
         if(
-            interaction.customId.startsWith("trainingLeave_")
+            interaction.customId.startsWith("trainingClose_")
         ){
+
+
+
+            const milsimRole =
+                "1381662796646973542";
+
+
+
+            if(
+                !interaction.member.roles.cache.has(
+                    milsimRole
+                )
+            ){
+
+
+                return interaction.reply({
+
+                    content:
+                    "❌ Pouze MILSIM může ukončit výcvik.",
+
+                    ephemeral:true
+
+                });
+
+
+            }
+
+
+
+
 
 
             const trainingId =
                 interaction.customId.replace(
-                    "trainingLeave_",
+                    "trainingClose_",
                     ""
                 );
 
 
 
-            trainingDB.removeParticipant(
 
-                trainingId,
 
-                interaction.user.id
+            const training =
+                trainingDB.getTraining(
+                    trainingId
+                );
 
+
+
+
+
+            console.log(
+                "UKONČUJI VÝCVIK:",
+                JSON.stringify(
+                    training,
+                    null,
+                    4
+                )
             );
+
+
+
+
+
+
+            if(training){
+
+
+
+                for(
+                    const member of training.participants
+                ){
+
+
+
+                    console.log(
+                        "PŘIDÁVÁM VÝCVIK ČLENOVI:",
+                        member.id,
+                        member.username
+                    );
+
+
+
+                    memberDB.addTraining(
+                        member.id
+                    );
+
+
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+            const archive =
+                interaction.guild.channels.cache.get(
+                    "1533504495437353120"
+                );
+
+
+
+
+
+            if(archive){
+
+
+                await archive.send({
+
+                    embeds:
+                    interaction.message.embeds
+
+                });
+
+
+            }
+
+
+
 
 
 
             await interaction.update({
 
+                content:
+                "🔒 Výcvik ukončen. Statistiky účastníků aktualizovány.",
+
+
                 embeds:
-                interaction.message.embeds
+                interaction.message.embeds,
+
+
+                components:[]
 
             });
+
+
 
 
 
@@ -183,88 +417,35 @@ module.exports = async (interaction) => {
 
 
 
-        // UKONČENÍ
-
-
-        if(
-            interaction.customId.startsWith("trainingClose_")
-        ){
-
-
-            const trainingId =
-                interaction.customId.replace(
-                    "trainingClose_",
-                    ""
-                );
-
-
-
-            const training =
-                trainingDB.getTraining(
-                    trainingId
-                );
-
-
-
-            console.log(
-                "UKONČUJI:",
-                training
-            );
-
-
-
-            if(training){
-
-
-                for(
-                    const member of training.participants
-                ){
-
-
-                    console.log(
-                        "PŘIDÁVÁM VÝCVIK:",
-                        member.id
-                    );
-
-
-                    memberDB.addTraining(
-                        member.id
-                    );
-
-
-                }
-
-
-            }
-
-
-
-            await interaction.update({
-
-                content:
-                "🔒 Výcvik ukončen. Statistiky aktualizovány.",
-
-                embeds:
-                interaction.message.embeds,
-
-                components:[]
-
-            });
-
-
-
-        }
-
-
 
     }
     catch(err){
 
 
         console.error(
-            "TRAINING ERROR:",
+            "❌ TRAINING BUTTON ERROR:",
             err
         );
+
+
+
+        if(
+            !interaction.replied &&
+            !interaction.deferred
+        ){
+
+
+            interaction.reply({
+
+                content:
+                "❌ Chyba při zpracování výcviku.",
+
+                ephemeral:true
+
+            }).catch(()=>{});
+
+
+        }
 
 
     }
