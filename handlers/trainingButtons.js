@@ -14,8 +14,9 @@ module.exports = async (interaction) => {
     try {
 
 
+
         // ===============================
-        // ÚČAST NA VÝCVIKU
+        // ÚČAST
         // ===============================
 
 
@@ -40,7 +41,8 @@ module.exports = async (interaction) => {
 
                     id: interaction.user.id,
 
-                    username: interaction.user.username
+                    username:
+                    interaction.user.username
 
                 }
 
@@ -57,17 +59,22 @@ module.exports = async (interaction) => {
 
 
 
-            let field =
+            const field =
                 embed.data.fields.find(
-                    f => f.name === "👥 Účast"
+
+                    f =>
+                    f.name === "👥 Účast"
+
                 );
 
 
 
             let members =
                 field.value === "Nikdo přihlášen"
-                ? []
-                : field.value.split("\n");
+                ?
+                []
+                :
+                field.value.split("\n");
 
 
 
@@ -96,7 +103,9 @@ module.exports = async (interaction) => {
             await interaction.update({
 
                 embeds:[
+
                     embed
+
                 ]
 
             });
@@ -152,17 +161,22 @@ module.exports = async (interaction) => {
 
 
 
-            let field =
+            const field =
                 embed.data.fields.find(
-                    f => f.name === "👥 Účast"
+
+                    f =>
+                    f.name === "👥 Účast"
+
                 );
 
 
 
             let members =
                 field.value === "Nikdo přihlášen"
-                ? []
-                : field.value.split("\n");
+                ?
+                []
+                :
+                field.value.split("\n");
 
 
 
@@ -191,7 +205,9 @@ module.exports = async (interaction) => {
             await interaction.update({
 
                 embeds:[
+
                     embed
+
                 ]
 
             });
@@ -210,7 +226,7 @@ module.exports = async (interaction) => {
 
 
         // ===============================
-        // UKONČENÍ VÝCVIKU
+        // UKONČENÍ
         // ===============================
 
 
@@ -231,6 +247,7 @@ module.exports = async (interaction) => {
                 )
             ){
 
+
                 return interaction.reply({
 
                     content:
@@ -240,15 +257,22 @@ module.exports = async (interaction) => {
 
                 });
 
+
             }
+
+
+
 
 
 
 
             const archive =
                 interaction.guild.channels.cache.get(
+
                     "1533504495437353120"
+
                 );
+
 
 
 
@@ -259,6 +283,7 @@ module.exports = async (interaction) => {
                 await archive.send({
 
                     embeds:
+
                     interaction.message.embeds
 
                 });
@@ -271,13 +296,16 @@ module.exports = async (interaction) => {
 
 
 
+
             await interaction.update({
 
                 content:
+
                 "🔒 Výcvik byl ukončen a uložen do archivu.",
 
 
                 embeds:
+
                 interaction.message.embeds,
 
 
@@ -287,15 +315,18 @@ module.exports = async (interaction) => {
 
 
 
-
             return;
+
 
         }
 
 
 
+
+
     }
     catch(err){
+
 
 
         console.error(
