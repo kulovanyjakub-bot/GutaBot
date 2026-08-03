@@ -14,6 +14,11 @@ const probationButtons =
     require("../handlers/probationButtons");
 
 
+const recruitModal =
+    require("../handlers/recruitModal");
+
+
+
 
 
 
@@ -22,7 +27,6 @@ module.exports = async (interaction, client) => {
 
 
     try {
-
 
 
 
@@ -195,6 +199,14 @@ module.exports = async (interaction, client) => {
 
 
 
+            // ===============================
+            // OSTATNÍ BUTTONY
+            // ===============================
+
+
+            return;
+
+
         }
 
 
@@ -213,8 +225,29 @@ module.exports = async (interaction, client) => {
 
 
 
-            // pokud máš vlastní modal handlery,
-            // přidáme je sem později
+            // ===============================
+            // NÁBOROVÝ FORMULÁŘ
+            // ===============================
+
+
+            if(
+
+                interaction.customId ===
+                "recruitForm"
+
+            ){
+
+
+                return recruitModal(
+                    interaction
+                );
+
+
+            }
+
+
+
+
 
 
 
