@@ -27,6 +27,10 @@ module.exports = async (interaction) => {
         ){
 
 
+            await interaction.deferUpdate();
+
+
+
 
             const userId =
 
@@ -55,10 +59,7 @@ module.exports = async (interaction) => {
 
 
 
-
-            // ===============================
             // ROLE REKRUT
-            // ===============================
 
 
             await member.roles.add(
@@ -75,10 +76,7 @@ module.exports = async (interaction) => {
 
 
 
-            // ===============================
-            // VYTVOŘENÍ / ÚPRAVA PROFILU
-            // ===============================
-
+            // PROFIL
 
 
             const existing =
@@ -101,11 +99,9 @@ module.exports = async (interaction) => {
                 db.createMember({
 
 
-
                     id:
 
                     member.id,
-
 
 
                     username:
@@ -113,37 +109,28 @@ module.exports = async (interaction) => {
                     member.user.username,
 
 
-
                     missions:0,
-
 
 
                     trainings:0,
 
 
-
                     activity:0,
-
 
 
                     teamwork:0,
 
 
-
                     discipline:0,
-
 
 
                     rank:null,
 
 
-
                     role:"Rekrut",
 
 
-
                     probation:true,
-
 
 
                     milSimJoinDate:
@@ -151,9 +138,7 @@ module.exports = async (interaction) => {
                     new Date().toISOString(),
 
 
-
                     probationChecked:false,
-
 
 
                     joined:
@@ -161,11 +146,9 @@ module.exports = async (interaction) => {
                     new Date().toISOString(),
 
 
-
                     lastActivity:
 
                     new Date().toISOString()
-
 
 
                 });
@@ -175,7 +158,6 @@ module.exports = async (interaction) => {
             }
 
             else {
-
 
 
                 db.updateMember(
@@ -199,7 +181,6 @@ module.exports = async (interaction) => {
                         probationChecked:false
 
 
-
                     }
 
                 );
@@ -215,16 +196,14 @@ module.exports = async (interaction) => {
 
 
 
-            // ===============================
             // PŘEJMENOVÁNÍ TICKETU
-            // ===============================
 
 
             await interaction.channel.setName(
 
                 `rekrut-${member.user.username}`
 
-            );
+            ).catch(()=>{});
 
 
 
@@ -234,9 +213,7 @@ module.exports = async (interaction) => {
 
 
 
-            // ===============================
-            // NÁBOR LOG
-            // ===============================
+            // LOG
 
 
             const logChannel =
@@ -246,8 +223,6 @@ module.exports = async (interaction) => {
                     "1533467882720202812"
 
                 );
-
-
 
 
 
@@ -276,61 +251,40 @@ module.exports = async (interaction) => {
                     .addFields(
 
 
-
                         {
 
-                            name:
+                            name:"Uchazeč",
 
-                            "Uchazeč",
-
-                            value:
-
-                            `${member}`
+                            value:`${member}`
 
                         },
 
 
-
                         {
 
-                            name:
+                            name:"Přijal",
 
-                            "Přijal",
-
-                            value:
-
-                            `${interaction.user}`
+                            value:`${interaction.user}`
 
                         },
 
 
-
                         {
 
-                            name:
+                            name:"Role",
 
-                            "Role",
-
-                            value:
-
-                            "<@&1458487234989654201>"
+                            value:"<@&1458487234989654201>"
 
                         },
 
 
-
                         {
 
-                            name:
+                            name:"Zkušební doba",
 
-                            "Zkušební doba",
-
-                            value:
-
-                            "3 měsíce"
+                            value:"3 měsíce"
 
                         }
-
 
 
                     )
@@ -342,16 +296,13 @@ module.exports = async (interaction) => {
 
 
 
-
-                logChannel.send({
-
+                await logChannel.send({
 
                     embeds:[
 
                         logEmbed
 
                     ]
-
 
                 });
 
@@ -366,9 +317,7 @@ module.exports = async (interaction) => {
 
 
 
-            // ===============================
-            // DM UCHAZEČI
-            // ===============================
+            // DM
 
 
             await member.send({
@@ -377,13 +326,10 @@ module.exports = async (interaction) => {
                 embeds:[
 
 
-
                     new EmbedBuilder()
 
 
-
                     .setColor("Green")
-
 
 
                     .setTitle(
@@ -393,9 +339,7 @@ module.exports = async (interaction) => {
                     )
 
 
-
                     .setDescription(
-
 
 `Gratulujeme ${member}!
 
@@ -410,40 +354,26 @@ Během něj sledujeme:
 🪖 Chování
 📡 Komunikaci
 🤝 Týmovou spolupráci
-🎯 Přístup k misím
-🏋️ Účast na výcvicích
+🎯 Mise
+🏋️ Výcviky
 
 Po ukončení zkušební doby proběhne vyhodnocení velením.
 
 GUTALAX MILSIM
 Respekt. Komunikace. Tým.`
 
-
                     )
-
 
                     .setTimestamp()
 
 
                 ]
 
-
             }).catch(()=>{});
 
 
 
 
-
-
-
-
-
-            // ===============================
-            // UKONČENÍ TLAČÍTKA
-            // ===============================
-
-
-            await interaction.deferUpdate();
 
 
 
@@ -471,7 +401,6 @@ Respekt. Komunikace. Tým.`
                 components:[]
 
 
-
             });
 
 
@@ -490,7 +419,6 @@ Respekt. Komunikace. Tým.`
 
 
             },5000);
-
 
 
 
@@ -557,16 +485,15 @@ Respekt. Komunikace. Tým.`
                 content:
 
 
-`🎤 **Pohovor požaduje ${member}**
+                `🎤 **Pohovor požaduje ${member}**\n\n` +
 
-<@&1533447617957073117>
+                `<@&1533447617957073117>\n\n` +
 
-Náborář prosím zahajte pohovor s uchazečem.`,
+                `Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
                 allowedMentions:{
-
 
 
                     users:[
@@ -574,7 +501,6 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                         member.id
 
                     ],
-
 
 
                     roles:[
@@ -587,10 +513,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                 }
 
 
-
             });
-
-
 
 
 
@@ -623,6 +546,10 @@ Náborář prosím zahajte pohovor s uchazečem.`,
         ){
 
 
+            await interaction.deferUpdate();
+
+
+
 
             const userId =
 
@@ -633,6 +560,8 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                     ""
 
                 );
+
+
 
 
 
@@ -668,19 +597,16 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-                logChannel.send({
+                await logChannel.send({
 
 
                     embeds:[
 
 
-
                         new EmbedBuilder()
 
 
-
                         .setColor("Red")
-
 
 
                         .setTitle(
@@ -690,33 +616,23 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                         )
 
 
-
                         .addFields(
-
 
 
                             {
 
-                                name:
+                                name:"Uchazeč",
 
-                                "Uchazeč",
-
-                                value:
-
-                                `${member}`
+                                value:`${member}`
 
                             },
 
 
                             {
 
-                                name:
+                                name:"Rozhodl",
 
-                                "Rozhodl",
-
-                                value:
-
-                                `${interaction.user}`
+                                value:`${interaction.user}`
 
                             }
 
@@ -727,12 +643,9 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                         .setTimestamp()
 
 
-
                     ]
 
-
                 });
-
 
 
             }
@@ -743,16 +656,9 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
 
 
-            await interaction.deferUpdate();
-
-
-
-
-
 
 
             await interaction.message.edit({
-
 
 
                 content:
@@ -761,16 +667,13 @@ Náborář prosím zahajte pohovor s uchazečem.`,
                 `❌ ${member} byl odmítnut.`,
 
 
-
                 embeds:[],
 
 
                 components:[]
 
 
-
             });
-
 
 
 
@@ -805,7 +708,6 @@ Náborář prosím zahajte pohovor s uchazečem.`,
     }
 
 
-
     catch(err){
 
 
@@ -817,6 +719,7 @@ Náborář prosím zahajte pohovor s uchazečem.`,
             err
 
         );
+
 
 
 
@@ -833,27 +736,20 @@ Náborář prosím zahajte pohovor s uchazečem.`,
 
             await interaction.reply({
 
-
                 content:
 
                 "❌ Chyba při zpracování tlačítka.",
 
 
-
                 ephemeral:true
-
 
 
             }).catch(()=>{});
 
-
-
         }
 
 
-
     }
-
 
 
 };
