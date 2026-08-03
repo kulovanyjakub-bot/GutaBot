@@ -14,8 +14,13 @@ const probationButtons =
     require("../handlers/probationButtons");
 
 
+const openRecruit =
+    require("../handlers/openRecruit");
+
+
 const recruitModal =
     require("../handlers/recruitModal");
+
 
 
 
@@ -36,6 +41,33 @@ module.exports = async (interaction, client) => {
 
 
         if(interaction.isButton()){
+
+
+
+
+
+            // ===============================
+            // OTEVŘENÍ NÁBORU
+            // ===============================
+
+
+            if(
+
+                interaction.customId ===
+                "openRecruit"
+
+            ){
+
+
+                return openRecruit(
+                    interaction
+                );
+
+
+            }
+
+
+
 
 
 
@@ -73,6 +105,7 @@ module.exports = async (interaction, client) => {
 
 
             }
+
 
 
 
@@ -199,15 +232,12 @@ module.exports = async (interaction, client) => {
 
 
 
-            // ===============================
-            // OSTATNÍ BUTTONY
-            // ===============================
-
 
             return;
 
 
         }
+
 
 
 
@@ -223,11 +253,6 @@ module.exports = async (interaction, client) => {
 
         if(interaction.isModalSubmit()){
 
-
-
-            // ===============================
-            // NÁBOROVÝ FORMULÁŘ
-            // ===============================
 
 
             if(
@@ -249,12 +274,11 @@ module.exports = async (interaction, client) => {
 
 
 
-
-
             return;
 
 
         }
+
 
 
 
@@ -323,6 +347,7 @@ module.exports = async (interaction, client) => {
 
     }
 
+
     catch(err){
 
 
@@ -334,6 +359,8 @@ module.exports = async (interaction, client) => {
             err
 
         );
+
+
 
 
 
@@ -358,6 +385,7 @@ module.exports = async (interaction, client) => {
 
 
                 ephemeral:true
+
 
 
             }).catch(()=>{});
