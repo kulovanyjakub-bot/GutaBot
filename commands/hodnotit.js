@@ -28,8 +28,6 @@ const COMMAND_ROLES = [
 
 
 
-
-
 module.exports = {
 
 
@@ -118,10 +116,199 @@ module.exports = {
     async execute(interaction){
 
 
+        console.log(
+            "HODNOTIT SPUŠTĚN"
+        );
+
+
+
+
+
+
+        const allowed =
+
+            interaction.member.roles.cache.some(
+
+                role =>
+
+                COMMAND_ROLES.includes(
+
+                    role.id
+
+                )
+
+            );
+
+
+
+
+
+
+        if(!allowed){
+
+
+            return interaction.reply({
+
+                content:
+
+                "❌ Tento příkaz může použít pouze velení.",
+
+                ephemeral:true
+
+            });
+
+
+        }
+
+
+
+
+
+
+
+
+        const user =
+
+            interaction.options.getUser(
+
+                "clen"
+
+            );
+
+
+
+
+
+
+
+        const activity =
+
+            interaction.options.getInteger(
+
+                "aktivita"
+
+            );
+
+
+
+
+
+
+
+        const teamwork =
+
+            interaction.options.getInteger(
+
+                "tymovaprace"
+
+            );
+
+
+
+
+
+
+
+        const discipline =
+
+            interaction.options.getInteger(
+
+                "disciplina"
+
+            );
+
+
+
+
+
+
 
         console.log(
-            "🔥 HODNOTIT SPUŠTĚN"
+
+            "HODNOCENÍ:",
+
+            user.username,
+
+            activity,
+
+            teamwork,
+
+            discipline
+
         );
+
+
+
+
+
+
+
+
+
+        memberDB.updateEvaluation(
+
+            user.id,
+
+            activity,
+
+            teamwork,
+
+            discipline ?? 0
+
+        );
+
+
+
+
+
+
+        console.log(
+
+            "HODNOCENÍ ULOŽENO"
+
+        );
+
+
+
+
+
+
+
+
+        // skrytá odpověď pouze pro velitele
+
+
+        await interaction.reply({
+
+            content:
+
+            `✅ Hodnocení uloženo pro ${user}\n\n` +
+
+            `⚡ Aktivita: **${activity}/100**\n` +
+
+            `🤝 Týmová práce: **${teamwork}/100**\n` +
+
+            `🎖 Disciplína: **${discipline ?? 0}/100**`,
+
+            ephemeral:true
+
+        });
+
+
+
+
+
+
+
+        console.log(
+
+            "REPLY ODESLÁN"
+
+        );
+
+
+
+
 
 
 
@@ -130,104 +317,14 @@ module.exports = {
         try{
 
 
-            await interaction.deferReply({
 
-                ephemeral:false
+            const member =
 
-            });
+                await interaction.guild.members.fetch(
 
-
-
-
-
-
-            const allowed =
-
-                interaction.member.roles.cache.some(
-
-                    role =>
-
-                    COMMAND_ROLES.includes(
-
-                        role.id
-
-                    )
+                    user.id
 
                 );
-
-
-
-
-
-
-            if(!allowed){
-
-
-                return interaction.editReply({
-
-                    content:
-
-                    "❌ Tento příkaz může použít pouze velení."
-
-                });
-
-
-            }
-
-
-
-
-
-
-
-
-
-            const user =
-
-                interaction.options.getUser(
-
-                    "clen"
-
-                );
-
-
-
-
-
-            const activity =
-
-                interaction.options.getInteger(
-
-                    "aktivita"
-
-                );
-
-
-
-
-
-            const teamwork =
-
-                interaction.options.getInteger(
-
-                    "tymovaprace"
-
-                );
-
-
-
-
-
-            const discipline =
-
-                interaction.options.getInteger(
-
-                    "disciplina"
-
-                );
-
-
-
 
 
 
@@ -236,15 +333,9 @@ module.exports = {
 
             console.log(
 
-                "📊 HODNOCENÍ:",
+                "ČLEN NALEZEN:",
 
-                user.username,
-
-                activity,
-
-                teamwork,
-
-                discipline
+                member.user.username
 
             );
 
@@ -254,17 +345,11 @@ module.exports = {
 
 
 
+            await rankChecker(
 
+                member,
 
-            memberDB.updateEvaluation(
-
-                user.id,
-
-                activity,
-
-                teamwork,
-
-                discipline
+                interaction.guild
 
             );
 
@@ -276,131 +361,9 @@ module.exports = {
 
             console.log(
 
-                "✅ HODNOCENÍ ULOŽENO"
+                "RANK CHECK HOTOV"
 
             );
-
-
-
-
-
-
-
-
-
-            await interaction.editReply({
-
-
-                content:
-
-
-                `✅ Hodnocení aktualizováno pro ${user}\n\n` +
-
-
-                `⚡ Aktivita: **${activity}/100**\n` +
-
-
-                `🤝 Týmová práce: **${teamwork}/100**\n` +
-
-
-                `🎖 Disciplína: **${discipline}/100**`
-
-
-            });
-
-
-
-
-
-
-
-            console.log(
-
-                "✅ REPLY ODESLÁN"
-
-            );
-
-
-
-
-
-
-
-
-
-            try{
-
-
-
-                const member =
-
-                    await interaction.guild.members.fetch(
-
-                        user.id
-
-                    );
-
-
-
-
-
-                console.log(
-
-                    "👤 ČLEN NALEZEN:",
-
-                    member.user.username
-
-                );
-
-
-
-
-
-
-
-                await rankChecker(
-
-                    member,
-
-                    interaction.guild
-
-                );
-
-
-
-
-
-
-
-                console.log(
-
-                    "🎖 RANK CHECK HOTOV"
-
-                );
-
-
-
-            }
-
-
-
-            catch(err){
-
-
-
-                console.error(
-
-                    "❌ Rank checker chyba:",
-
-                    err
-
-                );
-
-
-            }
-
-
-
 
 
 
@@ -415,7 +378,7 @@ module.exports = {
 
             console.error(
 
-                "❌ HODNOTIT ERROR:",
+                "❌ Rank checker chyba:",
 
                 err
 
@@ -423,51 +386,11 @@ module.exports = {
 
 
 
-
-
-            if(
-
-                interaction.deferred
-
-            ){
-
-
-
-                await interaction.editReply({
-
-                    content:
-
-                    "❌ Chyba při hodnocení člena."
-
-                }).catch(()=>{});
-
-
-
-            }
-
-
-
-            else{
-
-
-
-                await interaction.reply({
-
-                    content:
-
-                    "❌ Chyba při hodnocení člena.",
-
-                    ephemeral:true
-
-                }).catch(()=>{});
-
-
-
-            }
-
-
-
         }
+
+
+
+
 
 
 
