@@ -210,7 +210,7 @@ module.exports = {
 
 
 
-        // uloží hodnocení do databáze
+        // uložit hodnocení
 
         memberDB.updateEvaluation(
 
@@ -232,38 +232,7 @@ module.exports = {
 
 
 
-        const member =
-
-            await interaction.guild.members.fetch(
-
-                user.id
-
-            );
-
-
-
-
-
-
-
-
-        // kontrola povýšení
-
-        await rankChecker(
-
-            member,
-
-            interaction.guild
-
-        );
-
-
-
-
-
-
-
-
+        // odpověď Discordu ihned
 
         await interaction.reply({
 
@@ -283,6 +252,62 @@ module.exports = {
 
 
         });
+
+
+
+
+
+
+
+
+
+        // kontrola povýšení
+
+        try{
+
+
+            const member =
+
+                await interaction.guild.members.fetch(
+
+                    user.id
+
+                );
+
+
+
+
+
+            await rankChecker(
+
+                member,
+
+                interaction.guild
+
+            );
+
+
+
+        }
+
+
+        catch(err){
+
+
+            console.error(
+
+                "❌ Rank checker chyba:",
+
+                err
+
+            );
+
+
+        }
+
+
+
+
 
 
 
