@@ -33,14 +33,12 @@ async function rankChecker(member, guild){
 
 
 
-        let currentRank = null;
 
+        let currentRank =
 
+            ranks.find(
 
-        for(const rank of ranks){
-
-
-            if(
+                rank =>
 
                 member.roles.cache.has(
 
@@ -48,14 +46,7 @@ async function rankChecker(member, guild){
 
                 )
 
-            ){
-
-                currentRank = rank;
-
-            }
-
-
-        }
+            );
 
 
 
@@ -63,24 +54,8 @@ async function rankChecker(member, guild){
 
 
 
-        let newRank = null;
-
-
-
-
-
-
-        for(const rank of ranks){
-
-
-
-            if(
-
-                !rank.automatic
-
-            )
-
-                continue;
+        if(!currentRank)
+            return;
 
 
 
@@ -88,28 +63,19 @@ async function rankChecker(member, guild){
 
 
 
-            if(
+        const nextRank =
 
+            ranks.find(
 
-                data.missions >= rank.missions &&
+                rank =>
 
-                data.trainings >= rank.trainings &&
+                rank.level === currentRank.level + 1
 
-                data.activity >= rank.activity &&
+                &&
 
-                data.teamwork >= rank.teamwork
+                rank.automatic
 
-
-            ){
-
-
-                newRank = rank;
-
-
-            }
-
-
-        }
+            );
 
 
 
@@ -117,7 +83,7 @@ async function rankChecker(member, guild){
 
 
 
-        if(!newRank)
+        if(!nextRank)
             return;
 
 
@@ -128,9 +94,21 @@ async function rankChecker(member, guild){
 
         if(
 
-            currentRank &&
 
-            currentRank.level >= newRank.level
+            data.missions < nextRank.missions
+
+            ||
+
+            data.trainings < nextRank.trainings
+
+            ||
+
+            data.activity < nextRank.activity
+
+            ||
+
+            data.teamwork < nextRank.teamwork
+
 
         ){
 
@@ -145,36 +123,17 @@ async function rankChecker(member, guild){
 
 
 
-        // odebrání staré hodnosti
+
+        // ===============================
+        // ODEBRÁNÍ STARÉ HODNOSTI
+        // ===============================
 
 
-        for(const rank of ranks){
+        await member.roles.remove(
 
+            currentRank.id
 
-
-            if(
-
-                member.roles.cache.has(
-
-                    rank.id
-
-                )
-
-            ){
-
-
-
-                await member.roles.remove(
-
-                    rank.id
-
-                ).catch(()=>{});
-
-
-            }
-
-
-        }
+        ).catch(()=>{});
 
 
 
@@ -183,14 +142,18 @@ async function rankChecker(member, guild){
 
 
 
-        // přidání nové hodnosti
+
+        // ===============================
+        // PŘIDÁNÍ NOVÉ HODNOSTI
+        // ===============================
 
 
         await member.roles.add(
 
-            newRank.id
+            nextRank.id
 
         );
+
 
 
 
@@ -202,7 +165,7 @@ async function rankChecker(member, guild){
 
             member.id,
 
-            newRank.name
+            nextRank.name
 
         );
 
@@ -232,6 +195,7 @@ async function rankChecker(member, guild){
 
 
 
+
         if(channel){
 
 
@@ -241,11 +205,12 @@ async function rankChecker(member, guild){
 
                 content:
 
+
 `🎖 **POVÝŠENÍ ČLENA**
 
 🪖 Člen: ${member}
 
-⬆️ Nová hodnost: **${newRank.name}**
+⬆️ Nová hodnost: **${nextRank.name}**
 
 🎯 Mise: ${data.missions || 0}
 🏋️ Výcviky: ${data.trainings || 0}
@@ -266,11 +231,13 @@ Respekt. Komunikace. Tým.`
 
 
 
+
         console.log(
 
-            `🎖 ${member.user.username} povýšen na ${newRank.name}`
+            `🎖 ${member.user.username} povýšen na ${nextRank.name}`
 
         );
+
 
 
 
