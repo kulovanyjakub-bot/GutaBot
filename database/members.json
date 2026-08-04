@@ -1,2 +1,24 @@
 [
+  {
+    "id": "1119313377257341129",
+    "username": "TestovacíVojak",
+
+    "missions": 25,
+    "trainings": 10,
+
+    "activity": 70,
+    "teamwork": 70,
+    "discipline": 0,
+
+    "rank": "Vojín",
+    "role": "Milsim",
+
+    "probation": false,
+    "probationChecked": true,
+
+    "milSimJoinDate": "2026-01-01T00:00:00.000Z",
+
+    "joined": "2026-01-01T00:00:00.000Z",
+    "lastActivity": "2026-08-04T00:00:00.000Z"
+}
 ]
