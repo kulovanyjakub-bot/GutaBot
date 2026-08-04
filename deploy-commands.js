@@ -3,71 +3,7 @@ const {
     Routes
 } = require("discord.js");
 
-const fs = require("fs");
-const path = require("path");
-
 require("dotenv").config();
-
-
-
-const commands = [];
-
-
-// složka commands
-const commandsPath = path.join(
-    __dirname,
-    "commands"
-);
-
-
-
-const commandFiles = fs.readdirSync(
-    commandsPath
-)
-.filter(file => file.endsWith(".js"));
-
-
-
-
-// načtení commandů
-for (const file of commandFiles) {
-
-
-    const command = require(
-        path.join(
-            commandsPath,
-            file
-        )
-    );
-
-
-
-    // pouze skutečné slash commandy
-    if(command.data){
-
-
-        commands.push(
-            command.data.toJSON()
-        );
-
-
-        console.log(
-            `✅ Načten command: ${file}`
-        );
-
-
-    }
-    else {
-
-
-        console.log(
-            `⚠️ Přeskočen ${file} (není slash command)`
-        );
-
-
-    }
-
-}
 
 
 
@@ -83,6 +19,7 @@ const rest = new REST({
 
 
 
+
 (async () => {
 
 
@@ -90,8 +27,10 @@ const rest = new REST({
 
 
         console.log(
-            "Registruji příkazy..."
+            "Mažu slash commandy..."
         );
+
+
 
 
 
@@ -108,7 +47,9 @@ const rest = new REST({
 
 
             {
-                body: commands
+
+                body: []
+
             }
 
 
@@ -116,18 +57,28 @@ const rest = new REST({
 
 
 
+
+
+
+
         console.log(
-            `✅ Příkazy zaregistrovány (${commands.length})`
+
+            "✅ Všechny slash commandy smazány"
+
         );
 
 
 
     }
+
+
     catch(err){
 
 
         console.error(
+
             err
+
         );
 
 
