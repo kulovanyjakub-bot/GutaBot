@@ -1,18 +1,31 @@
 [
     {
-        "id": "1119313377257341129",
-        "username": "TestovacíVojak",
+    "id": "1119313377257341129",
 
-        "trainings": 5,
-        "missions": 9,
+    "username": "TestovacíVojak",
 
-        "rank": "Rekrut",
+    "missions": 9,
 
-        "activity": 60,
-        "teamwork": 60,
+    "trainings": 5,
 
-        "joined": "2026-08-02T00:00:00.000Z",
+    "activity": 60,
 
-        "lastActivity": "2026-08-02T00:00:00.000Z"
-    }
+    "teamwork": 60,
+
+    "discipline": 0,
+
+    "rank": null,
+
+    "role": "Rekrut",
+
+    "probation": true,
+
+    "milSimJoinDate": "2026-01-01T00:00:00.000Z",
+
+    "probationChecked": false,
+
+    "joined": "2026-01-01T00:00:00.000Z",
+
+    "lastActivity": "2026-08-04T00:00:00.000Z"
+}
 ]
