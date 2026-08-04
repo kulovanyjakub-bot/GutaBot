@@ -12,7 +12,7 @@ const memberDB =
 
 
 const rankChecker =
-    require("../utils/rankChecker");
+    require("./rankChecker");
 
 
 
@@ -73,7 +73,6 @@ module.exports = async (interaction) => {
 
 
 
-
             const embed =
                 EmbedBuilder.from(
 
@@ -97,9 +96,7 @@ module.exports = async (interaction) => {
 
 
 
-
             if(field){
-
 
 
                 let users =
@@ -130,12 +127,9 @@ module.exports = async (interaction) => {
                     !users.includes(entry)
                 ){
 
-
                     users.push(entry);
 
-
                 }
-
 
 
 
@@ -146,10 +140,7 @@ module.exports = async (interaction) => {
                     users.join("\n");
 
 
-
             }
-
-
 
 
 
@@ -168,11 +159,11 @@ module.exports = async (interaction) => {
 
 
 
+
             return;
 
 
         }
-
 
 
 
@@ -207,8 +198,6 @@ module.exports = async (interaction) => {
 
 
 
-
-
             trainingDB.removeParticipant(
 
                 trainingId,
@@ -216,7 +205,6 @@ module.exports = async (interaction) => {
                 interaction.user.id
 
             );
-
 
 
 
@@ -269,7 +257,9 @@ module.exports = async (interaction) => {
 
                     :
 
+
                     field.value.split("\n");
+
 
 
 
@@ -283,9 +273,11 @@ module.exports = async (interaction) => {
                         u =>
 
                         u !==
+
                         `🪖 ${interaction.user.username}`
 
                     );
+
 
 
 
@@ -300,17 +292,18 @@ module.exports = async (interaction) => {
 
                     ?
 
+
                     users.join("\n")
 
 
                     :
+
 
                     "Nikdo přihlášen";
 
 
 
             }
-
 
 
 
@@ -327,6 +320,7 @@ module.exports = async (interaction) => {
                 ]
 
             });
+
 
 
 
@@ -354,7 +348,6 @@ module.exports = async (interaction) => {
         if(
             interaction.customId.startsWith("trainingClose_")
         ){
-
 
 
 
@@ -403,7 +396,6 @@ module.exports = async (interaction) => {
 
 
 
-
             const trainingId =
 
 
@@ -414,8 +406,6 @@ module.exports = async (interaction) => {
                     ""
 
                 );
-
-
 
 
 
@@ -456,26 +446,11 @@ module.exports = async (interaction) => {
 
 
 
-                console.log(
-
-                    "ÚČASTNÍCI VÝCVIKU:",
-
-                    training.participants
-
-                );
-
-
-
-
-
                 for(
 
                     const member of training.participants
 
                 ){
-
-
-
 
 
 
@@ -494,6 +469,7 @@ module.exports = async (interaction) => {
 
 
 
+
                     memberDB.addTraining(
 
                         member.id,
@@ -501,6 +477,9 @@ module.exports = async (interaction) => {
                         member.username
 
                     );
+
+
+
 
 
 
@@ -514,6 +493,7 @@ module.exports = async (interaction) => {
                     try{
 
 
+
                         const discordMember =
 
                             await interaction.guild.members.fetch(
@@ -524,6 +504,8 @@ module.exports = async (interaction) => {
 
 
 
+
+
                         await rankChecker(
 
                             discordMember,
@@ -531,6 +513,7 @@ module.exports = async (interaction) => {
                             interaction.guild
 
                         );
+
 
 
                     }
@@ -548,6 +531,8 @@ module.exports = async (interaction) => {
 
 
                     }
+
+
 
 
 
@@ -580,7 +565,6 @@ module.exports = async (interaction) => {
 
 
 
-
             if(archive){
 
 
@@ -604,7 +588,6 @@ module.exports = async (interaction) => {
 
 
 
-
             await interaction.update({
 
 
@@ -614,12 +597,9 @@ module.exports = async (interaction) => {
 
 
 
-
                 embeds:
 
                 interaction.message.embeds,
-
-
 
 
 
@@ -628,7 +608,6 @@ module.exports = async (interaction) => {
 
 
             });
-
 
 
 
@@ -661,6 +640,7 @@ module.exports = async (interaction) => {
             err
 
         );
+
 
 
 
