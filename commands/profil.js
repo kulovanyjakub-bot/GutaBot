@@ -69,7 +69,6 @@ module.exports = {
 
 
 
-
         const member =
 
             await interaction.guild.members.fetch(
@@ -121,21 +120,17 @@ module.exports = {
 
 
 
-
-
         // ===============================
-        // HODNOST
+        // AKTUÁLNÍ HODNOST
         // ===============================
 
 
         let currentRank =
 
-            data.rank || "Rekrut";
-
+            "Rekrut";
 
 
         let currentLevel = 0;
-
 
 
 
@@ -149,7 +144,11 @@ module.exports = {
 
             if(
 
-                member.roles.cache.has(rank.id)
+                member.roles.cache.has(
+
+                    rank.id
+
+                )
 
                 &&
 
@@ -157,50 +156,14 @@ module.exports = {
 
             ){
 
+                currentRank =
+                rank.name;
 
-                currentRank = rank.name;
 
-
-                currentLevel = rank.level;
-
+                currentLevel =
+                rank.level;
 
             }
-
-
-        }
-
-
-
-
-
-
-
-
-
-        // ===============================
-        // STATUS
-        // ===============================
-
-
-        let status = "Neznámý";
-
-
-
-
-        if(data.probation){
-
-
-            status =
-            "⏳ Rekrut - zkušební doba";
-
-
-        }
-
-        else if(data.role === "Milsim"){
-
-
-            status =
-            "🪖 Plnohodnotný MILSIM člen";
 
 
         }
@@ -233,9 +196,10 @@ module.exports = {
 
 
 
+
         let progress =
 
-        "Maximální hodnost";
+        "🏆 Maximální hodnost";
 
 
 
@@ -250,13 +214,14 @@ module.exports = {
             progress =
 
 
-            `🎯 Mise: ${data.missions || 0}/${nextRank.missions}\n` +
+            `🎯 Mise: **${data.missions || 0}/${nextRank.missions}**\n` +
 
-            `🏋️ Výcviky: ${data.trainings || 0}/${nextRank.trainings}\n` +
+            `🏋️ Výcviky: **${data.trainings || 0}/${nextRank.trainings}**\n` +
 
-            `⚡ Aktivita: ${data.activity || 0}/${nextRank.activity}\n` +
+            `⚡ Aktivita: **${data.activity || 0}/${nextRank.activity}**\n` +
 
-            `🤝 Týmová práce: ${data.teamwork || 0}/${nextRank.teamwork}`;
+            `🤝 Týmová práce: **${data.teamwork || 0}/${nextRank.teamwork}**`;
+
 
 
         }
@@ -275,9 +240,7 @@ module.exports = {
         new EmbedBuilder()
 
 
-
         .setColor("#1f8b4c")
-
 
 
         .setTitle(
@@ -285,7 +248,6 @@ module.exports = {
             "🪖 GUTALAX MILSIM - Profil"
 
         )
-
 
 
         .setThumbnail(
@@ -296,6 +258,7 @@ module.exports = {
 
 
 
+
         .addFields(
 
 
@@ -303,110 +266,78 @@ module.exports = {
             {
 
                 name:
+
                 "👤 Člen",
 
                 value:
-                `${user}`,
 
-                inline:false
+                `${user}`
 
             },
+
 
 
 
             {
 
                 name:
-                "🪖 Status",
 
-                value:
-                status,
-
-                inline:false
-
-            },
-
-
-
-            {
-
-                name:
                 "🎖 Hodnost",
 
                 value:
-                currentRank,
 
-                inline:true
+                `**${currentRank}**`
 
             },
+
 
 
 
             {
 
                 name:
-                "🎯 Mise",
+
+                "📊 Statistiky",
 
                 value:
-                `${data.missions || 0}`,
 
-                inline:true
+
+                `🎯 Mise: **${data.missions || 0}**\n` +
+
+                `🏋️ Výcviky: **${data.trainings || 0}**`
 
             },
+
 
 
 
             {
 
                 name:
-                "🏋️ Výcviky",
+
+                "⚡ Hodnocení",
 
                 value:
-                `${data.trainings || 0}`,
 
-                inline:true
+
+                `⚡ Aktivita: **${data.activity || 0}/100**\n` +
+
+                `🤝 Týmová práce: **${data.teamwork || 0}/100**`
 
             },
+
 
 
 
             {
 
                 name:
-                "⚡ Aktivita",
 
-                value:
-                `${data.activity || 0}/100`,
-
-                inline:true
-
-            },
-
-
-
-            {
-
-                name:
-                "🤝 Týmová práce",
-
-                value:
-                `${data.teamwork || 0}/100`,
-
-                inline:false
-
-            },
-
-
-
-            {
-
-                name:
                 "⬆️ Postup na další hodnost",
 
                 value:
-                progress,
 
-                inline:false
+                progress
 
             }
 
@@ -425,16 +356,13 @@ module.exports = {
 
 
 
-
         await interaction.reply({
-
 
             embeds:[
 
                 embed
 
             ]
-
 
         });
 
