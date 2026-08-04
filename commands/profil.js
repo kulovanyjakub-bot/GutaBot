@@ -271,7 +271,9 @@ module.exports = {
 
                 value:
 
-                `${user}`
+                `${user}`,
+
+                inline:false
 
             },
 
@@ -282,11 +284,13 @@ module.exports = {
 
                 name:
 
-                "🎖 Hodnost",
+                "🎖 AKTUÁLNÍ HODNOST",
 
                 value:
 
-                `**${currentRank}**`
+                `🪖 **${currentRank}**`,
+
+                inline:false
 
             },
 
@@ -297,14 +301,33 @@ module.exports = {
 
                 name:
 
-                "📊 Statistiky",
+                "🟢 STAV ČLENA",
+
+                value:
+
+                "🟢 Aktivní MILSIM člen",
+
+                inline:false
+
+            },
+
+
+
+
+            {
+
+                name:
+
+                "📊 STATISTIKY",
 
                 value:
 
 
                 `🎯 Mise: **${data.missions || 0}**\n` +
 
-                `🏋️ Výcviky: **${data.trainings || 0}**`
+                `🏋️ Výcviky: **${data.trainings || 0}**`,
+
+                inline:false
 
             },
 
@@ -315,14 +338,16 @@ module.exports = {
 
                 name:
 
-                "⚡ Hodnocení",
+                "⚡ HODNOCENÍ",
 
                 value:
 
 
                 `⚡ Aktivita: **${data.activity || 0}/100**\n` +
 
-                `🤝 Týmová práce: **${data.teamwork || 0}/100**`
+                `🤝 Týmová práce: **${data.teamwork || 0}/100**`,
+
+                inline:false
 
             },
 
@@ -333,11 +358,13 @@ module.exports = {
 
                 name:
 
-                "⬆️ Postup na další hodnost",
+                "⬆️ POSTUP NA DALŠÍ HODNOST",
 
                 value:
 
-                progress
+                progress,
+
+                inline:false
 
             }
 
