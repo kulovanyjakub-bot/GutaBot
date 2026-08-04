@@ -12,7 +12,7 @@ const memberDB =
 
 
 const rankChecker =
-    require("../utils/rankChecker");
+    require("./rankChecker");
 
 
 
@@ -486,6 +486,7 @@ module.exports = async (interaction) => {
                         member.username
 
                     );
+
 
 
 
