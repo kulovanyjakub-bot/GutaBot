@@ -13,6 +13,13 @@ const memberDB =
 module.exports = async (interaction) => {
 
 
+    console.log(
+        "PROBATION BUTTON:",
+        interaction.customId
+    );
+
+
+
     try {
 
 
@@ -29,7 +36,9 @@ module.exports = async (interaction) => {
         ){
 
 
+
             await interaction.deferReply();
+
 
 
 
@@ -40,6 +49,7 @@ module.exports = async (interaction) => {
                     "acceptMilsim_",
                     ""
                 );
+
 
 
 
@@ -58,7 +68,8 @@ module.exports = async (interaction) => {
 
 
 
-            // odebrat Rekrut
+
+            // Odebrat Rekrut
 
 
             await member.roles.remove(
@@ -71,7 +82,8 @@ module.exports = async (interaction) => {
 
 
 
-            // přidat MILSIM
+
+            // Přidat MILSIM
 
 
             await member.roles.add(
@@ -84,7 +96,8 @@ module.exports = async (interaction) => {
 
 
 
-            // přidat Vojín
+
+            // Přidat hodnost Vojín
 
 
             await member.roles.add(
@@ -98,8 +111,7 @@ module.exports = async (interaction) => {
 
 
 
-
-            // databáze
+            // Aktualizace databáze
 
 
             memberDB.updateMember(
@@ -138,11 +150,11 @@ module.exports = async (interaction) => {
 
 
 
+
             await interaction.editReply({
 
 
                 content:
-
 
                 `✅ ${member} byl přijat do GUTALAX MILSIM.\n\n` +
 
@@ -152,6 +164,7 @@ module.exports = async (interaction) => {
 
 
             });
+
 
 
 
@@ -207,9 +220,11 @@ module.exports = async (interaction) => {
 
 
 
+
             const newDate =
 
                 new Date();
+
 
 
 
@@ -263,11 +278,12 @@ module.exports = async (interaction) => {
 
                 content:
 
-                "⏳ Zkušební doba byla prodloužena o 30 dní."
+                "⏳ Zkušební doba prodloužena o 30 dní."
 
 
 
             });
+
 
 
 
@@ -321,6 +337,7 @@ module.exports = async (interaction) => {
 
 
 
+
             const member =
 
                 await interaction.guild.members.fetch(
@@ -335,10 +352,11 @@ module.exports = async (interaction) => {
 
 
 
+            // Odebrat Rekrut
+
+
             await member.roles.remove(
-
                 "1458487234989654201"
-
             ).catch(()=>{});
 
 
@@ -398,6 +416,7 @@ module.exports = async (interaction) => {
 
 
 
+
             return;
 
 
@@ -428,7 +447,6 @@ module.exports = async (interaction) => {
 
 
 
-
         if(
 
             !interaction.replied &&
@@ -438,7 +456,9 @@ module.exports = async (interaction) => {
         ){
 
 
+
             await interaction.reply({
+
 
                 content:
 
@@ -448,11 +468,13 @@ module.exports = async (interaction) => {
                 ephemeral:true
 
 
+
             }).catch(()=>{});
 
 
 
         }
+
 
 
     }
