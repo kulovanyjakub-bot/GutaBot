@@ -28,6 +28,8 @@ const COMMAND_ROLES = [
 
 
 
+
+
 module.exports = {
 
 
@@ -118,180 +120,8 @@ module.exports = {
 
 
         console.log(
-            "HODNOTIT SPUŠTĚN"
+            "🔥 HODNOTIT SPUŠTĚN"
         );
-
-
-
-
-
-        const allowed =
-
-            interaction.member.roles.cache.some(
-
-                role =>
-
-                COMMAND_ROLES.includes(
-
-                    role.id
-
-                )
-
-            );
-
-
-
-
-
-        if(!allowed){
-
-
-            return interaction.reply({
-
-                content:
-
-                "❌ Tento příkaz může použít pouze velení.",
-
-
-                ephemeral:true
-
-            });
-
-
-        }
-
-
-
-
-
-
-
-        const user =
-
-            interaction.options.getUser(
-
-                "clen"
-
-            );
-
-
-
-
-
-        const activity =
-
-            interaction.options.getInteger(
-
-                "aktivita"
-
-            );
-
-
-
-
-
-        const teamwork =
-
-            interaction.options.getInteger(
-
-                "tymovaprace"
-
-            );
-
-
-
-
-
-        const discipline =
-
-            interaction.options.getInteger(
-
-                "disciplina"
-
-            );
-
-
-
-
-
-
-
-        console.log(
-            "HODNOCENÍ:",
-            user.username,
-            activity,
-            teamwork,
-            discipline
-        );
-
-
-
-
-
-
-
-
-
-        memberDB.updateEvaluation(
-
-            user.id,
-
-            activity,
-
-            teamwork,
-
-            discipline
-
-        );
-
-
-
-
-
-        console.log(
-            "HODNOCENÍ ULOŽENO"
-        );
-
-
-
-
-
-
-
-
-
-        await interaction.reply({
-
-            content:
-
-
-            `✅ Hodnocení aktualizováno pro ${user}\n\n` +
-
-
-            `⚡ Aktivita: **${activity}/100**\n` +
-
-
-            `🤝 Týmová práce: **${teamwork}/100**\n` +
-
-
-            `🎖 Disciplína: **${discipline}/100**`
-
-
-        });
-
-
-
-
-
-
-
-        console.log(
-            "REPLY ODESLÁN"
-        );
-
-
-
-
 
 
 
@@ -300,12 +130,28 @@ module.exports = {
         try{
 
 
+            await interaction.deferReply({
 
-            const member =
+                ephemeral:false
 
-                await interaction.guild.members.fetch(
+            });
 
-                    user.id
+
+
+
+
+
+            const allowed =
+
+                interaction.member.roles.cache.some(
+
+                    role =>
+
+                    COMMAND_ROLES.includes(
+
+                        role.id
+
+                    )
 
                 );
 
@@ -313,32 +159,249 @@ module.exports = {
 
 
 
+
+            if(!allowed){
+
+
+                return interaction.editReply({
+
+                    content:
+
+                    "❌ Tento příkaz může použít pouze velení."
+
+                });
+
+
+            }
+
+
+
+
+
+
+
+
+
+            const user =
+
+                interaction.options.getUser(
+
+                    "clen"
+
+                );
+
+
+
+
+
+            const activity =
+
+                interaction.options.getInteger(
+
+                    "aktivita"
+
+                );
+
+
+
+
+
+            const teamwork =
+
+                interaction.options.getInteger(
+
+                    "tymovaprace"
+
+                );
+
+
+
+
+
+            const discipline =
+
+                interaction.options.getInteger(
+
+                    "disciplina"
+
+                );
+
+
+
+
+
+
+
+
+
             console.log(
-                "ČLEN NALEZEN:",
-                member.user.username
+
+                "📊 HODNOCENÍ:",
+
+                user.username,
+
+                activity,
+
+                teamwork,
+
+                discipline
+
+            );
+
+
+
+
+
+
+
+
+
+            memberDB.updateEvaluation(
+
+                user.id,
+
+                activity,
+
+                teamwork,
+
+                discipline
+
             );
 
 
-
-
-
-
-
-            await rankChecker(
-
-                member,
-
-                interaction.guild
-
-            );
 
 
 
 
 
             console.log(
-                "RANK CHECK HOTOV"
+
+                "✅ HODNOCENÍ ULOŽENO"
+
             );
+
+
+
+
+
+
+
+
+
+            await interaction.editReply({
+
+
+                content:
+
+
+                `✅ Hodnocení aktualizováno pro ${user}\n\n` +
+
+
+                `⚡ Aktivita: **${activity}/100**\n` +
+
+
+                `🤝 Týmová práce: **${teamwork}/100**\n` +
+
+
+                `🎖 Disciplína: **${discipline}/100**`
+
+
+            });
+
+
+
+
+
+
+
+            console.log(
+
+                "✅ REPLY ODESLÁN"
+
+            );
+
+
+
+
+
+
+
+
+
+            try{
+
+
+
+                const member =
+
+                    await interaction.guild.members.fetch(
+
+                        user.id
+
+                    );
+
+
+
+
+
+                console.log(
+
+                    "👤 ČLEN NALEZEN:",
+
+                    member.user.username
+
+                );
+
+
+
+
+
+
+
+                await rankChecker(
+
+                    member,
+
+                    interaction.guild
+
+                );
+
+
+
+
+
+
+
+                console.log(
+
+                    "🎖 RANK CHECK HOTOV"
+
+                );
+
+
+
+            }
+
+
+
+            catch(err){
+
+
+
+                console.error(
+
+                    "❌ Rank checker chyba:",
+
+                    err
+
+                );
+
+
+            }
+
+
+
+
 
 
 
@@ -352,18 +415,59 @@ module.exports = {
 
             console.error(
 
-                "❌ Rank checker chyba:",
+                "❌ HODNOTIT ERROR:",
 
                 err
 
             );
 
 
+
+
+
+            if(
+
+                interaction.deferred
+
+            ){
+
+
+
+                await interaction.editReply({
+
+                    content:
+
+                    "❌ Chyba při hodnocení člena."
+
+                }).catch(()=>{});
+
+
+
+            }
+
+
+
+            else{
+
+
+
+                await interaction.reply({
+
+                    content:
+
+                    "❌ Chyba při hodnocení člena.",
+
+                    ephemeral:true
+
+                }).catch(()=>{});
+
+
+
+            }
+
+
+
         }
-
-
-
-
 
 
 
