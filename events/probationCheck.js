@@ -35,6 +35,7 @@ module.exports = {
 
 
 
+
         async function checkProbation(){
 
 
@@ -53,21 +54,14 @@ module.exports = {
 
 
 
+
+
             for(const data of members){
 
 
 
                 if(
                     !data.probation
-                )
-                    continue;
-
-
-
-
-
-                if(
-                    data.probationChecked
                 )
                     continue;
 
@@ -115,7 +109,7 @@ module.exports = {
 
 
 
-                // 3 měsíce cca 90 dní
+                // 3 měsíce
 
 
                 if(
@@ -176,6 +170,7 @@ module.exports = {
 
 
 
+
                 const channel =
 
                     guild.channels.cache.get(
@@ -190,253 +185,258 @@ module.exports = {
 
 
 
-                if(channel){
+                if(!channel)
+                    continue;
 
 
 
-                    const embed =
 
 
-                        new EmbedBuilder()
 
 
-                        .setColor("Orange")
 
 
-                        .setTitle(
-
-                            "🪖 Kontrola zkušební doby"
-
-                        )
+                const embed =
 
 
-                        .setDescription(
+                    new EmbedBuilder()
+
+
+                    .setColor("Orange")
+
+
+                    .setTitle(
+
+                        "🪖 Kontrola zkušební doby"
+
+                    )
+
+
+
+                    .setDescription(
 
 `Člen ${member} dokončil 3 měsíční zkušební období.
 
 Je potřeba rozhodnutí velení.`
 
+                    )
+
+
+
+                    .addFields(
+
+
+
+                        {
+
+                            name:
+
+                            "📅 Přijat do MILSIM",
+
+                            value:
+
+                            `<t:${Math.floor(joinDate.getTime()/1000)}:D>`
+
+                        },
+
+
+
+                        {
+
+                            name:
+
+                            "🎯 Mise",
+
+                            value:
+
+                            `${data.missions || 0}`,
+
+                            inline:true
+
+                        },
+
+
+
+                        {
+
+                            name:
+
+                            "🏋️ Výcviky",
+
+                            value:
+
+                            `${data.trainings || 0}`,
+
+                            inline:true
+
+                        },
+
+
+
+                        {
+
+                            name:
+
+                            "⚡ Aktivita",
+
+                            value:
+
+                            `${data.activity || 0}/100`,
+
+                            inline:true
+
+                        },
+
+
+
+                        {
+
+                            name:
+
+                            "🤝 Týmová práce",
+
+                            value:
+
+                            `${data.teamwork || 0}/100`,
+
+                            inline:true
+
+                        }
+
+
+
+                    )
+
+
+
+                    .setTimestamp();
+
+
+
+
+
+
+
+
+
+                const buttons =
+
+
+                    new ActionRowBuilder()
+
+
+
+                    .addComponents(
+
+
+
+                        new ButtonBuilder()
+
+                        .setCustomId(
+
+                            `acceptMilsim_${data.id}`
+
+                        )
+
+                        .setLabel(
+
+                            "✅ Přijmout MILSIM"
+
+                        )
+
+                        .setStyle(
+
+                            ButtonStyle.Success
+
+                        ),
+
+
+
+
+
+                        new ButtonBuilder()
+
+                        .setCustomId(
+
+                            `extendProbation_${data.id}`
+
+                        )
+
+                        .setLabel(
+
+                            "⏳ Prodloužit"
+
+                        )
+
+                        .setStyle(
+
+                            ButtonStyle.Secondary
+
+                        ),
+
+
+
+
+
+                        new ButtonBuilder()
+
+                        .setCustomId(
+
+                            `rejectMilsim_${data.id}`
+
+                        )
+
+                        .setLabel(
+
+                            "❌ Ukončit členství"
+
+                        )
+
+                        .setStyle(
+
+                            ButtonStyle.Danger
+
                         )
 
 
 
-                        .addFields(
+                    );
 
 
 
-                            {
 
-                                name:"🎯 Mise",
 
-                                value:
 
-                                `${data.missions || 0}`,
 
-                                inline:true
 
-                            },
 
+                await channel.send({
 
 
-                            {
 
-                                name:"🏋️ Výcviky",
+                    content:
 
-                                value:
+                    `<@&1533447617957073117>`,
 
-                                `${data.trainings || 0}`,
 
-                                inline:true
 
-                            },
+                    embeds:[
 
+                        embed
 
+                    ],
 
-                            {
 
-                                name:"⚡ Aktivita",
 
-                                value:
+                    components:[
 
-                                `${data.activity || 0}/100`,
+                        buttons
 
-                                inline:true
+                    ]
 
-                            },
 
 
-
-                            {
-
-                                name:"🤝 Týmová práce",
-
-                                value:
-
-                                `${data.teamwork || 0}/100`,
-
-                                inline:true
-
-                            }
-
-
-                        )
-
-
-
-                        .setTimestamp();
-
-
-
-
-
-
-
-
-                    const buttons =
-
-
-                        new ActionRowBuilder()
-
-
-
-                        .addComponents(
-
-
-
-                            new ButtonBuilder()
-
-                            .setCustomId(
-
-                                `acceptMilsim_${data.id}`
-
-                            )
-
-                            .setLabel(
-
-                                "Přijmout MILSIM"
-
-                            )
-
-                            .setStyle(
-
-                                ButtonStyle.Success
-
-                            ),
-
-
-
-
-
-                            new ButtonBuilder()
-
-                            .setCustomId(
-
-                                `extendProbation_${data.id}`
-
-                            )
-
-                            .setLabel(
-
-                                "Prodloužit"
-
-                            )
-
-                            .setStyle(
-
-                                ButtonStyle.Secondary
-
-                            ),
-
-
-
-
-
-                            new ButtonBuilder()
-
-                            .setCustomId(
-
-                                `rejectMilsim_${data.id}`
-
-                            )
-
-                            .setLabel(
-
-                                "Ukončit členství"
-
-                            )
-
-                            .setStyle(
-
-                                ButtonStyle.Danger
-
-                            )
-
-
-
-                        );
-
-
-
-
-
-
-
-
-
-                    await channel.send({
-
-
-
-                        content:
-
-                        `<@&1533447617957073117>`,
-
-
-
-                        embeds:[
-
-                            embed
-
-                        ],
-
-
-
-                        components:[
-
-                            buttons
-
-                        ]
-
-
-
-                    });
-
-
-
-                }
-
-
-
-
-
-
-
-
-
-                memberDB.updateMember(
-
-
-                    data.id,
-
-
-                    {
-
-                        probationChecked:true
-
-                    }
-
-
-                );
+                });
 
 
 
@@ -448,7 +448,7 @@ Je potřeba rozhodnutí velení.`
 
                 console.log(
 
-                    `⏳ Zkušební doba dokončena: ${data.username}`
+                    `⏳ Kontrola zkušební doby: ${data.username}`
 
                 );
 
@@ -470,7 +470,7 @@ Je potřeba rozhodnutí velení.`
 
 
 
-        // kontrola po startu bota
+        // kontrola při startu
 
 
         checkProbation();
@@ -500,6 +500,7 @@ Je potřeba rozhodnutí velení.`
 
 
         );
+
 
 
 
