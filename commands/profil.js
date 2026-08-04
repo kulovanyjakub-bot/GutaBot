@@ -85,7 +85,6 @@ module.exports = {
 
 
 
-
         const data =
 
             memberDB.getMember(
@@ -93,7 +92,6 @@ module.exports = {
                 user.id
 
             );
-
 
 
 
@@ -151,11 +149,7 @@ module.exports = {
 
             if(
 
-                member.roles.cache.has(
-
-                    rank.id
-
-                )
+                member.roles.cache.has(rank.id)
 
                 &&
 
@@ -164,18 +158,49 @@ module.exports = {
             ){
 
 
-                currentRank =
-
-                rank.name;
+                currentRank = rank.name;
 
 
-
-                currentLevel =
-
-                rank.level;
+                currentLevel = rank.level;
 
 
             }
+
+
+        }
+
+
+
+
+
+
+
+
+
+        // ===============================
+        // STATUS
+        // ===============================
+
+
+        let status = "Neznámý";
+
+
+
+
+        if(data.probation){
+
+
+            status =
+            "⏳ Rekrut - zkušební doba";
+
+
+        }
+
+        else if(data.role === "Milsim"){
+
+
+            status =
+            "🪖 Plnohodnotný MILSIM člen";
 
 
         }
@@ -208,11 +233,9 @@ module.exports = {
 
 
 
-
         let progress =
 
         "Maximální hodnost";
-
 
 
 
@@ -234,46 +257,6 @@ module.exports = {
             `⚡ Aktivita: ${data.activity || 0}/${nextRank.activity}\n` +
 
             `🤝 Týmová práce: ${data.teamwork || 0}/${nextRank.teamwork}`;
-
-
-
-        }
-
-
-
-
-
-
-
-
-
-        // ===============================
-        // STATUS
-        // ===============================
-
-
-        let status =
-
-            "Neznámý";
-
-
-
-
-        if(data.probation){
-
-            status =
-
-            "⏳ Rekrut - zkušební doba";
-
-
-        }
-
-        else if(data.role === "Milsim"){
-
-
-            status =
-
-            "🪖 Plnohodnotný MILSIM člen";
 
 
         }
@@ -320,11 +303,9 @@ module.exports = {
             {
 
                 name:
-
                 "👤 Člen",
 
                 value:
-
                 `${user}`,
 
                 inline:false
@@ -336,14 +317,12 @@ module.exports = {
             {
 
                 name:
-
                 "🪖 Status",
 
                 value:
-
                 status,
 
-                inline:true
+                inline:false
 
             },
 
@@ -352,11 +331,9 @@ module.exports = {
             {
 
                 name:
-
                 "🎖 Hodnost",
 
                 value:
-
                 currentRank,
 
                 inline:true
@@ -368,11 +345,9 @@ module.exports = {
             {
 
                 name:
-
                 "🎯 Mise",
 
                 value:
-
                 `${data.missions || 0}`,
 
                 inline:true
@@ -384,11 +359,9 @@ module.exports = {
             {
 
                 name:
-
                 "🏋️ Výcviky",
 
                 value:
-
                 `${data.trainings || 0}`,
 
                 inline:true
@@ -400,11 +373,9 @@ module.exports = {
             {
 
                 name:
-
                 "⚡ Aktivita",
 
                 value:
-
                 `${data.activity || 0}/100`,
 
                 inline:true
@@ -416,14 +387,12 @@ module.exports = {
             {
 
                 name:
-
                 "🤝 Týmová práce",
 
                 value:
-
                 `${data.teamwork || 0}/100`,
 
-                inline:true
+                inline:false
 
             },
 
@@ -432,11 +401,9 @@ module.exports = {
             {
 
                 name:
-
                 "⬆️ Postup na další hodnost",
 
                 value:
-
                 progress,
 
                 inline:false
@@ -470,8 +437,6 @@ module.exports = {
 
 
         });
-
-
 
 
 
