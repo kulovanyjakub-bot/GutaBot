@@ -46,6 +46,125 @@ module.exports = async (interaction) => {
 
 
 
+            // ===============================
+            // NAČTENÍ ÚDAJŮ Z TICKETU
+            // ===============================
+
+
+            let recruitData = {
+
+
+                vek:"Neuvedeno",
+
+
+                platforma:"Neuvedeno",
+
+
+                mikrofon:"Neuvedeno",
+
+
+                zkusenosti:"Neuvedeno",
+
+
+                proc:"Neuvedeno"
+
+
+            };
+
+
+
+
+
+            const messages =
+
+                await interaction.channel.messages.fetch({
+
+                    limit:10
+
+                });
+
+
+
+
+
+            const recruitMessage =
+
+                messages.find(
+
+                    m =>
+
+                    m.embeds.length &&
+
+                    m.embeds[0].title === "🎖 Nová přihláška"
+
+                );
+
+
+
+
+
+            if(recruitMessage){
+
+
+                const fields =
+
+                    recruitMessage.embeds[0].fields;
+
+
+
+
+
+                for(const field of fields){
+
+
+
+                    if(field.name === "Věk")
+
+                        recruitData.vek = field.value;
+
+
+
+
+                    if(field.name === "Platforma")
+
+                        recruitData.platforma = field.value;
+
+
+
+
+                    if(field.name === "Mikrofon")
+
+                        recruitData.mikrofon = field.value;
+
+
+
+
+                    if(field.name === "Zkušenosti")
+
+                        recruitData.zkusenosti = field.value;
+
+
+
+
+                    if(field.name === "Proč se chce přidat")
+
+                        recruitData.proc = field.value;
+
+
+
+                }
+
+
+            }
+
+
+
+
+
+
+
+
+
             const member =
 
                 await interaction.guild.members.fetch(
@@ -53,6 +172,9 @@ module.exports = async (interaction) => {
                     userId
 
                 );
+
+
+
 
 
 
@@ -99,9 +221,11 @@ module.exports = async (interaction) => {
                 db.createMember({
 
 
+
                     id:
 
                     member.id,
+
 
 
                     username:
@@ -109,28 +233,37 @@ module.exports = async (interaction) => {
                     member.user.username,
 
 
+
                     missions:0,
+
 
 
                     trainings:0,
 
 
+
                     activity:0,
+
 
 
                     teamwork:0,
 
 
+
                     discipline:0,
+
 
 
                     rank:null,
 
 
+
                     role:"Rekrut",
 
 
+
                     probation:true,
+
 
 
                     milSimJoinDate:
@@ -138,7 +271,9 @@ module.exports = async (interaction) => {
                     new Date().toISOString(),
 
 
+
                     probationChecked:false,
+
 
 
                     joined:
@@ -146,9 +281,11 @@ module.exports = async (interaction) => {
                     new Date().toISOString(),
 
 
+
                     lastActivity:
 
                     new Date().toISOString()
+
 
 
                 });
@@ -160,6 +297,7 @@ module.exports = async (interaction) => {
             else {
 
 
+
                 db.updateMember(
 
                     member.id,
@@ -167,10 +305,13 @@ module.exports = async (interaction) => {
                     {
 
 
+
                         role:"Rekrut",
 
 
+
                         probation:true,
+
 
 
                         milSimJoinDate:
@@ -178,7 +319,9 @@ module.exports = async (interaction) => {
                         new Date().toISOString(),
 
 
+
                         probationChecked:false
+
 
 
                     }
@@ -196,9 +339,6 @@ module.exports = async (interaction) => {
 
 
 
-            // PŘEJMENOVÁNÍ TICKETU
-
-
             await interaction.channel.setName(
 
                 `rekrut-${member.user.username}`
@@ -213,7 +353,9 @@ module.exports = async (interaction) => {
 
 
 
-            // LOG
+            // ===============================
+            // NÁBOR ARCHIV
+            // ===============================
 
 
             const logChannel =
@@ -238,7 +380,9 @@ module.exports = async (interaction) => {
                     new EmbedBuilder()
 
 
+
                     .setColor("Green")
+
 
 
                     .setTitle(
@@ -248,39 +392,96 @@ module.exports = async (interaction) => {
                     )
 
 
+
                     .addFields(
+
 
 
                         {
 
-                            name:"Uchazeč",
+                            name:"👤 Uchazeč",
 
                             value:`${member}`
 
                         },
 
 
+
                         {
 
-                            name:"Přijal",
+                            name:"🎮 Platforma",
+
+                            value:recruitData.platforma
+
+                        },
+
+
+
+                        {
+
+                            name:"🎤 Mikrofon",
+
+                            value:recruitData.mikrofon
+
+                        },
+
+
+
+                        {
+
+                            name:"🪖 Zkušenosti",
+
+                            value:recruitData.zkusenosti
+
+                        },
+
+
+
+                        {
+
+                            name:"📝 Důvod vstupu",
+
+                            value:recruitData.proc
+
+                        },
+
+
+
+                        {
+
+                            name:"📅 Datum přijetí",
+
+                            value:
+
+                            `<t:${Math.floor(Date.now()/1000)}:d>`
+
+                        },
+
+
+
+                        {
+
+                            name:"👑 Přijal",
 
                             value:`${interaction.user}`
 
                         },
 
 
+
                         {
 
-                            name:"Role",
+                            name:"🎖 Role",
 
                             value:"<@&1458487234989654201>"
 
                         },
 
 
+
                         {
 
-                            name:"Zkušební doba",
+                            name:"⏳ Zkušební doba",
 
                             value:"3 měsíce"
 
@@ -288,6 +489,7 @@ module.exports = async (interaction) => {
 
 
                     )
+
 
 
                     .setTimestamp();
@@ -317,7 +519,7 @@ module.exports = async (interaction) => {
 
 
 
-            // DM
+            // DM ZPRÁVA
 
 
             await member.send({
@@ -341,33 +543,28 @@ module.exports = async (interaction) => {
 
                     .setDescription(
 
+
 `Gratulujeme ${member}!
 
 Byl jsi přijat do jednotky **GUTALAX MILSIM**.
 
-Byla ti přidělena role **Rekrut**.
+🎖 Role: Rekrut
 
 ⏳ Začíná tvoje 3 měsíční zkušební období.
 
-Během něj sledujeme:
-
-🪖 Chování
-📡 Komunikaci
-🤝 Týmovou spolupráci
-🎯 Mise
-🏋️ Výcviky
-
-Po ukončení zkušební doby proběhne vyhodnocení velením.
 
 GUTALAX MILSIM
 Respekt. Komunikace. Tým.`
 
+
                     )
+
 
                     .setTimestamp()
 
 
                 ]
+
 
             }).catch(()=>{});
 
@@ -389,7 +586,7 @@ Respekt. Komunikace. Tým.`
 
                 `🎖 Role Rekrut přidělena.\n` +
 
-                `⏳ Zahájeno 3 měsíční zkušební období.\n` +
+                `🎮 Platforma: ${recruitData.platforma}\n` +
 
                 `📁 Záznam uložen do evidence.`,
 
@@ -402,6 +599,7 @@ Respekt. Komunikace. Tým.`
 
 
             });
+
 
 
 
@@ -496,18 +694,10 @@ Respekt. Komunikace. Tým.`
                 allowedMentions:{
 
 
-                    users:[
-
-                        member.id
-
-                    ],
+                    users:[member.id],
 
 
-                    roles:[
-
-                        "1533447617957073117"
-
-                    ]
+                    roles:["1533447617957073117"]
 
 
                 }
