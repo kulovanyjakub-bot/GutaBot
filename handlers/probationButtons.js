@@ -54,7 +54,6 @@ module.exports = async (interaction) => {
 
 
 
-
             const member =
 
                 await interaction.guild.members.fetch(
@@ -65,11 +64,20 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "MILSIM PŘIJETÍ:",
+                member.user.tag
+            );
 
 
 
 
-            // Odebrat Rekrut
+
+
+
+
+
+            // odebrat Rekrut
 
 
             await member.roles.remove(
@@ -80,10 +88,18 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "Rekrut odebrán"
+            );
 
 
 
-            // Přidat MILSIM
+
+
+
+
+
+            // přidat MILSIM
 
 
             await member.roles.add(
@@ -94,10 +110,18 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "MILSIM role přidána"
+            );
 
 
 
-            // Přidat hodnost Vojín
+
+
+
+
+
+            // přidat Vojín
 
 
             await member.roles.add(
@@ -108,10 +132,19 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "Vojín role přidána"
+            );
 
 
 
-            // Aktualizace databáze
+
+
+
+
+
+
+            // UPDATE DATABASE
 
 
             memberDB.updateMember(
@@ -148,6 +181,16 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "AKTUALNI DATA PO UPDATE:",
+                memberDB.getMember(userId)
+            );
+
+
+
+
+
+
 
 
 
@@ -155,6 +198,7 @@ module.exports = async (interaction) => {
 
 
                 content:
+
 
                 `✅ ${member} byl přijat do GUTALAX MILSIM.\n\n` +
 
@@ -205,7 +249,6 @@ module.exports = async (interaction) => {
 
 
 
-
             const userId =
 
                 interaction.customId.replace(
@@ -218,23 +261,15 @@ module.exports = async (interaction) => {
 
 
 
-
-
-
             const newDate =
 
                 new Date();
 
 
 
-
             newDate.setDate(
-
                 newDate.getDate() + 30
-
             );
-
-
 
 
 
@@ -271,20 +306,15 @@ module.exports = async (interaction) => {
 
 
 
-
-
             await interaction.editReply({
 
 
                 content:
 
-                "⏳ Zkušební doba prodloužena o 30 dní."
-
+                "⏳ Zkušební doba byla prodloužena o 30 dní."
 
 
             });
-
-
 
 
 
@@ -336,8 +366,6 @@ module.exports = async (interaction) => {
 
 
 
-
-
             const member =
 
                 await interaction.guild.members.fetch(
@@ -351,14 +379,9 @@ module.exports = async (interaction) => {
 
 
 
-
-            // Odebrat Rekrut
-
-
             await member.roles.remove(
                 "1458487234989654201"
             ).catch(()=>{});
-
 
 
 
@@ -397,6 +420,17 @@ module.exports = async (interaction) => {
 
 
 
+            console.log(
+                "Členství ukončeno:",
+                memberDB.getMember(userId)
+            );
+
+
+
+
+
+
+
 
 
             await interaction.editReply({
@@ -416,12 +450,10 @@ module.exports = async (interaction) => {
 
 
 
-
             return;
 
 
         }
-
 
 
 
@@ -438,7 +470,6 @@ module.exports = async (interaction) => {
         console.error(
 
             "❌ PROBATION BUTTON ERROR:",
-
             err
 
         );
@@ -447,30 +478,24 @@ module.exports = async (interaction) => {
 
 
 
+
         if(
 
             !interaction.replied &&
-
             !interaction.deferred
 
         ){
 
 
-
             await interaction.reply({
-
 
                 content:
 
                 "❌ Chyba při zpracování zkušební doby.",
 
-
                 ephemeral:true
 
-
-
             }).catch(()=>{});
-
 
 
         }
