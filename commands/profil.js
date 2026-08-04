@@ -69,6 +69,7 @@ module.exports = {
 
 
 
+
         const member =
 
             await interaction.guild.members.fetch(
@@ -84,6 +85,7 @@ module.exports = {
 
 
 
+
         const data =
 
             memberDB.getMember(
@@ -91,6 +93,7 @@ module.exports = {
                 user.id
 
             );
+
 
 
 
@@ -120,17 +123,21 @@ module.exports = {
 
 
 
+
+
         // ===============================
-        // AKTUÁLNÍ HODNOST
+        // HODNOST
         // ===============================
 
 
         let currentRank =
 
-            "Rekrut";
+            data.rank || "Rekrut";
+
 
 
         let currentLevel = 0;
+
 
 
 
@@ -156,12 +163,17 @@ module.exports = {
 
             ){
 
+
                 currentRank =
+
                 rank.name;
 
 
+
                 currentLevel =
+
                 rank.level;
+
 
             }
 
@@ -199,7 +211,8 @@ module.exports = {
 
         let progress =
 
-            "Maximální hodnost";
+        "Maximální hodnost";
+
 
 
 
@@ -213,13 +226,15 @@ module.exports = {
 
             progress =
 
-            `🎯 Mise: ${data.missions}/${nextRank.missions}\n` +
 
-            `🏋️ Výcviky: ${data.trainings}/${nextRank.trainings}\n` +
+            `🎯 Mise: ${data.missions || 0}/${nextRank.missions}\n` +
+
+            `🏋️ Výcviky: ${data.trainings || 0}/${nextRank.trainings}\n` +
 
             `⚡ Aktivita: ${data.activity || 0}/${nextRank.activity}\n` +
 
             `🤝 Týmová práce: ${data.teamwork || 0}/${nextRank.teamwork}`;
+
 
 
         }
@@ -230,11 +245,57 @@ module.exports = {
 
 
 
+
+
+        // ===============================
+        // STATUS
+        // ===============================
+
+
+        let status =
+
+            "Neznámý";
+
+
+
+
+        if(data.probation){
+
+            status =
+
+            "⏳ Rekrut - zkušební doba";
+
+
+        }
+
+        else if(data.role === "Milsim"){
+
+
+            status =
+
+            "🪖 Plnohodnotný MILSIM člen";
+
+
+        }
+
+
+
+
+
+
+
+
+
         const embed =
+
 
         new EmbedBuilder()
 
+
+
         .setColor("#1f8b4c")
+
+
 
         .setTitle(
 
@@ -242,13 +303,18 @@ module.exports = {
 
         )
 
+
+
         .setThumbnail(
 
             user.displayAvatarURL()
 
         )
 
+
+
         .addFields(
+
 
 
             {
@@ -259,9 +325,28 @@ module.exports = {
 
                 value:
 
-                `${user}`
+                `${user}`,
+
+                inline:false
 
             },
+
+
+
+            {
+
+                name:
+
+                "🪖 Status",
+
+                value:
+
+                status,
+
+                inline:true
+
+            },
+
 
 
             {
@@ -272,9 +357,12 @@ module.exports = {
 
                 value:
 
-                currentRank
+                currentRank,
+
+                inline:true
 
             },
+
 
 
             {
@@ -285,9 +373,12 @@ module.exports = {
 
                 value:
 
-                `${data.missions || 0}`
+                `${data.missions || 0}`,
+
+                inline:true
 
             },
+
 
 
             {
@@ -298,9 +389,12 @@ module.exports = {
 
                 value:
 
-                `${data.trainings || 0}`
+                `${data.trainings || 0}`,
+
+                inline:true
 
             },
+
 
 
             {
@@ -311,9 +405,12 @@ module.exports = {
 
                 value:
 
-                `${data.activity || 0}/100`
+                `${data.activity || 0}/100`,
+
+                inline:true
 
             },
+
 
 
             {
@@ -324,9 +421,12 @@ module.exports = {
 
                 value:
 
-                `${data.teamwork || 0}/100`
+                `${data.teamwork || 0}/100`,
+
+                inline:true
 
             },
+
 
 
             {
@@ -337,12 +437,17 @@ module.exports = {
 
                 value:
 
-                progress
+                progress,
+
+                inline:false
 
             }
 
 
+
         )
+
+
 
         .setTimestamp();
 
@@ -353,7 +458,9 @@ module.exports = {
 
 
 
+
         await interaction.reply({
+
 
             embeds:[
 
@@ -361,7 +468,10 @@ module.exports = {
 
             ]
 
+
         });
+
+
 
 
 
