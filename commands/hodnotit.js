@@ -117,6 +117,14 @@ module.exports = {
 
 
 
+        console.log(
+            "HODNOTIT SPUŠTĚN"
+        );
+
+
+
+
+
         const allowed =
 
             interaction.member.roles.cache.some(
@@ -208,9 +216,21 @@ module.exports = {
 
 
 
+        console.log(
+            "HODNOCENÍ:",
+            user.username,
+            activity,
+            teamwork,
+            discipline
+        );
 
 
-        // uložit hodnocení
+
+
+
+
+
+
 
         memberDB.updateEvaluation(
 
@@ -228,11 +248,17 @@ module.exports = {
 
 
 
+        console.log(
+            "HODNOCENÍ ULOŽENO"
+        );
 
 
 
 
-        // odpověď Discordu ihned
+
+
+
+
 
         await interaction.reply({
 
@@ -259,11 +285,20 @@ module.exports = {
 
 
 
+        console.log(
+            "REPLY ODESLÁN"
+        );
 
 
-        // kontrola povýšení
+
+
+
+
+
+
 
         try{
+
 
 
             const member =
@@ -273,6 +308,17 @@ module.exports = {
                     user.id
 
                 );
+
+
+
+
+
+            console.log(
+                "ČLEN NALEZEN:",
+                member.user.username
+            );
+
+
 
 
 
@@ -288,10 +334,20 @@ module.exports = {
 
 
 
+
+
+            console.log(
+                "RANK CHECK HOTOV"
+            );
+
+
+
         }
 
 
+
         catch(err){
+
 
 
             console.error(
