@@ -1,6 +1,5 @@
 const {
-    SlashCommandBuilder,
-    PermissionFlagsBits
+    SlashCommandBuilder
 } = require("discord.js");
 
 
@@ -9,7 +8,7 @@ const memberDB =
 
 
 const rankChecker =
-    require("../utils/rankChecker");
+    require("../handlers/rankChecker");
 
 
 
@@ -125,7 +124,9 @@ module.exports = {
                 role =>
 
                 COMMAND_ROLES.includes(
+
                     role.id
+
                 )
 
             );
@@ -160,7 +161,9 @@ module.exports = {
         const user =
 
             interaction.options.getUser(
+
                 "clen"
+
             );
 
 
@@ -170,7 +173,9 @@ module.exports = {
         const activity =
 
             interaction.options.getInteger(
+
                 "aktivita"
+
             );
 
 
@@ -180,7 +185,9 @@ module.exports = {
         const teamwork =
 
             interaction.options.getInteger(
+
                 "tymovaprace"
+
             );
 
 
@@ -190,7 +197,9 @@ module.exports = {
         const discipline =
 
             interaction.options.getInteger(
+
                 "disciplina"
+
             );
 
 
@@ -200,6 +209,8 @@ module.exports = {
 
 
 
+
+        // uloží hodnocení do databáze
 
         memberDB.updateEvaluation(
 
@@ -235,6 +246,9 @@ module.exports = {
 
 
 
+
+        // kontrola povýšení
+
         await rankChecker(
 
             member,
@@ -255,13 +269,18 @@ module.exports = {
 
             content:
 
+
             `✅ Hodnocení aktualizováno pro ${user}\n\n` +
+
 
             `⚡ Aktivita: **${activity}/100**\n` +
 
+
             `🤝 Týmová práce: **${teamwork}/100**\n` +
 
+
             `🎖 Disciplína: **${discipline}/100**`
+
 
         });
 
