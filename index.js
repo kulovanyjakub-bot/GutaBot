@@ -100,6 +100,15 @@ if(fs.existsSync(commandsPath)){
 
 
 
+        console.log(
+            "📂 COMMAND SOUBOR:",
+            file
+        );
+
+
+
+
+
         const command = require(
 
             path.join(
@@ -144,6 +153,18 @@ if(fs.existsSync(commandsPath)){
 
             );
 
+
+
+        }
+
+        else {
+
+
+            console.log(
+
+                `❌ Command nenahrán: ${file}`
+
+            );
 
 
         }
@@ -327,9 +348,6 @@ client.on(
 
 
 
-            // BUTTONY + MODALY
-
-
             if(
 
 
@@ -361,9 +379,6 @@ client.on(
 
 
 
-            // SLASH COMMANDY
-
-
             if(
 
                 !interaction.isChatInputCommand()
@@ -392,9 +407,16 @@ client.on(
 
 
 
-            if(!command)
+            if(!command){
+
+                console.log(
+                    "❌ Nenalezen command:",
+                    interaction.commandName
+                );
 
                 return;
+
+            }
 
 
 
